@@ -13,10 +13,10 @@ Changelog:
 
 bool is_alive(int field[ROWS][COLS], size_t i, size_t j)
 {
-    if (i < 0 || i >= ROWS || j < 0 || j >= COLS)  // check bounds
-    {
-        return false;
-    }
+    //if (i < 0 || i >= ROWS || j < 0 || j >= COLS)  // check bounds
+    //{
+    //    return false;
+    //}
     return field[i][j] == ALIVE;
 }
 
@@ -24,7 +24,7 @@ int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
 {
     unsigned int num_neighbors = num_living_neighbors(field, i, j);
 
-    if (is_alive(field, i, j)) // rule for alive cells
+    if (is_alive(field, i, j)) // rules for alive cells
     { 
         if (num_neighbors < 2 || num_neighbors > 3) 
         {
@@ -34,11 +34,11 @@ int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
     }
     else 
     { 
-        if (num_neighbors == 3) // rule for dead cells
+        if (num_neighbors == 3) // rules for dead cells
         {
             return ALIVE;
         }
-        return DEAD;
+        return DEAD; // base case
     }
 }
 
@@ -48,9 +48,11 @@ unsigned int num_living_neighbors(int field[ROWS][COLS], size_t i, size_t j)
     int             row;
     int             col;
 
-    for (int row_i = -1; row_i <= 1; row_i++) {
-        for (int col_j = -1; col_j <= 1; col_j++) {
-            if (row_i == 0 && col_j == 0) // Skip the cell itself
+    for (int row_i = -1; row_i <= 1; row_i++) 
+    {
+        for (int col_j = -1; col_j <= 1; col_j++) 
+        {
+            if (row_i == 0 && col_j == 0) // skip field[i][j] itself
             {
                 continue;
             }
@@ -58,7 +60,7 @@ unsigned int num_living_neighbors(int field[ROWS][COLS], size_t i, size_t j)
             row = i + row_i;
             col = j + col_j;
 
-            if (row >= 0 && row < ROWS && col >= 0 && col < COLS) // Check bounds before checking if alive
+            if (row >= 0 && row < ROWS && col >= 0 && col < COLS) // check bounds before checking if alive
             {
                 if (is_alive(field, row, col)) {
                     num_living_neighbors++;

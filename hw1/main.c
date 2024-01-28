@@ -13,20 +13,20 @@ Author: Braeden Cullen
 /* 
  * Game Loop for Conway's Game of Life
  *
- *  time_steps: number of generations to run
- *  field:      initial state of the field
+ *  time_steps:  number of generations to run
+ *  field:       initial state of the field
  *  
- *  returns: void
+ *  returns:     void
  */
 void game_loop(int time_steps, int field[ROWS][COLS]);
 
 /* 
  * Populate the field with the initial values
  * 
- * field:  the field to populate
- * init:   the initial values
+ * field:        the field to populate
+ * init:         the initial values
  * 
- * returns: void
+ * returns:      void
  * 
  */
 void field_population(int field[ROWS][COLS], char* init);
@@ -37,13 +37,18 @@ void field_population(int field[ROWS][COLS], char* init);
  * field:        the current field
  * next_field:   the next field
  * 
- * returns: void
+ * returns:      void
  * 
  */
 void copy_field(int field[ROWS][COLS], int next_field[ROWS][COLS]);
 
 /*
  * Main function
+ *
+ * Argv[1]:      number of generations, as an integer
+ * Argv[2]:      initial game field, as a string of 0's/1's
+ *  
+ * returns:      void
  */ 
 int main(int argc, char *argv[])
 {
