@@ -43,7 +43,7 @@ void field_population(int field[ROWS][COLS], char* init);
 void copy_field(int field[ROWS][COLS], int next_field[ROWS][COLS]);
 
 /*
- * Main function
+ * Main function. Calls field_population -> print_initial -> game_loop.
  *
  * Argv[1]:     number of generations, as an integer
  * Argv[2]:     initial game field, as a string of 0's/1's

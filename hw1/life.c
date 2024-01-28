@@ -13,10 +13,6 @@ Changelog:
 
 bool is_alive(int field[ROWS][COLS], size_t i, size_t j)
 {
-    //if (i < 0 || i >= ROWS || j < 0 || j >= COLS)  // check bounds
-    //{
-    //    return false;
-    //}
     return field[i][j] == ALIVE;
 }
 
