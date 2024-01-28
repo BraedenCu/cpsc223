@@ -17,6 +17,7 @@ bool is_alive(int field[ROWS][COLS], size_t i, size_t j)
 {
     /*
      * TODO: Implement this function. This line here only so starter code compiles
+     *
      * psuedo code:
      * check if i and j are within the bounds of the field
      * if not: return false
@@ -27,7 +28,6 @@ bool is_alive(int field[ROWS][COLS], size_t i, size_t j)
      * Reports whether field[i][j] is alive.
      * 
      */
-    // ensure that i and j are within the bounds of the field
     if (i < 0 || i >= ROWS || j < 0 || j >= COLS) {
         return false;
     }
@@ -48,38 +48,22 @@ int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
      * Reports the state of field[i][j] in the next time step according to the rules of the Game of Life.
      * 
      */
-    
-    return DEAD;
-}
-
-bool should_live(int field[ROWS][COLS], size_t i, size_t j)
-{
-    /*
-     * TODO: Implement this function. This line here only so starter code compiles
-     * psuedo code:
-     * get num_living_neighbors
-     * if field[i][j] is alive:
-     *    if num_living_neighbors < 2: return false
-     *   if num_living_neighbors > 3: return false
-     *  else: return true
-     * else:
-     *   if num_living_neighbors == 3: return true
-     *  else: return false
-     */
-
     int num_neighbors = num_living_neighbors(field, i, j);
-    //printf("num neighbors: %d\n", num_neighbors);
+
     if (is_alive(field, i, j)) { // rule for alive cells
-        if (num_neighbors < 2) {
-            return false;
+        if (num_neighbors < 2 || num_neighbors > 3) {
+            return DEAD;
         }
-        if (num_neighbors > 3) { // rule for dead cells
-            return false;
-        }
-        return true;
+        return ALIVE;
     }
-    return false;
+    else { // rule for dead cells
+        if (num_neighbors == 3) {
+            return ALIVE;
+        }
+        return DEAD;
+    }
 }
+
 
 unsigned int num_living_neighbors(int field[ROWS][COLS], size_t i, size_t j)
 {
@@ -142,14 +126,11 @@ void compute_next_gen(int cur_field[ROWS][COLS], int next_field[ROWS][COLS])
      * Computes the state at the next time step given the state described by cur_field, storing the next state in next_field.
      */
 
-    // get the num_living_neighbors for each cell in the field and print it
-    for (int i = 0; i < ROWS; ++i) {
-        for (int j = 0; j < COLS; ++j) {
-            int num_neighbors = num_living_neighbors(cur_field, i, j);
-            printf("%d ", num_neighbors);
+    for (int i = 0; i < ROWS; ++i)
+    {
+        for (int j = 0; j < COLS; ++j) 
+        {
+            next_field[i][j] = get_next_state(cur_field, i, j);
         }
-        printf("\n");
     }
-
-    printf("Done.\n");
 }

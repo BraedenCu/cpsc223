@@ -57,8 +57,6 @@ int main(int argc, char *argv[])
      */
     print_initial(field);   
 
-    //printf("%d\n", time_steps);
-
     /*
      * TODO: Run the game time_steps times, printing the field at the end of
      * each step
@@ -73,7 +71,6 @@ int main(int argc, char *argv[])
         compute_next_gen(field, next_field);
         print_generation(next_field, gen);
         // copy next_field to field
-        /*
         for (int j = 0; j < ROWS; ++j) 
         {
             for (int k = 0; k < COLS; ++k) 
@@ -81,7 +78,6 @@ int main(int argc, char *argv[])
                 field[j][k] = next_field[j][k];
             }
         }
-        */
     }
 
     /*
