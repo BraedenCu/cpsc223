@@ -30,7 +30,7 @@ int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
     }
     else 
     { 
-        if (num_neighbors == 3) // rules for dead cells
+        if (num_neighbors == 3) // rule for dead cells
         {
             return ALIVE;
         }
@@ -41,25 +41,23 @@ int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
 unsigned int num_living_neighbors(int field[ROWS][COLS], size_t i, size_t j)
 {
     unsigned int    num_living_neighbors = 0;
-    int             row;
-    int             col;
+    int             row_adjusted;
+    int             col_adjusted;
 
     for (int row_i = -1; row_i <= 1; row_i++) 
     {
         for (int col_j = -1; col_j <= 1; col_j++) 
         {
-            if (row_i == 0 && col_j == 0) // skip field[i][j] itself
+            if (!(row_i == 0 && col_j == 0)) // skip field[i][j] itself
             {
-                continue;
-            }
+                row_adjusted = i + row_i;
+                col_adjusted = j + col_j;
 
-            row = i + row_i;
-            col = j + col_j;
-
-            if (row >= 0 && row < ROWS && col >= 0 && col < COLS) // check bounds before checking if alive
-            {
-                if (is_alive(field, row, col)) {
-                    num_living_neighbors++;
+                if ((col_adjusted >= 0 && col_adjusted < COLS) && (row_adjusted >= 0 && row_adjusted < ROWS)) // check bounds before checking if alive
+                {
+                    if (is_alive(field, row_adjusted, col_adjusted)) {
+                        num_living_neighbors++;
+                    }
                 }
             }
         }
@@ -70,9 +68,9 @@ unsigned int num_living_neighbors(int field[ROWS][COLS], size_t i, size_t j)
 
 void compute_next_gen(int cur_field[ROWS][COLS], int next_field[ROWS][COLS])
 {
-    for (int i = 0; i < ROWS; ++i)
+    for (int i = 0; i < ROWS; i++)
     {
-        for (int j = 0; j < COLS; ++j) 
+        for (int j = 0; j < COLS; j++) 
         {
             next_field[i][j] = get_next_state(cur_field, i, j);
         }

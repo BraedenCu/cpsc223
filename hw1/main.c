@@ -17,6 +17,7 @@ Author: Braeden Cullen
  * field:       initial state of the field
  *  
  * returns:     void
+ * 
  */
 void game_loop(int time_steps, int field[ROWS][COLS]);
 
@@ -49,11 +50,12 @@ void copy_field(int field[ROWS][COLS], int next_field[ROWS][COLS]);
  * Argv[2]:     initial game field, as a string of 0's/1's
  *  
  * returns:     void
+ * 
  */ 
 int main(int argc, char *argv[])
 {
     int     time_steps;
-    char    *init;
+    char*   init;
     int     field[ROWS][COLS];
 
     time_steps = atoi(argv[1]);
