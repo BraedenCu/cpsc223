@@ -13,20 +13,20 @@ Author: Braeden Cullen
 /* 
  * Game Loop for Conway's Game of Life
  *
- *  time_steps:  number of generations to run
- *  field:       initial state of the field
+ * time_steps:  number of generations to run
+ * field:       initial state of the field
  *  
- *  returns:     void
+ * returns:     void
  */
 void game_loop(int time_steps, int field[ROWS][COLS]);
 
 /* 
  * Populate the field with the initial values
  * 
- * field:        the field to populate
- * init:         the initial values
+ * field:       the field to populate
+ * init:        the initial values
  * 
- * returns:      void
+ * returns:     void
  * 
  */
 void field_population(int field[ROWS][COLS], char* init);
@@ -34,10 +34,10 @@ void field_population(int field[ROWS][COLS], char* init);
 /* 
  * Copy the next field to the current field
  *
- * field:        the current field
- * next_field:   the next field
+ * field:       the current field
+ * next_field:  the next field
  * 
- * returns:      void
+ * returns:     void
  * 
  */
 void copy_field(int field[ROWS][COLS], int next_field[ROWS][COLS]);
@@ -45,10 +45,10 @@ void copy_field(int field[ROWS][COLS], int next_field[ROWS][COLS]);
 /*
  * Main function
  *
- * Argv[1]:      number of generations, as an integer
- * Argv[2]:      initial game field, as a string of 0's/1's
+ * Argv[1]:     number of generations, as an integer
+ * Argv[2]:     initial game field, as a string of 0's/1's
  *  
- * returns:      void
+ * returns:     void
  */ 
 int main(int argc, char *argv[])
 {
@@ -89,7 +89,7 @@ void field_population(int field[ROWS][COLS], char* init)
     {
         for (int j = 0; j < COLS; ++j) 
         {
-            if (init[i * COLS + j] == '0') 
+            if (init[i * COLS + j] == '0') // splice init into COL length chunks, iterate over them using j
             {
                 field[i][j] = DEAD;
             } 
