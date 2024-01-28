@@ -13,15 +13,12 @@ Changelog:
 
 bool is_alive(int field[ROWS][COLS], size_t i, size_t j)
 {
-    // check bounds
-    if (i < 0 || i >= ROWS || j < 0 || j >= COLS) 
+    if (i < 0 || i >= ROWS || j < 0 || j >= COLS)  // check bounds
     {
         return false;
     }
     return field[i][j] == ALIVE;
 }
-
-
 
 int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
 {
@@ -73,15 +70,8 @@ unsigned int num_living_neighbors(int field[ROWS][COLS], size_t i, size_t j)
     return num_living_neighbors;
 }
 
-
 void compute_next_gen(int cur_field[ROWS][COLS], int next_field[ROWS][COLS])
 {
-    /*
-     * TODO: Implement this function.
-     *
-     * Computes the state at the next time step given the state described by cur_field, storing the next state in next_field.
-     */
-
     for (int i = 0; i < ROWS; ++i)
     {
         for (int j = 0; j < COLS; ++j) 

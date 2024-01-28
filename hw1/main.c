@@ -11,17 +11,34 @@ Author: Braeden Cullen
 #include "helpers.h"
 
 /* 
- * Game Loop for Conway's Game of Life 
+ * Game Loop for Conway's Game of Life
+ *
+ *  time_steps: number of generations to run
+ *  field:      initial state of the field
+ *  
+ *  returns: void
  */
 void game_loop(int time_steps, int field[ROWS][COLS]);
 
 /* 
  * Populate the field with the initial values
+ * 
+ * field:  the field to populate
+ * init:   the initial values
+ * 
+ * returns: void
+ * 
  */
 void field_population(int field[ROWS][COLS], char* init);
 
 /* 
  * Copy the next field to the current field
+ *
+ * field:        the current field
+ * next_field:   the next field
+ * 
+ * returns: void
+ * 
  */
 void copy_field(int field[ROWS][COLS], int next_field[ROWS][COLS]);
 
