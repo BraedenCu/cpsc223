@@ -13,12 +13,6 @@ Changelog:
 
 bool is_alive(int field[ROWS][COLS], size_t i, size_t j)
 {
-    /*
-     * TODO: Implement this function. This line here only so starter code compiles
-     * 
-     * Reports whether field[i][j] is alive.
-     * 
-     */
     // check bounds
     if (i < 0 || i >= ROWS || j < 0 || j >= COLS) 
     {
@@ -31,12 +25,6 @@ bool is_alive(int field[ROWS][COLS], size_t i, size_t j)
 
 int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
 {
-    /*
-     * TODO: Implement this function. This line here only so starter code compiles
-     *
-     * Reports the state of field[i][j] in the next time step according to the rules of the Game of Life.
-     * 
-     */
     unsigned int num_neighbors = num_living_neighbors(field, i, j);
 
     if (is_alive(field, i, j)) // rule for alive cells
@@ -59,12 +47,6 @@ int get_next_state(int field[ROWS][COLS], size_t i, size_t j)
 
 unsigned int num_living_neighbors(int field[ROWS][COLS], size_t i, size_t j)
 {
-    /*
-     * TODO: Implement this function. This line here only so starter code compiles
-     *
-     * Reports the number of alive neighbors of cell field[i][j].
-     * 
-     */
     unsigned int    num_living_neighbors = 0;
     int             row;
     int             col;
