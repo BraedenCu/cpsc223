@@ -15,7 +15,7 @@ Author: Braeden Cullen
  * Game Loop for Game of Life
  * TODO: Implement neighbors function
  */
-int game_loop(int time_steps, int field[ROWS][COLS]);
+//int game_loop(int time_steps, int field[ROWS][COLS]);
 
 int main(int argc, char *argv[])
 {
@@ -38,17 +38,17 @@ int main(int argc, char *argv[])
      * TODO: Create a new statically-allocated array of size ROWS x COLS
      */
     int field[ROWS][COLS];
-    int i;
-    int j;
-    for (i = 0; i < ROWS; i++) {
-        for (j = 0; j < COLS; ++j) {
-            if (init[i * COLS + j] == '0') { // -'0' is necessary to convert char to int
+    for (int i = 0; i < ROWS; i++) 
+    {
+        for (int j = 0; j < COLS; ++j) 
+        {
+            if (init[i * COLS + j] == '0') 
+            {
                 field[i][j] = DEAD;
-            } else {
+            } 
+            else {
                 field[i][j] = ALIVE;
             }
-            //printf("%d", field[i][j]);
-            //printf("\n");
         }
     }
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
      */
     print_initial(field);   
 
-    printf("%d\n", time_steps);
+    //printf("%d\n", time_steps);
 
     /*
      * TODO: Run the game time_steps times, printing the field at the end of
@@ -65,7 +65,24 @@ int main(int argc, char *argv[])
      * 
      * game loop
      */
-    game_loop(time_steps, field);
+    int gen;
+    for (int i = 0; i < time_steps; ++i) 
+    {
+        int next_field[ROWS][COLS];
+        gen = i + 1;
+        compute_next_gen(field, next_field);
+        print_generation(next_field, gen);
+        // copy next_field to field
+        /*
+        for (int j = 0; j < ROWS; ++j) 
+        {
+            for (int k = 0; k < COLS; ++k) 
+            {
+                field[j][k] = next_field[j][k];
+            }
+        }
+        */
+    }
 
     /*
      * Print "Done." then exit.
@@ -75,22 +92,3 @@ int main(int argc, char *argv[])
 }
 
 
-int game_loop(int time_steps, int field[ROWS][COLS]) {
-    int i;
-    int gen;
-    for (i = 0; i < time_steps; ++i) {
-        int next_field[ROWS][COLS];
-        gen = i + 1;
-        compute_next_gen(field, next_field);
-        print_generation(next_field, gen);
-        // copy next_field to field
-        int j;
-        for (j = 0; j < ROWS; ++j) {
-            int k;
-            for (k = 0; k < COLS; ++k) {
-                field[j][k] = next_field[j][k];
-            }
-        }
-    }
-    return 0;
-}
