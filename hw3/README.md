@@ -355,6 +355,11 @@ If there are any differences in these files and those in the starter code, defer
     **You may not change anything already in this file**, however you may add functions or other definitions to it if you like.
     ```C
     /**
+    * Type of a comparison function.
+    */
+    typedef int (*compare_fn)(const void *, const void *);
+
+    /**
      * Reads the next line of input from stream, discarding the trailing newline
      *  character if there is one, and stores the line in the array pointed to by
      *  str. If the next line of input is longer than count characters, this reads
@@ -381,7 +386,7 @@ If there are any differences in these files and those in the starter code, defer
         You must submit a makefile having identical values for those two variables:
         ```
         CC = gcc
-        CFLAGS = -std=c17 -Wall -Werror -pedantic -g
+        CFLAGS = -std=c17 -Wall -pedantic -g
         ```
     * The first target, `Hookbook`, is incomplete and you must complete it, however, you must not change its name, and it must generate an executable file named "`Hookbook`".
     * The rest of `makefile` is up to you.

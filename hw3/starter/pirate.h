@@ -20,13 +20,7 @@ typedef struct pirate_t pirate;
 struct pirate_t
 {
     char *name;
-    char *rank;
-    char *vessel;
-    pirate *captain;
-    char *port_of_call;
-    bool has_treasure;
-    unsigned int treasure;
-    skills_list *skills;
+    // TODO: Expand this type definition
 };
 
 /**
