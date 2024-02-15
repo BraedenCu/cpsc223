@@ -8,6 +8,8 @@ CFLAGS = -std=c17 -Wall -Werror -pedantic -g
 Hookbook :
     # TODO: You must complete this rule to compile Hookbook, including 
     #   dependencies
+    $(CC) $(CFLAGS) -o Hookbook main.c
+
 
 clean :
     $(RM) Hookbook

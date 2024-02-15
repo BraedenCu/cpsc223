@@ -1,21 +1,35 @@
 /**
  * Implementation file for pirate_list for HookBook A in CPSC 223 SP2024.
  *
- * Author: [your name here]
+ * Author: braeden
  */
 
 #include "pirate_list.h"
 
+// define initial capacity
+#define INITIAL_CAPACITY 10
+
 struct pirate_list_instance_t
 {
     // TODO: Complete this struct definition
+    size_t list_length;
+    size_t capacity;
+    // you need a pointer to the array so that you know where the pirate is // ALL pirates will be on the heap
+    pirate **array; // pointing to a pointer that points to a pirate, can't just be one star need two
 };
 
 pirate_list *list_create()
 {
     // TODO: Implement this function.
     // This line is here only so starter code compiles.
-    return NULL;
+
+    // CO CO CO CO
+    pirate_list *temp_list = malloc(sizeof(pirate_list));
+    temp_list -> list_length = 0;
+    temp_list -> capacity = INITIAL_CAPACITY;
+    temp_list -> array = malloc(sizeof(pirate *) * temp_list->capacity);
+
+    return temp_list;
 }
 
 size_t list_index_of(const pirate_list *pirates, const char *name)
