@@ -16,35 +16,40 @@ int main(int argc, char *argv[])
      *   5. Release all resources (files, memory, etc.)
      */
 
+    /**
+     * - Anatomy
+     *  - hookbook.c (driver file
+     *  - libhookbook.c (implementation)
+     *  - pirate.c (implementation file, yours to create)
+     *  - pirate_list.c (implementation file)
+     *  - libhookbook.h (interface)
+     *  - pirate_list.h (interface file)
+     *  - pirate.h (interface file)
+     * 
+     * 
+    */
 
     // input checking
-    if (argc < 2) {
-        fprintf("error: missing argument\n");
-        return 1;
-    }
-
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <pirate_file>\n", argv[0]);
         return 1;
     }
 
     // attempt to collect input, if not possible, return error
-
-    // read in the file
-    FILE *file = fopen(argv[1], "r");
+    FILE *file = fopen(argv[1], "r");   // read in the file
 
     if (file == NULL) {
         fprintf(stderr, "Error: Cannot open file %s\n", argv[1]);
         return 1;
     }
 
-    
-
-    // now lets make our pirates! 
-    // first lets create our full list of pirates 
+    // initialize an empty pirate list structure
     pirate_list *all_pirates = list_create();
-    pirate *next_pirate = pirate_read(file);
 
+    // read a pirate profile from the input file
+    
+    pirate *next_pirate = pirate_read(file);
+    /*
     while (next_pirate != NULL) {
         pirate *p = list_insert(all_pirates, next_pirate, list_length(all_pirates));
 
@@ -53,13 +58,23 @@ int main(int argc, char *argv[])
         
         next_pirate = pirate_read(file);
     }
+    */
+    // code structure according to ozan (next three lines)
+    //list_sort(allpirates); 
+    
+    //list_destroy(allpirates); 
+    
+    //fclose(infile);
+
+
+
+
+
+
+
 
 
     // now read pirates and assign them one by one to slots
-
-
-
-
 
     // now using the initialized list create a pirate list
 

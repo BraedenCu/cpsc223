@@ -1,11 +1,30 @@
 #include "pirate.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /**
  * Implementation file for pirate for HookBook A in CPSC 223 SP2024.
  *
  * Author: Braeden Cullen
+ * 
+ * What this file needs to do
+ * - Define a struct pirate in pirate.c
+ * - Create functions to make/destroy pirates
+ * - Function to read a pirate
+ * - Read from current position until back-to-back newline loading chars into string
+ * - Once hit back to back newline create a pirate of given name
+ * - Functions to get, set, print pirate name
+ * - Should set 
+ * - Function to compare 2 pirates
+ * - Should return result of string comparing the two pirate names
+ * - Make sure to check NULL name case!
+ * - Add a typedef statement to pirate.h
+ * 
+ * 
+ * 
+ * 
  */
-
 
 /**
  * Allocates enough memory for a pirate, and sets the pirate's name to name.
@@ -25,10 +44,8 @@ pirate *pirate_create(char *name)
      */
 
     pirate *new_pirate = list_create();
-
     new_pirate->name = name;
-
-    return new_pirate; // DONE
+    return new_pirate;
 }
 
 
@@ -51,17 +68,34 @@ pirate *pirate_create(char *name)
  *  profile, and that input is well-formed according to the input specification
  *  in the README.
  */
+
+#define MAX_LINE_LENGTH 100 // define max line length
+
 pirate *pirate_read(FILE *restrict input)
 {
     // TODO: Implement this function.
-    // This line is here only so starter code compiles.
 
     // read in the first line
-    char *line1 = freadln(input);
+    char *l1 = malloc(MAX_LINE_LENGTH);
+    fread(l1, MAX_LINE_LENGTH, input);
+    //fgets(l1, MAX_LINE_LENGTH, input);
     
+    // if the line is empty, return NULL
+    if (l1[0] == '\n') {
+        free(l1);
+        return NULL;
+    }
 
+    // remove the newline character from the end of the line
+    l1[strlen(l1) - 1] = '\0';
 
-    return NULL;
+    // create a new pirate with the name from the first line
+
+    pirate *new_pirate = pirate_create(l1);
+    free(l1);
+
+    // return the new pirate
+    return new_pirate;
 }
 
 /**
@@ -77,6 +111,11 @@ pirate *pirate_read(FILE *restrict input)
 void pirate_print(const pirate *p, FILE *restrict output)
 {
     // TODO: Implement this function.
+    // This line is here only so starter code compiles.
+
+    // print the pirate's name
+    fprintf(output, "%s\n", p->name);
+
 }
 
 /**
@@ -112,4 +151,14 @@ int pirate_compare_name(const pirate *a, const pirate *b)
 void pirate_destroy(pirate *p)
 {
     // TODO: Implement this function.
+
+    // free the pirate's name
+    free(p->name);
+
+    // free the pirate
+    free(p);
+
+    // This line is here only so starter code compiles.
+    return;
+
 }

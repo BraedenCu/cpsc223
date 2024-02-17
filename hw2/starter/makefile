@@ -1,16 +1,26 @@
+# Compiler and compiler flags
 CC = gcc
-CFLAGS = -std=c17 -Wall -Werror -pedantic -g
+CFLAGS = -std=c17 -Wall -pedantic -g
 
-# TO STUDENT: You may add to this file, but there must remain a target named
-#   "Hookbook" that generates an executable named the same, and a target named
-#   "clean" that removes all files created by the Hookbook target.
+# Target executable name
+TARGET = Hookbook
 
-Hookbook :
-    # TODO: You must complete this rule to compile Hookbook, including 
-    #   dependencies
-    $(CC) $(CFLAGS) -o Hookbook main.c
+# Source files to compile
+SOURCES = hookbooka.c pirate.c pirate_list.c libhookbook.c
 
+# Object files to generate
+OBJECTS = $(SOURCES:.c=.o)
 
-clean :
-    $(RM) Hookbook
-    $(RM) *.o
+# The first target is the default, building the main executable
+$(TARGET): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
+
+# Dependency rules for source files
+hookbooka.o: hookbooka.c pirate_list.h pirate.h libhookbook.h
+pirate.o: pirate.c pirate.h
+pirate_list.o: pirate_list.c pirate_list.h pirate.h
+libhookbook.o: libhookbook.c libhookbook.h
+
+# Rule to clean up all generated files
+clean:
+	rm -f $(TARGET) $(OBJECTS)
