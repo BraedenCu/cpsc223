@@ -34,7 +34,6 @@ pirate_list *list_create()
 }
 
 
-
 size_t list_index_of(const pirate_list *pirates, const char *name)
 {
     // TODO: Implement this function.
@@ -74,14 +73,52 @@ pirate *list_remove(pirate_list *pirates, const char *name)
 
 const pirate *list_access(const pirate_list *pirates, size_t idx)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
+    // TODO: Implement this function. Return a pointer to the pirate pointed to by index idx in the list, or NULL
+    //  if idx is not a valid index (i.e., it is >= the length of the list).
+    // Ownership of the returned pirate remains with the list.
+
+    for (size_t i = 0; i < pirates->list_length; i++) {
+        if (i == idx) {
+            return pirates->array[i];
+        }
+    }
+
     return NULL;
 }
 
-void list_sort(pirate_list *pirates)
-{
-    // TODO: Implement this function.
+/**
+ * Sort the list of pirates in lexicographical order by name.
+ *
+ * @param pirates the list to sort
+ * @does sorts the list of pirates in lexicographical order by name
+ * @assumes pirates is not NULL and every pirate in the list has a name that is
+ *  unique in the list
+ */
+void list_sort(pirate_list *pirates) {
+    if (pirates == NULL || pirates->list_length <= 1) {
+        // No need to sort if the list is NULL or contains 0 or 1 element
+        return;
+    }
+
+    pirate *temp;
+    size_t j;
+    // Start from the second element (index 1)
+    for (size_t i = 1; i < pirates->list_length; i++) {
+        temp = pirates->array[i]; // Take the current element
+        j = i - 1;
+
+        // Compare and shift elements to the right to make room for the current element
+        while (j < pirates->list_length && pirates->array[j] && temp && strcmp(pirates->array[j]->name, temp->name) > 0) {
+            pirates->array[j + 1] = pirates->array[j]; // Shift elements to the right
+            if (j == 0) break; // Prevent underflow of size_t j
+            j--;
+        }
+        pirates->array[j + 1] = temp; // Insert the current element into its correct position
+    }
+    // print the sorted array
+    for (size_t i = 0; i < pirates->list_length; i++) {
+        printf("OK: %s\n", pirates->array[i]->name);
+    }
     
 }
 

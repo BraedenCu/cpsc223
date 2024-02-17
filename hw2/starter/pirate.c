@@ -1,4 +1,5 @@
 #include "pirate.h"
+#include "libhookbook.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,10 +43,12 @@ pirate *pirate_create(char *name)
      * 2. Set the pirate's name to name
      * 3. Return a pointer to the newly-allocated pirate
      */
-
-    pirate *new_pirate = list_create();
+    pirate *new_pirate = malloc(sizeof(pirate));
+    //printf("pirate created\n");
     new_pirate->name = name;
+    //printf("%s\n", new_pirate->name);
     return new_pirate;
+
 }
 
 
@@ -69,28 +72,27 @@ pirate *pirate_create(char *name)
  *  in the README.
  */
 
-#define MAX_LINE_LENGTH 100 // define max line length
-
 
 pirate *pirate_read(FILE *input) {
-    char line[MAX_LINE_LENGTH];
-    if (fgets(line, MAX_LINE_LENGTH, input) == NULL) { // Use fgets to read the line
-        return NULL; // Return NULL if reading fails or EOF is encountered
-    }
+    // malloc line
+    // use fread line to write into input
+    // check for blank line, by checking if newline
+    // then use pirate create on the line, pirate_create will be used to create the pirate
+    
+    char *line = malloc((MAX_LINE_LENGTH+1)*sizeof(char));
+    char *l2 = freadln(line, MAX_LINE_LENGTH, input);
 
-    // Check for a blank line indicating the end of a pirate profile
-    if (strcmp(line, "\n") == 0) {
+
+    // check for EOF
+    if (l2 == NULL) {
+        free(line);
         return NULL;
     }
 
-    // Trim the newline character at the end if present
-    size_t len = strlen(line);
-    if (line[len - 1] == '\n') {
-        line[len - 1] = '\0';
-    }
+    pirate *new_pirate = pirate_create(l2);
 
-    // Create a new pirate with the name from the line
-    pirate *new_pirate = pirate_create(line);
+    // free the line
+    // free(line);                                  MAY BE MEMORY LEAK LOCATION, KEEP IN MIND FOR FUTURE
 
     return new_pirate;
 }
@@ -111,8 +113,9 @@ void pirate_print(const pirate *p, FILE *restrict output)
     // This line is here only so starter code compiles.
 
     // print the pirate's name
-    fprintf(output, "%s\n", p->name);
-
+    //printf("pirate found\n");
+    printf("pirate: %s\n", p->name);
+    // fprintf(output, "%s\n", p->name);
 }
 
 /**

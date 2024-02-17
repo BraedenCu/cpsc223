@@ -51,16 +51,21 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Failed to load pirates from file %s\n", argv[1]);
         return 1;
     }
-
     
     // assuming list_sort and pirate_list_print are implemented functions
-    list_sort(all_pirates);
+    // list_sort(all_pirates);
+
+    // print each element in the newly sorted all_pirates list
+    for (size_t i = 0; i < list_length(all_pirates); i++) {
+        pirate_print(list_access(all_pirates, i), stdout);
+    }
 
     // release resources
     list_destroy(all_pirates); 
 
     return 0;
 }
+
 
 
 pirate_list* load_pirates_from_file(const char* filepath) {
@@ -77,14 +82,15 @@ pirate_list* load_pirates_from_file(const char* filepath) {
         return NULL;
     }
 
-    pirate *next_pirate = pirate_read(file);
+    pirate *next_pirate = pirate_read(file); 
+
     if (next_pirate == NULL) {
         fprintf(stderr, "Error: Failed to read a pirate from the file\n");
         list_destroy(all_pirates);
         fclose(file);
         return NULL;
     }
-    
+
     while (next_pirate != NULL) 
     {
         if (list_insert(all_pirates, next_pirate, list_length(all_pirates)) == NULL)
@@ -95,6 +101,7 @@ pirate_list* load_pirates_from_file(const char* filepath) {
             fclose(file);
             return NULL;
         }
+        pirate_print(next_pirate, stdout);
         next_pirate = pirate_read(file);
     }
 

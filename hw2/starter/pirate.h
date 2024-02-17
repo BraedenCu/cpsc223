@@ -20,7 +20,7 @@ typedef struct pirate_t pirate;
 struct pirate_t
 {
     char *name;
-    // TODO: Extend this struct
+    // TODO: Extend this struct for Hookbook B
 };
 
 /**
