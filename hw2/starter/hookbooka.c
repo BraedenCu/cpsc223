@@ -1,8 +1,20 @@
 #include "pirate.h"
 #include "pirate_list.h"
 #include "libhookbook.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-int main(int argc, char *argv[])
+/**
+ * Allocates enough memory for a pirate, and sets the pirate's name to name.
+ * Ownership of the name pointer is transferred to the pirate. Returns a
+ * pointer to the newly-allocated pirate.
+ * 
+ * @return a pointer to a new pirate with given name
+*/
+pirate_list* load_pirates_from_file(const char* filepath);
+
+
+int main(int argc, char *argv[]) 
 {
     /**
      * Your main function must:
@@ -26,70 +38,68 @@ int main(int argc, char *argv[])
      *  - pirate_list.h (interface file)
      *  - pirate.h (interface file)
      * 
-     * 
     */
 
-    // input checking
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <pirate_file>\n", argv[0]);
         return 1;
     }
 
-    // attempt to collect input, if not possible, return error
-    FILE *file = fopen(argv[1], "r");   // read in the file
-
-    if (file == NULL) {
-        fprintf(stderr, "Error: Cannot open file %s\n", argv[1]);
+    pirate_list *all_pirates = load_pirates_from_file(argv[1]);
+    
+    if (all_pirates == NULL) {
+        fprintf(stderr, "Error: Failed to load pirates from file %s\n", argv[1]);
         return 1;
     }
 
-    // initialize an empty pirate list structure
-    pirate_list *all_pirates = list_create();
-
-    // read a pirate profile from the input file
     
-    pirate *next_pirate = pirate_read(file);
-    /*
-    while (next_pirate != NULL) {
-        pirate *p = list_insert(all_pirates, next_pirate, list_length(all_pirates));
+    // assuming list_sort and pirate_list_print are implemented functions
+    list_sort(all_pirates);
 
-        // destroy the pirate
-        pirate_destroy(next_pirate);
-        
-        next_pirate = pirate_read(file);
-    }
-    */
-    // code structure according to ozan (next three lines)
-    //list_sort(allpirates); 
-    
-    //list_destroy(allpirates); 
-    
-    //fclose(infile);
-
-
-
-
-
-
-
-
-
-    // now read pirates and assign them one by one to slots
-
-    // now using the initialized list create a pirate list
-
-    // create a pirate_list using create_pirate_list()
-
-    // read from file using pirate_read
-
-    // print all the pirates you have created using pirate_print
-
-
-    // sort the list using pirate_list_sort(list)
-
-    // print the pirates using pirate_list_print(list)    
-
-    // release resources using pirate_destroy() 
+    // release resources
+    list_destroy(all_pirates); 
 
     return 0;
+}
+
+
+pirate_list* load_pirates_from_file(const char* filepath) {
+    FILE *file = fopen(filepath, "r");
+    if (file == NULL) {
+        fprintf(stderr, "Error: Cannot open file %s\n", filepath);
+        return NULL;
+    }
+
+    pirate_list *all_pirates = list_create();
+    if (all_pirates == NULL) {
+        fprintf(stderr, "Error: Failed to create a pirate list\n");
+        fclose(file);
+        return NULL;
+    }
+
+    pirate *next_pirate = pirate_read(file);
+    if (next_pirate == NULL) {
+        fprintf(stderr, "Error: Failed to read a pirate from the file\n");
+        list_destroy(all_pirates);
+        fclose(file);
+        return NULL;
+    }
+    
+    while (next_pirate != NULL) 
+    {
+        if (list_insert(all_pirates, next_pirate, list_length(all_pirates)) == NULL)
+        { 
+            fprintf(stderr, "Error: Failed to insert a pirate into the list\n");
+            pirate_destroy(next_pirate);
+            list_destroy(all_pirates);
+            fclose(file);
+            return NULL;
+        }
+        next_pirate = pirate_read(file);
+    }
+
+    // release resources
+    fclose(file);
+
+    return all_pirates;
 }

@@ -71,30 +71,27 @@ pirate *pirate_create(char *name)
 
 #define MAX_LINE_LENGTH 100 // define max line length
 
-pirate *pirate_read(FILE *restrict input)
-{
-    // TODO: Implement this function.
 
-    // read in the first line
-    char *l1 = malloc(MAX_LINE_LENGTH);
-    fread(l1, MAX_LINE_LENGTH, input);
-    //fgets(l1, MAX_LINE_LENGTH, input);
-    
-    // if the line is empty, return NULL
-    if (l1[0] == '\n') {
-        free(l1);
+pirate *pirate_read(FILE *input) {
+    char line[MAX_LINE_LENGTH];
+    if (fgets(line, MAX_LINE_LENGTH, input) == NULL) { // Use fgets to read the line
+        return NULL; // Return NULL if reading fails or EOF is encountered
+    }
+
+    // Check for a blank line indicating the end of a pirate profile
+    if (strcmp(line, "\n") == 0) {
         return NULL;
     }
 
-    // remove the newline character from the end of the line
-    l1[strlen(l1) - 1] = '\0';
+    // Trim the newline character at the end if present
+    size_t len = strlen(line);
+    if (line[len - 1] == '\n') {
+        line[len - 1] = '\0';
+    }
 
-    // create a new pirate with the name from the first line
+    // Create a new pirate with the name from the line
+    pirate *new_pirate = pirate_create(line);
 
-    pirate *new_pirate = pirate_create(l1);
-    free(l1);
-
-    // return the new pirate
     return new_pirate;
 }
 
