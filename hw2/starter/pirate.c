@@ -100,7 +100,7 @@ pirate *pirate_read(FILE *input)
  */
 void pirate_print(const pirate *p, FILE *restrict output)
 {
-    printf("pirate: %s\n", p->name);
+    printf("%s\n", p->name);
 
     // done
 }
