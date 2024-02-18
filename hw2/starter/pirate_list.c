@@ -40,8 +40,10 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
     // TODO: Implement this function.
     // This line is here only so starter code compiles.
 
-    for (size_t i = 0; i < pirates->list_length; i++) {
-        if (strcmp(pirates->array[i]->name, name) == 0) {
+    for (size_t i = 0; i < pirates->list_length; i++) 
+    {
+        if (strcmp(pirates->array[i]->name, name) == 0) 
+        {
             return i;
         }
     }
@@ -55,13 +57,15 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
     // This line is here only so starter code compiles.
 
     // if the list is full, double the capacity
-    if (pirates->list_length == pirates->capacity) {
+    if (pirates->list_length == pirates->capacity) 
+    {
         pirates->capacity *= RESIZE_RATIO;
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity);
     }
 
     // shift all elements to the right
-    for (size_t i = pirates->list_length; i > idx; i--) {
+    for (size_t i = pirates->list_length; i > idx; i--) 
+    {
         pirates->array[i] = pirates->array[i - 1];
     }
 
@@ -79,14 +83,16 @@ pirate *list_remove(pirate_list *pirates, const char *name)
     size_t idx = list_index_of(pirates, name);
 
     // if the pirate is not in the list, return NULL
-    if (idx == pirates->list_length) {
+    if (idx == pirates->list_length) 
+    {
         return NULL;
     }
 
     // remove the pirate from the list
     pirate *removed_pirate = pirates->array[idx];
 
-    for (size_t i = idx; i < pirates->list_length - 1; i++) {
+    for (size_t i = idx; i < pirates->list_length - 1; i++) 
+    {
         pirates->array[i] = pirates->array[i + 1];
     }
 
@@ -102,8 +108,10 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
     //  if idx is not a valid index (i.e., it is >= the length of the list).
     // Ownership of the returned pirate remains with the list.
 
-    for (size_t i = 0; i < pirates->list_length; i++) {
-        if (i == idx) {
+    for (size_t i = 0; i < pirates->list_length; i++) 
+    {
+        if (i == idx) 
+        {
             return pirates->array[i];
         }
     }
@@ -119,54 +127,49 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
  * @assumes pirates is not NULL and every pirate in the list has a name that is
  *  unique in the list
  */
-void list_sort(pirate_list *pirates) {
-    if (pirates == NULL || pirates->array == NULL || pirates->list_length <= 1) {
-        return; // No need to sort if the list is NULL, empty, or has a single element
+void list_sort(pirate_list *pirates) 
+{
+    if (pirates == NULL || pirates->array == NULL || pirates->list_length <= 1) 
+    {
+        return;
     }
-    // Call the quickSort function on the entire array of pirates
     quickSort(pirates->array, 0, pirates->list_length - 1);
-    
-    print_all_pirates(pirates);
+    //print_all_pirates(pirates);
 }
 
-// beginning of sorting specific co co co
-
-
-void quickSort(pirate **arr, int low, int high) {
-    if (low < high) {
-        // Partition the array around the pivot
+void quickSort(pirate **arr, int low, int high) 
+{
+    if (low < high) 
+    {
         int pi = partition(arr, low, high);
-
-        // Recursively sort the sub-arrays
         quickSort(arr, low, pi - 1);  // Before pi
         quickSort(arr, pi + 1, high); // After pi
     }
 }
 
-void swap(pirate **a, pirate **b) {
+void swap(pirate **a, pirate **b) 
+{
     pirate *t = *a;
     *a = *b;
     *b = t;
 }
 
-int partition(pirate **arr, int low, int high) {
-    // Select the rightmost element as pivot
-    pirate *pivot = arr[high];
-    int i = (low - 1); // Index of smaller element
+int partition(pirate **arr, int low, int high) 
+{
+    pirate *pivot = arr[high]; // rightmost element as pivot
+    int i = (low - 1); // index of smaller element
 
-    for (int j = low; j <= high - 1; j++) {
-        // If current element is smaller than or equal to pivot
-        if (pirate_compare_name(arr[j], pivot) <= 0) {
-            i++; // Increment index of smaller element
+    for (int j = low; j <= high - 1; j++) 
+    {
+        if (pirate_compare_name(arr[j], pivot) <= 0) // if curr element is <= pivot
+        {
+            i++; // inc index of smaller element
             swap(&arr[i], &arr[j]);
         }
     }
     swap(&arr[i + 1], &arr[high]);
     return (i + 1);
 }
-
-
-// end of sorting
 
 
 size_t list_length(const pirate_list *pirates)
@@ -192,8 +195,10 @@ void list_destroy(pirate_list *pirates)
 }
 
 
-void print_all_pirates(pirate_list *pirates) {
-    for (size_t i = 0; i < pirates->list_length; i++) {
+void print_all_pirates(pirate_list *pirates) 
+{
+    for (size_t i = 0; i < pirates->list_length; i++) 
+    {
         pirate_print(pirates->array[i], stdout);
     }
 }
