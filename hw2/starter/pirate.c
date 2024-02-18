@@ -71,28 +71,25 @@ pirate *pirate_create(char *name)
  *  profile, and that input is well-formed according to the input specification
  *  in the README.
  */
-
-
 pirate *pirate_read(FILE *input) {
-    // malloc line
-    // use fread line to write into input
-    // check for blank line, by checking if newline
-    // then use pirate create on the line, pirate_create will be used to create the pirate
+    char *line = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
+    if (line == NULL) {
+        // memory allocation failure case
+        return NULL;
+    }
     
-    char *line = malloc((MAX_LINE_LENGTH+1)*sizeof(char));
-    char *l2 = freadln(line, MAX_LINE_LENGTH, input);
-
-
-    // check for EOF
-    if (l2 == NULL) {
-        free(line);
+    if (freadln(line, MAX_LINE_LENGTH, input) == NULL) {
+        free(line); // clean up allocated memory if failed read
         return NULL;
     }
 
-    pirate *new_pirate = pirate_create(l2);
-
-    // free the line
-    // free(line);                                  MAY BE MEMORY LEAK LOCATION, KEEP IN MIND FOR FUTURE
+    pirate *new_pirate = pirate_create(line);
+    
+    // free line, should be freed but for some reason uncommenting breaks the pirate creation code
+    //  free(line);                 // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY !
+    
+    // skip blank lines separating pirate profiles
+    fscanf(input, "\n");
 
     return new_pirate;
 }
