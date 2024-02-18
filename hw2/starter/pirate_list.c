@@ -1,30 +1,27 @@
 /**
  * Implementation file for pirate_list for HookBook A in CPSC 223 SP2024.
  *
- * Author: braeden
+ * Author: Braeden Cullen
  */
 
 #include "pirate_list.h"
-#include <string.h>                     // IS THIS ALLOWED, FOR STRCMP ???? CO CO CO CO
+#include <string.h>                      // IS THIS ALLOWED, FOR STRCMP ???? CO CO CO CO
 
-// define initial capacity
 #define INITIAL_CAPACITY 10
 #define RESIZE_RATIO 2
 
 
 struct pirate_list_instance_t
 {
-    // Complete this struct definition
     size_t list_length;
     size_t capacity;
-    pirate **array; // pointing to a pointer that points to a pirate, can't just be one star need two
+    pirate **array; // pointing to a pointer that points to a pirate
 
     // done 
 };
 
 pirate_list *list_create()
 {
-    // Implement this function.
     pirate_list *temp_list = malloc(sizeof(pirate_list));
     temp_list -> list_length = 0;
     temp_list -> capacity = INITIAL_CAPACITY;
@@ -37,9 +34,6 @@ pirate_list *list_create()
 
 size_t list_index_of(const pirate_list *pirates, const char *name)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-
     for (size_t i = 0; i < pirates->list_length; i++) 
     {
         if (strcmp(pirates->array[i]->name, name) == 0) 
@@ -47,17 +41,12 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
             return i;
         }
     }
-
     return 0;
 }
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-
-    // if the list is full, double the capacity
-    if (pirates->list_length == pirates->capacity) 
+    if (pirates->list_length == pirates->capacity) // if list full, RESIZE_RATIO capacity
     {
         pirates->capacity *= RESIZE_RATIO;
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity);
@@ -78,17 +67,12 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 
 pirate *list_remove(pirate_list *pirates, const char *name)
 {
-    // TODO: Implement this function. FINISH FINISH
-    // find the index of the pirate with the given name
     size_t idx = list_index_of(pirates, name);
-
-    // if the pirate is not in the list, return NULL
     if (idx == pirates->list_length) 
     {
         return NULL;
     }
 
-    // remove the pirate from the list
     pirate *removed_pirate = pirates->array[idx];
 
     for (size_t i = idx; i < pirates->list_length - 1; i++) 
@@ -97,6 +81,8 @@ pirate *list_remove(pirate_list *pirates, const char *name)
     }
 
     pirates->list_length--;
+
+    // check if list should be resized after removal
 
 
     return removed_pirate;
@@ -195,10 +181,75 @@ void list_destroy(pirate_list *pirates)
 }
 
 
-void print_all_pirates(pirate_list *pirates) 
+void print_all_pirates(pirate_list *pirates) {
+    if (pirates == NULL || pirates->array == NULL) {
+        fprintf(stderr, "No pirates to print.\n");
+        return;
+    }
+    for (size_t i = 0; i < pirates->list_length; i++) {
+        if (pirates->array[i] != NULL && pirates->array[i]->name != NULL) {
+            printf("%s\n", pirates->array[i]->name);
+        }
+    }
+}
+
+
+/**
+ * Check if the actual number of pirates in the array is "too large"; if it is,
+ *  increase the capacity of the array by a factor of RESIZE_FACTOR.
+ *
+ * Given N actual pirates in the array of capacity C, we say N is "too large"
+ *  whenever N >= C
+ *
+ * If the array capacity was changed, print to stderr the string "Expand to ",
+ *  followed by the new capacity of the list and a newline. Here is a possible
+ *  print statement:
+ *
+ *     fprintf(stderr, "Expand to %zu\n", new_capacity);
+ *
+ * If the capacity was not changed, print nothing.
+ *
+ * @param pirates the pirate list to expand, if necessary
+ * @does increases the capacity of the array if there are too many pirates in
+ *  it
+ * @assumes the pirate list is in the process of having a pirate added to it.
+ */
+void list_expand_if_necessary(pirate_list *pirates) 
 {
-    for (size_t i = 0; i < pirates->list_length; i++) 
+    if (pirates->list_length >= pirates->capacity)  // check if list needs to resize
     {
-        pirate_print(pirates->array[i], stdout);
+        pirates->capacity *= RESIZE_RATIO;
+        pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity); // resize list
+    }
+}
+
+/**
+ * Check if the actual number of pirates in the array is "too small"; if it is,
+ *  decrease the capacity of the array by a factor of RESIZE_FACTOR.
+ *
+ * Given N actual pirates in the array of capacity C, we say N is "too small"
+ *  whenever C > INITIAL_CAPACITY and N * RESIZE_FACTOR <= C / RESIZE_FACTOR
+ *
+ * If the array capacity was changed, print to stderr the string "Contract to "
+ *  followed by the new capacity of the list. Here is a possible print
+ *  statement:
+ *
+ *     fprintf(stderr, Contract to %zu\n, new_capacity);
+ *
+ * If the capacity was not changed, print nothing.
+ *
+ * The capacity of the array must never fall below INITIAL_CAPACITY!
+ *
+ * @param pirates the pirate list to contract, if necessary
+ * @does decreases the capacity of the array if there are too few pirates in
+ *  it.
+ * @assumes the pirate list is in the process of having a pirate added to it.
+ */
+void list_contract_if_necessary(pirate_list *pirates) 
+{
+    if (pirates->capacity > INITIAL_CAPACITY && pirates->list_length * RESIZE_RATIO <= pirates->capacity / RESIZE_RATIO) // check if list needs to contract
+    {
+        pirates->capacity /= RESIZE_RATIO;
+        pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity); // contract
     }
 }

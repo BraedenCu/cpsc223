@@ -100,7 +100,10 @@ pirate *pirate_read(FILE *input)
  */
 void pirate_print(const pirate *p, FILE *restrict output)
 {
-    printf("%s\n", p->name);
+    if (p!=NULL && p->name!=NULL) 
+    {
+        fprintf(output, "%s\n", p->name);
+    }
 
     // done
 }

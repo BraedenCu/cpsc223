@@ -104,7 +104,7 @@
 - Function to compare 2 pirates
   - Should return result of string comparing the two pirate names
   - Make sure to check NULL name case!
-- Add a typedef statement to pirate.h
+- Add a typedef statement to pirate.h   
 
 ### Makefile
 

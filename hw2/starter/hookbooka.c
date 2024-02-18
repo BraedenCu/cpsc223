@@ -28,20 +28,8 @@ int main(int argc, char *argv[])
      *   5. Release all resources (files, memory, etc.)
      */
 
-    /**
-     * - Anatomy
-     *  - hookbook.c (driver file
-     *  - libhookbook.c (implementation)
-     *  - pirate.c (implementation file, yours to create)
-     *  - pirate_list.c (implementation file)
-     *  - libhookbook.h (interface)
-     *  - pirate_list.h (interface file)
-     *  - pirate.h (interface file)
-     * 
-    */
-
     if (argc != 2) {
-        fprintf(stderr, "Usage: %s <pirate_file>\n", argv[0]);
+        fprintf(stderr, "Correct Input Format: %s <pirate_file>\n", argv[0]);
         return 1;
     }
 
@@ -51,16 +39,11 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Failed to load pirates from file %s\n", argv[1]);
         return 1;
     }
-    
-    // assuming list_sort and pirate_list_print are implemented functions
+        
     list_sort(all_pirates);
 
-    // print each element in the newly sorted all_pirates list
-    for (size_t i = 0; i < list_length(all_pirates); i++) {
-        pirate_print(list_access(all_pirates, i), stdout);
-    }
+    print_all_pirates(all_pirates);
 
-    // release resources
     list_destroy(all_pirates); 
 
     return 0;
@@ -105,7 +88,6 @@ pirate_list* load_pirates_from_file(const char* filepath) {
         next_pirate = pirate_read(file);
     }
 
-    // release resources
     fclose(file);
 
     return all_pirates;
