@@ -49,6 +49,7 @@ pirate *pirate_create(char *name)
     //printf("%s\n", new_pirate->name);
     return new_pirate;
 
+    // done
 }
 
 
@@ -86,12 +87,14 @@ pirate *pirate_read(FILE *input) {
     pirate *new_pirate = pirate_create(line);
     
     // free line, should be freed but for some reason uncommenting breaks the pirate creation code
-    //  free(line);                 // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY !
+    // free(line);                 // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY !
     
     // skip blank lines separating pirate profiles
     fscanf(input, "\n");
 
     return new_pirate;
+
+    // done
 }
 
 /**
@@ -106,13 +109,11 @@ pirate *pirate_read(FILE *input) {
  */
 void pirate_print(const pirate *p, FILE *restrict output)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
+    // Implement this function.
 
-    // print the pirate's name
-    //printf("pirate found\n");
     printf("pirate: %s\n", p->name);
-    // fprintf(output, "%s\n", p->name);
+
+    // done
 }
 
 /**
@@ -135,6 +136,18 @@ int pirate_compare_name(const pirate *a, const pirate *b)
 {
     // TODO: Implement this function.
     // This line is here only so starter code compiles.
+    if (a->name == NULL && b->name == NULL) {
+        return 0;
+    } 
+    else if (a->name == NULL) {
+        return 1;
+    } 
+    else if (b->name == NULL) {
+        return -1;
+    } 
+    else {
+        return strcmp(a->name, b->name);
+    }
     return 0;
 }
 
@@ -147,7 +160,7 @@ int pirate_compare_name(const pirate *a, const pirate *b)
  */
 void pirate_destroy(pirate *p)
 {
-    // TODO: Implement this function.
+    // Implement this function.
 
     // free the pirate's name
     free(p->name);
@@ -155,7 +168,5 @@ void pirate_destroy(pirate *p)
     // free the pirate
     free(p);
 
-    // This line is here only so starter code compiles.
-    return;
-
+    // done
 }

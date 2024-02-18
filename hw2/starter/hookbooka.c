@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     }
     
     // assuming list_sort and pirate_list_print are implemented functions
-    // list_sort(all_pirates);
+    list_sort(all_pirates);
 
     // print each element in the newly sorted all_pirates list
     for (size_t i = 0; i < list_length(all_pirates); i++) {

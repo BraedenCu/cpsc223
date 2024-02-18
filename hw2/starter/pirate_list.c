@@ -5,6 +5,7 @@
  */
 
 #include "pirate_list.h"
+#include <string.h>                     // IS THIS ALLOWED, FOR STRCMP ???? CO CO CO CO
 
 // define initial capacity
 #define INITIAL_CAPACITY 10
@@ -38,6 +39,13 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
 {
     // TODO: Implement this function.
     // This line is here only so starter code compiles.
+
+    for (size_t i = 0; i < pirates->list_length; i++) {
+        if (strcmp(pirates->array[i]->name, name) == 0) {
+            return i;
+        }
+    }
+
     return 0;
 }
 
@@ -66,9 +74,26 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 
 pirate *list_remove(pirate_list *pirates, const char *name)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return NULL;
+    // TODO: Implement this function. FINISH FINISH
+    // find the index of the pirate with the given name
+    size_t idx = list_index_of(pirates, name);
+
+    // if the pirate is not in the list, return NULL
+    if (idx == pirates->list_length) {
+        return NULL;
+    }
+
+    // remove the pirate from the list
+    pirate *removed_pirate = pirates->array[idx];
+
+    for (size_t i = idx; i < pirates->list_length - 1; i++) {
+        pirates->array[i] = pirates->array[i + 1];
+    }
+
+    pirates->list_length--;
+
+
+    return removed_pirate;
 }
 
 const pirate *list_access(const pirate_list *pirates, size_t idx)
@@ -95,32 +120,54 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
  *  unique in the list
  */
 void list_sort(pirate_list *pirates) {
-    if (pirates == NULL || pirates->list_length <= 1) {
-        // No need to sort if the list is NULL or contains 0 or 1 element
-        return;
+    if (pirates == NULL || pirates->array == NULL || pirates->list_length <= 1) {
+        return; // No need to sort if the list is NULL, empty, or has a single element
     }
-
-    pirate *temp;
-    size_t j;
-    // Start from the second element (index 1)
-    for (size_t i = 1; i < pirates->list_length; i++) {
-        temp = pirates->array[i]; // Take the current element
-        j = i - 1;
-
-        // Compare and shift elements to the right to make room for the current element
-        while (j < pirates->list_length && pirates->array[j] && temp && strcmp(pirates->array[j]->name, temp->name) > 0) {
-            pirates->array[j + 1] = pirates->array[j]; // Shift elements to the right
-            if (j == 0) break; // Prevent underflow of size_t j
-            j--;
-        }
-        pirates->array[j + 1] = temp; // Insert the current element into its correct position
-    }
-    // print the sorted array
-    for (size_t i = 0; i < pirates->list_length; i++) {
-        printf("OK: %s\n", pirates->array[i]->name);
-    }
+    // Call the quickSort function on the entire array of pirates
+    quickSort(pirates->array, 0, pirates->list_length - 1);
     
+    print_all_pirates(pirates);
 }
+
+// beginning of sorting specific co co co
+
+
+void quickSort(pirate **arr, int low, int high) {
+    if (low < high) {
+        // Partition the array around the pivot
+        int pi = partition(arr, low, high);
+
+        // Recursively sort the sub-arrays
+        quickSort(arr, low, pi - 1);  // Before pi
+        quickSort(arr, pi + 1, high); // After pi
+    }
+}
+
+void swap(pirate **a, pirate **b) {
+    pirate *t = *a;
+    *a = *b;
+    *b = t;
+}
+
+int partition(pirate **arr, int low, int high) {
+    // Select the rightmost element as pivot
+    pirate *pivot = arr[high];
+    int i = (low - 1); // Index of smaller element
+
+    for (int j = low; j <= high - 1; j++) {
+        // If current element is smaller than or equal to pivot
+        if (pirate_compare_name(arr[j], pivot) <= 0) {
+            i++; // Increment index of smaller element
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+
+// end of sorting
+
 
 size_t list_length(const pirate_list *pirates)
 {
@@ -142,4 +189,11 @@ void list_destroy(pirate_list *pirates)
     free(pirates);
 
     // done
+}
+
+
+void print_all_pirates(pirate_list *pirates) {
+    for (size_t i = 0; i < pirates->list_length; i++) {
+        pirate_print(pirates->array[i], stdout);
+    }
 }
