@@ -36,17 +36,8 @@
  */
 pirate *pirate_create(char *name)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    /**
-     * 1. Allocate memory for a new pirate
-     * 2. Set the pirate's name to name
-     * 3. Return a pointer to the newly-allocated pirate
-     */
     pirate *new_pirate = malloc(sizeof(pirate));
-    //printf("pirate created\n");
     new_pirate->name = name;
-    //printf("%s\n", new_pirate->name);
     return new_pirate;
 
     // done
@@ -72,25 +63,25 @@ pirate *pirate_create(char *name)
  *  profile, and that input is well-formed according to the input specification
  *  in the README.
  */
-pirate *pirate_read(FILE *input) {
+pirate *pirate_read(FILE *input) 
+{
     char *line = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
-    if (line == NULL) {
-        // memory allocation failure case
+    if (line == NULL) 
+    {
         return NULL;
     }
-    
-    if (freadln(line, MAX_LINE_LENGTH, input) == NULL) {
+    if (freadln(line, MAX_LINE_LENGTH, input) == NULL) 
+    {
         free(line); // clean up allocated memory if failed read
         return NULL;
     }
 
     pirate *new_pirate = pirate_create(line);
     
-    // free line, should be freed but for some reason uncommenting breaks the pirate creation code
-    // free(line);                 // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY !
+    // free(line);       // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY! 
+                         // if uncommented, the pirate list will not be populated
     
-    // skip blank lines separating pirate profiles
-    fscanf(input, "\n");
+    fscanf(input, "\n"); // skip blank lines
 
     return new_pirate;
 
@@ -109,8 +100,6 @@ pirate *pirate_read(FILE *input) {
  */
 void pirate_print(const pirate *p, FILE *restrict output)
 {
-    // Implement this function.
-
     printf("pirate: %s\n", p->name);
 
     // done
@@ -134,21 +123,21 @@ void pirate_print(const pirate *p, FILE *restrict output)
  */
 int pirate_compare_name(const pirate *a, const pirate *b)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    if (a->name == NULL && b->name == NULL) {
-        return 0;
-    } 
-    else if (a->name == NULL) {
+    if (a->name == NULL) {
         return 1;
     } 
     else if (b->name == NULL) {
         return -1;
     } 
+    else if (a->name == NULL && b->name == NULL) {
+        return 0;
+    } 
     else {
-        return strcmp(a->name, b->name);
+        return strcmp(a->name, b->name); // strcmp returns 0 if equal, -1 if a < b, 1 if a > b
     }
     return 0;
+
+    // done
 }
 
 /**
@@ -160,8 +149,6 @@ int pirate_compare_name(const pirate *a, const pirate *b)
  */
 void pirate_destroy(pirate *p)
 {
-    // Implement this function.
-
     // free the pirate's name
     free(p->name);
 
