@@ -7,8 +7,11 @@
  *
  * TO STUDENT: You may add to this file, but do not change anything that is
  *     already here!
- * Modified by: [your name here] on [date of modification]
- * Changelog: [what you added to this file]
+ * Modified by: Braeden Cullen on Feb 18th
+ * Changelog: Added a new function, print_all_pirates, to the pirate_list.h file
+ * 
+ * Modified by: Braeden Cullen on Feb 19th
+ * Changelog: Added quick_sort function and helpers for quick_sort to pirate_list.h
  */
 
 #include <stdlib.h>
@@ -104,6 +107,41 @@ const pirate *list_access(const pirate_list *pirates, size_t idx);
 void list_sort(pirate_list *pirates);
 
 /**
+ * Sort the list of pirates in lexicographical order by name using quick sort.
+ * 
+ * @param pirates the list to sort
+ * @does sorts the list of pirates in lexicographical order by name using quick sort
+ * @assumes pirates is not NULL and every pirate in the list has a name that is
+ * unique in the list
+ *
+*/
+void quick_sort(pirate_list *pirates, int low, int high);
+
+/**
+ * Helper function sort_swap for quick_sort function
+ * 
+ * @param pirates the list to sort
+ * @param low the lowest index of the list
+ * @param high the highest index of the list
+ * @does swaps the pirates at index low and high
+ * @assumes pirates is not NULL and low and high are valid indexes
+ * 
+*/
+void sort_swap(pirate_list *pirates, int low, int high);
+
+/**
+ * Helper function partition for quick_sort function
+ * 
+ * @param pirates the list to sort
+ * @param low the lowest index of the list
+ * @param high the highest index of the list
+ * @does partitions the list of pirates in lexicographical order by name using quick sort
+ * @assumes pirates is not NULL and low and high are valid indexes
+*/
+int partition(pirate_list *pirates, int low, int high);
+
+
+/**
  * Return the number of pirates in the list.
  *
  * @param pirates the list
@@ -118,3 +156,10 @@ size_t list_length(const pirate_list *pirates);
  * @param pirates the list to destroy
  */
 void list_destroy(pirate_list *pirates);
+
+/**
+ * Print all pirates in the list
+ * 
+ * @param pirates the list to print
+*/
+void print_all_pirates(pirate_list *pirates);

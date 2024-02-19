@@ -119,28 +119,28 @@ void list_sort(pirate_list *pirates)
     {
         return;
     }
-    quickSort(pirates->array, 0, pirates->list_length - 1);
+    quick_sort(pirates->array, 0, pirates->list_length - 1);
     //print_all_pirates(pirates);
 }
 
-void quickSort(pirate **arr, int low, int high) 
+void quick_sort(pirate **arr, int low, int high) 
 {
     if (low < high) 
     {
-        int pi = partition(arr, low, high);
-        quickSort(arr, low, pi - 1);  // Before pi
-        quickSort(arr, pi + 1, high); // After pi
+        int pi = sort_partition(arr, low, high);
+        quick_sort(arr, low, pi - 1);  // Before pi
+        quick_sort(arr, pi + 1, high); // After pi
     }
 }
 
-void swap(pirate **a, pirate **b) 
+void sort_swap(pirate **a, pirate **b) 
 {
     pirate *t = *a;
     *a = *b;
     *b = t;
 }
 
-int partition(pirate **arr, int low, int high) 
+int sort_partition(pirate **arr, int low, int high) 
 {
     pirate *pivot = arr[high]; // rightmost element as pivot
     int i = (low - 1); // index of smaller element
@@ -150,10 +150,10 @@ int partition(pirate **arr, int low, int high)
         if (pirate_compare_name(arr[j], pivot) <= 0) // if curr element is <= pivot
         {
             i++; // inc index of smaller element
-            swap(&arr[i], &arr[j]);
+            sort_swap(&arr[i], &arr[j]);
         }
     }
-    swap(&arr[i + 1], &arr[high]);
+    sort_swap(&arr[i + 1], &arr[high]);
     return (i + 1);
 }
 
