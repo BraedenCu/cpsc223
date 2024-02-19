@@ -41,8 +41,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Failed to load pirates from file %s\n", argv[1]);
         return 1;
     }
-
-    //remove_duplicate_pirates(all_pirates);
         
     list_sort(all_pirates);
 
