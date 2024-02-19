@@ -28,20 +28,21 @@ int main(int argc, char *argv[])
      *   5. Release all resources (files, memory, etc.)
      */
 
-    if (argc != 2) {
+    if (argc != 2) 
+    {
         fprintf(stderr, "Correct Input Format: %s <pirate_file>\n", argv[0]);
         return 1;
     }
 
     pirate_list *all_pirates = load_pirates_from_file(argv[1]);
 
-    // remove duplicate pirates
-    remove_duplicate_pirates(all_pirates);
-    
-    if (all_pirates == NULL) {
+    if (all_pirates == NULL) 
+    {
         fprintf(stderr, "Error: Failed to load pirates from file %s\n", argv[1]);
         return 1;
     }
+
+    remove_duplicate_pirates(all_pirates);
         
     list_sort(all_pirates);
 
@@ -54,15 +55,20 @@ int main(int argc, char *argv[])
 
 
 
-pirate_list* load_pirates_from_file(const char* filepath) {
+pirate_list* load_pirates_from_file(const char* filepath) 
+{
     FILE *file = fopen(filepath, "r");
-    if (file == NULL) {
+    
+    if (file == NULL) 
+    {
         fprintf(stderr, "Error: Cannot open file %s\n", filepath);
         return NULL;
     }
 
     pirate_list *all_pirates = list_create();
-    if (all_pirates == NULL) {
+
+    if (all_pirates == NULL) 
+    {
         fprintf(stderr, "Error: Failed to create a pirate list\n");
         fclose(file);
         return NULL;
@@ -70,7 +76,8 @@ pirate_list* load_pirates_from_file(const char* filepath) {
 
     pirate *next_pirate = pirate_read(file); 
 
-    if (next_pirate == NULL) {
+    if (next_pirate == NULL) 
+    {
         fprintf(stderr, "Error: Failed to read a pirate from the file\n");
         list_destroy(all_pirates);
         fclose(file);

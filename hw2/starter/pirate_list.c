@@ -5,7 +5,7 @@
  */
 
 #include "pirate_list.h"
-#include <string.h>                      // IS THIS ALLOWED, FOR STRCMP ???? CO CO CO CO
+#include <string.h>               // IS THIS ALLOWED, FOR STRCMP ???? CO CO CO CO
 
 #define INITIAL_CAPACITY 10
 #define RESIZE_RATIO 2
@@ -83,7 +83,10 @@ pirate *list_remove(pirate_list *pirates, const char *name)
     pirates->list_length--;
 
     // check if list should be resized after removal
+    list_contract_if_necessary(pirates);
 
+    // free memory of removed_pirate
+    pirate_destroy(removed_pirate);
 
     return removed_pirate;
 }
@@ -169,8 +172,11 @@ size_t list_length(const pirate_list *pirates)
 
 void list_destroy(pirate_list *pirates)
 {
-    // Implement this function.
-
+    // destroy every pirate
+    for (size_t i = 0; i < pirates->list_length; i++) 
+    {
+        pirate_destroy(pirates->array[i]);
+    }
     // free the array
     free(pirates->array);
 
