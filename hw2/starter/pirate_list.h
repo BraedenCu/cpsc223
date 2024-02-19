@@ -12,6 +12,9 @@
  * 
  * Modified by: Braeden Cullen on Feb 19th
  * Changelog: Added quick_sort function and helpers for quick_sort to pirate_list.h
+ * 
+ * Modified by: Braeden Cullen on Feb 19th
+ * Changelog: Added remove_duplicate_pirates function to pirate_list.h
  */
 
 #include <stdlib.h>
@@ -163,3 +166,12 @@ void list_destroy(pirate_list *pirates);
  * @param pirates the list to print
 */
 void print_all_pirates(pirate_list *pirates);
+
+/**
+ * Remove duplicate pirates
+ * 
+ * @param pirates the list of pirates
+ * @does removes duplicate pirates from the list
+ * @assumes pirates is not NULL
+*/
+void remove_duplicate_pirates(pirate_list *pirates);

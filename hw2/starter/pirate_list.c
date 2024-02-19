@@ -253,3 +253,24 @@ void list_contract_if_necessary(pirate_list *pirates)
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity); // contract
     }
 }
+
+
+/**
+ * Remove duplicate pirates
+ * 
+ * @param pirates the list of pirates
+ * @does removes duplicate pirates from the list
+ * @assumes pirates is not NULL
+*/
+void remove_duplicate_pirates(pirate_list *pirates) {
+    for (size_t i = 0; i < pirates->list_length; i++) {
+        for (size_t j = i + 1; j < pirates->list_length; j++) {
+            if (pirate_compare_name(pirates->array[i], pirates->array[j]) == 0) {
+                list_remove(pirates, pirates->array[j]->name);
+                // resize                                                   ASK ABOUT
+                list_contract_if_necessary(pirates);
+                j--;
+            }
+        }
+    }
+}

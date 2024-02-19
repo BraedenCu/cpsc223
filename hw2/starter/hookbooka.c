@@ -34,6 +34,9 @@ int main(int argc, char *argv[])
     }
 
     pirate_list *all_pirates = load_pirates_from_file(argv[1]);
+
+    // remove duplicate pirates
+    remove_duplicate_pirates(all_pirates);
     
     if (all_pirates == NULL) {
         fprintf(stderr, "Error: Failed to load pirates from file %s\n", argv[1]);
@@ -84,7 +87,7 @@ pirate_list* load_pirates_from_file(const char* filepath) {
             fclose(file);
             return NULL;
         }
-        pirate_print(next_pirate, stdout);
+        // pirate_print(next_pirate, stdout);
         next_pirate = pirate_read(file);
     }
 
