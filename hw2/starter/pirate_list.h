@@ -110,24 +110,25 @@ void list_sort(pirate_list *pirates);
  * Sort the list of pirates in lexicographical order by name using quick sort.
  * 
  * @param pirates the list to sort
+ * @param low the lowest index of the list
+ * @param high the highest index of the list
  * @does sorts the list of pirates in lexicographical order by name using quick sort
  * @assumes pirates is not NULL and every pirate in the list has a name that is
  * unique in the list
  *
 */
-void quick_sort(pirate_list *pirates, int low, int high);
+void quick_sort(pirate **arr, int low, int high); 
 
 /**
  * Helper function sort_swap for quick_sort function
  * 
- * @param pirates the list to sort
- * @param low the lowest index of the list
- * @param high the highest index of the list
+ * @param a the first pirate to swap
+ * @param b the second pirate to swap
  * @does swaps the pirates at index low and high
  * @assumes pirates is not NULL and low and high are valid indexes
  * 
 */
-void sort_swap(pirate_list *pirates, int low, int high);
+void sort_swap(pirate **a, pirate **b); 
 
 /**
  * Helper function partition for quick_sort function
@@ -138,8 +139,7 @@ void sort_swap(pirate_list *pirates, int low, int high);
  * @does partitions the list of pirates in lexicographical order by name using quick sort
  * @assumes pirates is not NULL and low and high are valid indexes
 */
-int partition(pirate_list *pirates, int low, int high);
-
+int sort_partition(pirate **arr, int low, int high);
 
 /**
  * Return the number of pirates in the list.
