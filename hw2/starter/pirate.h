@@ -9,8 +9,8 @@
  *
  * TO STUDENT: You may add to this file, but do not change anything that is
  *     already here!
- * Modified by: [your name here] on [date of modification]
- * Changelog: [what you added to this file]
+ * Modified by: Braeden on February 19th
+ * Changelog: Added a format_name function to the pirate.h file to resolve capitalization test case issues
  */
 
 /**
@@ -91,3 +91,12 @@ int pirate_compare_name(const pirate *a, const pirate *b);
  * @assumes p is not NULL
  */
 void pirate_destroy(pirate *p);
+
+/**
+ * Formats the name of a pirate to be uniformly capitalized
+ * 
+ * @param name the name of the pirate
+ * @does formats the name of the pirate to be uniformly capitalized
+ * @assumes name is not NULL
+ */
+char *format_name(char *name);

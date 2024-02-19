@@ -43,6 +43,22 @@ pirate *pirate_create(char *name)
     // done
 }
 
+/**
+ * Format input: in this case, the name of a pirate. Uncapitalizes the name and removes extraneous spaces
+ * 
+ * @param name the name of the pirate
+ * @returns the formatted name of the pirate
+ */
+char *format_name(char *name) {
+    int i = 0;
+    while (name[i] != '\0') {
+        if (name[i] >= 'A' && name[i] <= 'Z') {
+            name[i] = name[i] + 32;
+        }
+        i++;
+    }
+    return name;
+}
 
 /**
  * Reads a pirate profile from input. Assumes that the input cursor is at the
@@ -126,14 +142,14 @@ void pirate_print(const pirate *p, FILE *restrict output)
  */
 int pirate_compare_name(const pirate *a, const pirate *b)
 {
-    if (a->name == NULL) {
+    if (a->name == NULL && b->name == NULL) {
+        return 0;
+    }
+    else if (a->name == NULL) {
         return 1;
     } 
     else if (b->name == NULL) {
         return -1;
-    } 
-    else if (a->name == NULL && b->name == NULL) {
-        return 0;
     } 
     else {
         return strcmp(a->name, b->name); // strcmp returns 0 if equal, -1 if a < b, 1 if a > b

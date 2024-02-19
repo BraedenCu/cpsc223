@@ -168,10 +168,11 @@ void list_destroy(pirate_list *pirates);
 void print_all_pirates(pirate_list *pirates);
 
 /**
- * Remove duplicate pirates
+ * Check for duplicate pirates
  * 
  * @param pirates the list of pirates
- * @does removes duplicate pirates from the list
+ * @param name the name of the pirate
+ * @return 1 if the pirate is a duplicate, 0 if the pirate is not a duplicate
  * @assumes pirates is not NULL
 */
-void remove_duplicate_pirates(pirate_list *pirates);
+int check_duplicate_pirate(const pirate_list *pirates, char *name);

@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    remove_duplicate_pirates(all_pirates);
+    //remove_duplicate_pirates(all_pirates);
         
     list_sort(all_pirates);
 
@@ -52,8 +52,6 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-
 
 pirate_list* load_pirates_from_file(const char* filepath) 
 {
@@ -74,6 +72,7 @@ pirate_list* load_pirates_from_file(const char* filepath)
         return NULL;
     }
 
+    // read first pirate
     pirate *next_pirate = pirate_read(file); 
 
     if (next_pirate == NULL) 
@@ -84,9 +83,15 @@ pirate_list* load_pirates_from_file(const char* filepath)
         return NULL;
     }
 
+    // continue reading until end of file
     while (next_pirate != NULL) 
     {
-        if (list_insert(all_pirates, next_pirate, list_length(all_pirates)) == NULL)
+        // first check if duplicate pirate exists
+        if(check_duplicate_pirate(all_pirates, next_pirate->name) == 1)
+        {
+            pirate_destroy(next_pirate);
+        }
+        else if (list_insert(all_pirates, next_pirate, list_length(all_pirates)) == NULL)
         { 
             fprintf(stderr, "Error: Failed to insert a pirate into the list\n");
             pirate_destroy(next_pirate);

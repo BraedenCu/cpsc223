@@ -44,6 +44,19 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
     return 0;
 }
 
+int check_duplicate_pirate(const pirate_list *pirates, char *name)
+{
+    for (size_t i = 0; i < pirates->list_length; i++) 
+    {
+        if (strcmp(pirates->array[i]->name, name) == 0) 
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
     /*   
@@ -53,9 +66,9 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity);
     }
     */
-    
+    // check if list should be expanded
     list_expand_if_necessary(pirates);
-
+    
     // shift all elements to the right
     for (size_t i = pirates->list_length; i > idx; i--) 
     {
@@ -79,6 +92,7 @@ pirate *list_remove(pirate_list *pirates, const char *name)
 
     pirate *removed_pirate = pirates->array[idx];
 
+    // shift all elements to the left
     for (size_t i = idx; i < pirates->list_length - 1; i++) 
     {
         pirates->array[i] = pirates->array[i + 1];
@@ -226,7 +240,7 @@ void print_all_pirates(pirate_list *pirates) {
  */
 void list_expand_if_necessary(pirate_list *pirates) 
 {
-    if (pirates->list_length == pirates->capacity) // if list full, RESIZE_RATIO capacity
+    if (pirates->list_length >= pirates->capacity) // if list full, RESIZE_RATIO capacity
     {
         pirates->capacity *= RESIZE_RATIO;
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity);
@@ -270,26 +284,6 @@ void list_contract_if_necessary(pirate_list *pirates)
     {
         pirates->capacity /= RESIZE_RATIO;
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity); // contract
-    }
-}
-
-
-/**
- * Remove duplicate pirates
- * 
- * @param pirates the list of pirates
- * @does removes duplicate pirates from the list
- * @assumes pirates is not NULL
-*/
-void remove_duplicate_pirates(pirate_list *pirates) {
-    for (size_t i = 0; i < pirates->list_length; i++) {
-        for (size_t j = i + 1; j < pirates->list_length; j++) {
-            if (pirate_compare_name(pirates->array[i], pirates->array[j]) == 0) {
-                list_remove(pirates, pirates->array[j]->name);
-                // resize                                                   ASK ABOUT
-                list_contract_if_necessary(pirates);
-                j--;
-            }
-        }
+        fprintf(stderr, "Contract to %zu\n", pirates->capacity);
     }
 }
