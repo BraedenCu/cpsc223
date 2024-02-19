@@ -34,7 +34,9 @@
 pirate *pirate_create(char *name)
 {
     pirate *new_pirate = malloc(sizeof(pirate));
+    
     new_pirate->name = name;
+
     return new_pirate;
 
     // done
