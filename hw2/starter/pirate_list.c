@@ -7,7 +7,7 @@
 #include "pirate_list.h"
 #include <string.h>               // IS THIS ALLOWED, FOR STRCMP ???? CO CO CO CO
 
-#define INITIAL_CAPACITY 10
+#define INITIAL_CAPACITY 25
 #define RESIZE_RATIO 2
 
 
@@ -46,11 +46,15 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
+    /*   
     if (pirates->list_length == pirates->capacity) // if list full, RESIZE_RATIO capacity
     {
         pirates->capacity *= RESIZE_RATIO;
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity);
     }
+    */
+    
+    list_expand_if_necessary(pirates);
 
     // shift all elements to the right
     for (size_t i = pirates->list_length; i > idx; i--) 
@@ -222,11 +226,20 @@ void print_all_pirates(pirate_list *pirates) {
  */
 void list_expand_if_necessary(pirate_list *pirates) 
 {
+    if (pirates->list_length == pirates->capacity) // if list full, RESIZE_RATIO capacity
+    {
+        pirates->capacity *= RESIZE_RATIO;
+        pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity);
+        fprintf(stderr, "Expand to %zu\n", pirates->capacity);
+    }
+    /*
     if (pirates->list_length >= pirates->capacity)  // check if list needs to resize
     {
         pirates->capacity *= RESIZE_RATIO;
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity); // resize list
+        fprintf(stderr, "Expand to %zu\n", pirates->capacity *= RESIZE_RATIO);
     }
+    */
 }
 
 /**
