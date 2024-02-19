@@ -91,12 +91,3 @@ int pirate_compare_name(const pirate *a, const pirate *b);
  * @assumes p is not NULL
  */
 void pirate_destroy(pirate *p);
-
-/**
- * Formats the name of a pirate to be uniformly capitalized
- * 
- * @param name the name of the pirate
- * @does formats the name of the pirate to be uniformly capitalized
- * @assumes name is not NULL
- */
-char *format_name(char *name);

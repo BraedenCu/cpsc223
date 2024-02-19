@@ -22,9 +22,6 @@
  * - Make sure to check NULL name case!
  * - Add a typedef statement to pirate.h
  * 
- * 
- * 
- * 
  */
 
 /**
@@ -41,23 +38,6 @@ pirate *pirate_create(char *name)
     return new_pirate;
 
     // done
-}
-
-/**
- * Format input: in this case, the name of a pirate. Uncapitalizes the name and removes extraneous spaces
- * 
- * @param name the name of the pirate
- * @returns the formatted name of the pirate
- */
-char *format_name(char *name) {
-    int i = 0;
-    while (name[i] != '\0') {
-        if (name[i] >= 'A' && name[i] <= 'Z') {
-            name[i] = name[i] + 32;
-        }
-        i++;
-    }
-    return name;
 }
 
 /**
@@ -81,7 +61,12 @@ char *format_name(char *name) {
  */
 pirate *pirate_read(FILE *input) 
 {
-    char *line = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
+    int     next_pirate_char;
+    char*   line;
+    pirate* new_pirate;
+
+    line = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
+    
     if (line == NULL) 
     {
         return NULL;
@@ -91,15 +76,22 @@ pirate *pirate_read(FILE *input)
         free(line); // clean up allocated memory if failed read
         return NULL;
     }
-
-    pirate *new_pirate = pirate_create(line);
+    
+    new_pirate = pirate_create(line);
     
     // free(line);       // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY! 
                          // if uncommented, the pirate list will not be populated
     
-    fscanf(input, "\n"); // skip blank lines
+    // fscanf(input, "\n"); // cannot simply use fscanf, will skip blank pirate names
 
-    return new_pirate;
+    next_pirate_char = fgetc(input);
+
+    if (next_pirate_char != '\n' && next_pirate_char != EOF) 
+    {
+        ungetc(next_pirate_char, input); // decrements the stream indicator position by one
+    }
+
+    return new_pirate; // Return the newly created pirate structure, even if it represents a pirate without a name
 
     // done
 }

@@ -72,9 +72,9 @@ pirate_list* load_pirates_from_file(const char* filepath)
         return NULL;
     }
 
-    // read first pirate
+    // read first pirate, ensure that it is not an empty line
     pirate *next_pirate = pirate_read(file); 
-
+    
     if (next_pirate == NULL) 
     {
         fprintf(stderr, "Error: Failed to read a pirate from the file\n");
@@ -99,7 +99,7 @@ pirate_list* load_pirates_from_file(const char* filepath)
             fclose(file);
             return NULL;
         }
-        // pirate_print(next_pirate, stdout);
+        //pirate_print(next_pirate, stdout);
         next_pirate = pirate_read(file);
     }
 
