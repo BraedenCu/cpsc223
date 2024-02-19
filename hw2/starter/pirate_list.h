@@ -15,6 +15,9 @@
  * 
  * Modified by: Braeden Cullen on Feb 19th
  * Changelog: Added remove_duplicate_pirates function to pirate_list.h
+ * 
+ * Modified by: Braeden Cullen on Feb 19th
+ * Changelog: Removed remove_duplicate_pirates, added check_duplicate_pirate to pirate_list.h
  */
 
 #include <stdlib.h>
