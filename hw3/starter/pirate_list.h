@@ -12,7 +12,6 @@
  */
 
 #include <stdlib.h>
-
 #include "pirate.h"
 #include "libhookbook.h"
 

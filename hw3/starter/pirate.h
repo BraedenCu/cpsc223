@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include "skills_list.h"
 
 /**
  * Header file for pirate for HookBook B in CPSC 223 SP2024.
@@ -9,8 +10,8 @@
  *
  * TO STUDENT: You may add to this file, but do not change anything that is
  *     already here!
- * Modified by: [your name here] on [date of modification]
- * Changelog: [what you added to this file]
+ * Modified by: Braeden on Feb 20th
+ * Changelog: Added skills list implementation under pirate structure definition
  */
 
 /**
@@ -33,8 +34,9 @@ struct pirate_t
     char *vessel;
     char *port;
     char *treasure;
-    char *skill;
     char *captain;
+
+    skills_list_instance_t *skills;
 };
 
 /**
@@ -142,3 +144,11 @@ int pirate_compare_treasure(const pirate *a, const pirate *b);
  * @assumes p is not NULL
  */
 void pirate_destroy(pirate *p);
+
+/**
+ * Populate skills list when creating a pirate
+ * @param p the pirate to populate the skills list
+ * @param skill the skill to add to the skills list
+ * @does adds the skill to the skills list of the pirate
+*/
+void populate_skills_list(pirate *p, char* line, FILE *input);

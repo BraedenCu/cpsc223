@@ -3,6 +3,7 @@
 #include "libhookbook.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "skills_list.h"
 
 /**
  * Allocates enough memory for a pirate, and sets the pirate's name to name.

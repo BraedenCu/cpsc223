@@ -4,6 +4,14 @@ v:the black pearl
 p:tortuga
 t:12
 
+elizabeth swan
+r:queen
+t:367
+v:the flying dutchman
+p:port royal
+s:leadership
+s:subterfuge
+
 william turner
 p:port royal
 s:smithing
@@ -12,11 +20,3 @@ s:fencing
 s:fencing
 s:fencing
 s:fencing
-
-elizabeth swan
-r:queen
-t:367
-v:the flying dutchman
-p:port royal
-s:leadership
-s:subterfuge

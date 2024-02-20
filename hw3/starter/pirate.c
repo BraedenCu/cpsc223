@@ -1,11 +1,13 @@
 /**
  * Implementation file for pirate for HookBook B in CPSC 223 SP2024.
  *
- * Author: [your name here]
+ * Author: Braeden
  */
 
 #include "pirate.h"
 #include "libhookbook.h"
+#include "skills_list.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,10 +78,10 @@ pirate *pirate_read(FILE *input)
             new_pirate->treasure = malloc((strlen(line) - 2) * sizeof(char));
             strcpy(new_pirate->treasure, line + 2);
         }
+        // skill is the most difficult field, send to helper
         if (line[0] == 's' && line[1] == ':') 
         {
-            new_pirate->skill = malloc((strlen(line) - 2) * sizeof(char));
-            strcpy(new_pirate->skill, line + 2);
+            populate_skills_list(new_pirate, line, input);
         }
     }
     
@@ -95,6 +97,29 @@ pirate *pirate_read(FILE *input)
 
     return new_pirate; 
 }
+
+void populate_skills_list(pirate *p, char* line, FILE *input)
+{
+    skills_list_instance_t *lst = skills_list_create();
+    // read first skill -> line[2] to end of line
+    char* skill = malloc((strlen(line) - 1) * sizeof(char));
+    // set the skill to the current line, but do NOT set it as a pointer to line
+    strcpy(skill, line + 2);
+    // add the skill to the list
+    skills_list_append(lst, skill);
+    // continue reading skills until a newline character
+    
+    while (freadln(line, MAX_LINE_LENGTH, input) != NULL && line[0] != '\0') 
+    {
+        skill = malloc((strlen(line) - 2) * sizeof(char));
+        strcpy(skill, line + 2);
+        skills_list_append(lst, skill);
+    }
+    
+    // set the pirate's skill to the list
+    p->skills = lst;
+}
+
 
 void pirate_print_A(const pirate *p, FILE *restrict output)
 {
@@ -126,9 +151,9 @@ void pirate_print(const pirate *p, FILE *restrict output)
     {
         fprintf(output, "  Treasure: %s\n", p->treasure);
     }
-    if (p!=NULL && p->skill!=NULL) 
+    if (p!=NULL && p->skills!=NULL) 
     {
-        fprintf(output, "  Skill: %s\n", p->skill);
+        print_skills_list(p->skills, output);
     }
     if (p!=NULL && p->captain!=NULL) 
     {
