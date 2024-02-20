@@ -34,6 +34,7 @@ struct pirate_t
     char *port;
     char *treasure;
     char *skill;
+    char *captain;
 };
 
 /**

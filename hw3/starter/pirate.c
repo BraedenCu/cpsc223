@@ -50,6 +50,9 @@ pirate *pirate_read(FILE *input)
     strcpy(name, line);
     new_pirate = pirate_create(name); // we have effectively created a pirate with the proper name
     
+    // set captain to NULL, dealt with in populate_captains
+    new_pirate->captain = NULL;
+
     // now, continue reading the rest of the pirate's profile until a newline character
     while (freadln(line, MAX_LINE_LENGTH, input) != NULL && line[0] != '\0') 
     {
@@ -126,6 +129,10 @@ void pirate_print(const pirate *p, FILE *restrict output)
     if (p!=NULL && p->skill!=NULL) 
     {
         fprintf(output, "  Skill: %s\n", p->skill);
+    }
+    if (p!=NULL && p->captain!=NULL) 
+    {
+        fprintf(output, "  Captain: %s\n", p->captain);
     }
 }
 

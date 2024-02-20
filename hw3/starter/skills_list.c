@@ -1,7 +1,7 @@
 /**
  * Implementation file for skills_list for HookBook B in CPSC 223 SP2024.
  *
- * Author: [your name here]
+ * Author: Braeden
  */
 
 #include "skills_list.h"
