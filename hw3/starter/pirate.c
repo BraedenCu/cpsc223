@@ -55,6 +55,10 @@ pirate *pirate_read(FILE *input)
     // set captain to NULL, dealt with in populate_captains
     new_pirate->captain = NULL;
 
+    // create skills list 
+    skills_list_instance_t *lst = skills_list_create();
+    new_pirate->skills = lst;
+
     // now, continue reading the rest of the pirate's profile until a newline character
     while (freadln(line, MAX_LINE_LENGTH, input) != NULL && line[0] != '\0') 
     {
@@ -81,7 +85,7 @@ pirate *pirate_read(FILE *input)
         // skill is the most difficult field, send to helper
         if (line[0] == 's' && line[1] == ':') 
         {
-            populate_skills_list(new_pirate, line, input);
+            populate_skills_list(lst, new_pirate, line, input);
         }
     }
     
@@ -98,26 +102,19 @@ pirate *pirate_read(FILE *input)
     return new_pirate; 
 }
 
-void populate_skills_list(pirate *p, char* line, FILE *input)
+void populate_skills_list(skills_list_instance_t *lst, pirate *p, char* line, FILE *input)
 {
-    skills_list_instance_t *lst = skills_list_create();
-    // read first skill -> line[2] to end of line
-    char* skill = malloc((strlen(line) - 1) * sizeof(char));
+
+    // new skills node
+    char* skill;
+
+    skill = malloc((strlen(line) - 1) * sizeof(char));
+
     // set the skill to the current line, but do NOT set it as a pointer to line
     strcpy(skill, line + 2);
+
     // add the skill to the list
     skills_list_append(lst, skill);
-    // continue reading skills until a newline character
-    
-    while (freadln(line, MAX_LINE_LENGTH, input) != NULL && line[0] != '\0') 
-    {
-        skill = malloc((strlen(line) - 2) * sizeof(char));
-        strcpy(skill, line + 2);
-        skills_list_append(lst, skill);
-    }
-    
-    // set the pirate's skill to the list
-    p->skills = lst;
 }
 
 

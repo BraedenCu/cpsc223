@@ -151,4 +151,4 @@ void pirate_destroy(pirate *p);
  * @param skill the skill to add to the skills list
  * @does adds the skill to the skills list of the pirate
 */
-void populate_skills_list(pirate *p, char* line, FILE *input);
+void populate_skills_list(skills_list_instance_t *lst, pirate *p, char* line, FILE *input);
