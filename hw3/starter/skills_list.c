@@ -23,3 +23,18 @@ struct skills_list_instance_t
 };
 
 // TODO: Implement all functions declared in skills_list.h
+
+skills_list *skills_list_create(){return;}
+
+skills_list skills_list_append(skills_list *skills, char *skill){return;}
+
+int skills_list_remove_last(skills_list *skills){return;}
+
+void skills_list_destroy(skills_list *skills){return;}
+
+int skills_list_length(skills_list *skills){return;}
+
+char *skills_list_get(skills_list *skills, int index){return;}
+
+int skills_list_index_of(skills_list *skills, char *skill){return;}
+

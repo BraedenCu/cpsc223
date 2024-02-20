@@ -18,7 +18,6 @@ struct pirate_list_instance_t
     size_t list_length;
     size_t capacity;
     pirate **array; // pointing to a pointer that points to a pirate
-
 };
 
 /***********************
