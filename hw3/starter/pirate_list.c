@@ -12,6 +12,8 @@
 
 #define INITIAL_CAPACITY 25
 #define RESIZE_RATIO 2
+#define MAX_LINE_LENGTH 127
+
 
 struct pirate_list_instance_t
 {
@@ -215,10 +217,7 @@ void print_all_pirates(pirate_list *pirates)
     }
     for (size_t i = 0; i < pirates->list_length; i++) 
     {
-        if (pirates->array[i] != NULL && pirates->array[i]->name != NULL) 
-        {
-            printf("%s\n", pirates->array[i]->name);
-        }
+        pirate_print(pirates->array[i], stdout);
     }
 }
 
@@ -232,4 +231,69 @@ int check_duplicate_pirate(const pirate_list *pirates, char *name)
         }
     }
     return 0;
+}
+
+/**
+ * Populate all pirate captains from a file
+*/
+void populate_captains(pirate_list *pirates, const char* filepath) 
+{
+    char*       line;
+    char*       captain;
+    char*       line_next;
+    char*       captain_next;
+    pirate*     p;
+    pirate*     p_captain;
+    int idx =   0;
+    int idx_captain = 0;
+
+    FILE *file = fopen(filepath, "r");
+    
+    if (file == NULL) 
+    {
+        fprintf(stderr, "Error: Cannot open file %s\n", filepath);
+        return;
+    }
+
+
+    line = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
+    captain = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
+    line_next = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
+    captain_next = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
+
+    freadln(line_next, MAX_LINE_LENGTH, file);
+
+    while (freadln(line, MAX_LINE_LENGTH, file) != NULL && freadln(line_next, MAX_LINE_LENGTH, file) != NULL)
+    {
+
+        strcpy(captain_next, line_next);
+
+        strcpy(captain, line);  
+
+        //printf("Captain: %s\n", captain_next);
+       //printf("Subject: %s\n", captain);
+
+        idx = list_index_of(pirates, captain);
+        idx_captain = list_index_of(pirates, captain_next);
+
+
+        //printf("Index: %d\n", idx);
+
+        p = (pirate *)list_access(pirates, idx);
+        p_captain = (pirate *)list_access(pirates, idx_captain);
+
+        //printf("Pirate: %s\n", p->name);
+
+        if (p != NULL) 
+        {
+            p->captain = p_captain->name;
+            //printf("Captain of %s: %s\n", p->name, p->captain);
+        }
+    }
+
+    free(line);
+    free(captain);
+    free(line_next);
+    free(captain_next);
+    fclose(file);
 }

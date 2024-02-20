@@ -86,7 +86,7 @@ pirate *pirate_read(FILE *input)
         if (line[0] == 's' && line[1] == ':') 
         {
             populate_skills_list(lst, new_pirate, line, input);
-        }
+        }        
     }
     
     // free(line);       // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY! 
@@ -104,7 +104,6 @@ pirate *pirate_read(FILE *input)
 
 void populate_skills_list(skills_list_instance_t *lst, pirate *p, char* line, FILE *input)
 {
-
     // new skills node
     char* skill;
 

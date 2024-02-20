@@ -9,7 +9,8 @@
 #include <string.h>
 #include <stdio.h>
 
-skills_list_instance_t* skills_list_create() {
+skills_list_instance_t* skills_list_create() 
+{
     skills_list_instance_t* lst = malloc(sizeof(skills_list_instance_t));
     if (lst == NULL) {
         return NULL;
@@ -30,7 +31,8 @@ skills_list_instance_t* skills_list_create() {
     return lst;
 }
 
-void skills_list_append(skills_list_instance_t *skills, char *skill) {
+void skills_list_append(skills_list_instance_t *skills, char *skill) 
+{
     // Create a new node
     skills_list_node *new_node = malloc(sizeof(skills_list_node));
 
@@ -40,7 +42,9 @@ void skills_list_append(skills_list_instance_t *skills, char *skill) {
     //printf("    Tail Node Skill: %s\n", skills->tail->skill);
 
     new_node->skill = malloc(strlen(skill) + 1);
+
     strcpy(new_node->skill, skill);
+    
     new_node->next = NULL;
 
     if (skills->length == 0) {
@@ -57,7 +61,8 @@ void skills_list_append(skills_list_instance_t *skills, char *skill) {
 
 
 //int skills_list_remove_last(skills_list_instance_t *skills){return;}
-void skills_list_destroy(skills_list_instance_t* skills) {
+void skills_list_destroy(skills_list_instance_t* skills) 
+{
     if (!skills) return;
 
     skills_list_node* current = skills->head;
@@ -70,8 +75,12 @@ void skills_list_destroy(skills_list_instance_t* skills) {
     free(skills);
 }
 
-void print_skills_list(skills_list_instance_t *skills, FILE *output) {
-    if (!skills) return;
+void print_skills_list(skills_list_instance_t *skills, FILE *output) 
+{
+    if (skills->head->skill == NULL) 
+    {
+        return;
+    }
 
     skills_list_node* current = skills->head;
     
@@ -79,12 +88,11 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output) {
     //printf("    Head Node Skill: %s\n", current->skill);
 
     while (current != NULL) {
-        printf("    Skill: %s\n", current->skill);
+        printf("  Skill: %s\n", current->skill);
         current = current->next; // Move to the next node
     }    
 }
 
-    
 
 //int skills_list_length(skills_list_instance_t *skills){return;}
 

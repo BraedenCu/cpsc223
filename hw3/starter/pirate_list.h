@@ -151,3 +151,12 @@ void print_all_pirates(pirate_list *pirates);
  * @assumes pirates is not NULL
 */
 int check_duplicate_pirate(const pirate_list *pirates, char *name);
+
+/**
+ * Populate the list of pirates from a file
+ * 
+ * @param pirates the list of pirates
+ * @param filepath the path to the file containing the pirates
+ * @assumes pirates is not NULL
+*/
+void populate_captains(pirate_list *pirates, const char* filepath);

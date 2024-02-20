@@ -14,7 +14,7 @@
 */
 pirate_list* load_pirates_from_file(const char* filepath);
 pirate_list* load_profiles_from_file(const char* filepath);
-pirate_list* populate_captains(pirate_list *pirates, const char* filepath);
+//pirate_list* populate_captains(pirate_list *pirates, const char* filepath);
 
 int main(int argc, char *argv[])
 {
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
      *      -t: sort the output in descending order by the pirates' treasures
      *      Default sort: the output should be sorted in ascending order by the pirates' names (as if the -n sort flag was provided). Your sorting algorithm must break ties by sorting tied pirates in ascending order of their names.
     */
-    if (argc != 2) 
+    if (argc != 3) 
     {
         fprintf(stderr, "Must Enter Three Arguments");
         return 1;
@@ -63,7 +63,17 @@ int main(int argc, char *argv[])
     }
 
     // next, lets create the pirate/captain pairs. (assume pairs are the second argument)
-    all_profiles = populate_captains(all_profiles, argv[2]);
+    populate_captains(all_profiles, argv[2]);
+
+    if (all_profiles == NULL) 
+    {
+        fprintf(stderr, "Error: Failed to load captains from file %s\n", argv[2]);
+        return 1;
+    }
+    // print all pirates
+    print_all_pirates(all_profiles);
+
+    list_destroy(all_profiles);
 
     // now, lets determine which sorting algorithm should be used (assume sort flag is the third argument)
 
@@ -135,7 +145,7 @@ pirate_list* load_profiles_from_file(const char* filepath) {
             return NULL;
         }
         
-        pirate_print(next_profile, stdout);
+        //pirate_print(next_profile, stdout);
 
         next_profile = pirate_read(file);
     }
@@ -143,18 +153,6 @@ pirate_list* load_profiles_from_file(const char* filepath) {
     fclose(file);
 
     return all_profiles;
-}
-
-/**
- * Create pirate/captain pairs from a file and add them to the pirate_list
- * 
- * @params pirates: the pirate_list to add the pairs to
- * @params filepath: the path to the file containing the pirate/captain pairs
- * @return a pointer to a pirate_list containing all the pirates
- * 
- */
-pirate_list* populate_captains(pirate_list *pirates, const char* filepath) {
-    return NULL;
 }
 
 
