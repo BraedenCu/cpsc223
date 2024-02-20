@@ -135,3 +135,20 @@ size_t list_length(const pirate_list *pirates);
  * @param pirates the list to destroy
  */
 void list_destroy(pirate_list *pirates);
+
+/**
+ * Print all pirates in the list
+ * 
+ * @param pirates the list to print
+*/
+void print_all_pirates(pirate_list *pirates);
+
+/**
+ * Check for duplicate pirates
+ * 
+ * @param pirates the list of pirates
+ * @param name the name of the pirate
+ * @return 1 if the pirate is a duplicate, 0 if the pirate is not a duplicate
+ * @assumes pirates is not NULL
+*/
+int check_duplicate_pirate(const pirate_list *pirates, char *name);

@@ -1,16 +1,24 @@
 /**
  * Implementation file for pirate_list for HookBook B in CPSC 223 SP2024.
  *
- * Author: [your name here]
+ * Author: Braeden
  */
 
 #include "pirate_list.h"
-
 #include "pirate.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define INITIAL_CAPACITY 25
+#define RESIZE_RATIO 2
 
 struct pirate_list_instance_t
 {
-    // TODO: Complete this struct definition
+    size_t list_length;
+    size_t capacity;
+    pirate **array; // pointing to a pointer that points to a pirate
+
 };
 
 /***********************
@@ -69,9 +77,15 @@ void list_contract_if_necessary(pirate_list *pirates);
 
 pirate_list *list_create()
 {
-    // TODO: implement this function
-    // This line is here only so starter code compiles.
-    return NULL;
+    pirate_list *pir_list = malloc(sizeof(pirate_list)); 
+
+    pir_list -> list_length = 0;
+    
+    pir_list -> capacity = INITIAL_CAPACITY;
+    
+    pir_list -> array = calloc(pir_list->capacity, sizeof(pirate *)); // list of pirates
+
+    return pir_list;
 }
 
 pirate_list *list_create_with_cmp(compare_fn cmp)
@@ -83,32 +97,70 @@ pirate_list *list_create_with_cmp(compare_fn cmp)
 
 size_t list_index_of(const pirate_list *pirates, const char *name)
 {
-    // TODO: implement this function
-    // This line is here only so starter code compiles.
-    return 0;
+    for (size_t i = 0; i < pirates->list_length; i++) 
+    {
+        if (strcmp(pirates->array[i]->name, name) == 0) 
+        {
+            return i;
+        }
+    }
+    return pirates->list_length;
+
 }
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
-    // TODO: implement this function
-    // This line is here only so starter code compiles.
-    return NULL;
+    // check if list should be expanded
+    list_expand_if_necessary(pirates);
+    
+    // shift all elements to the right
+    for (size_t i = pirates->list_length; i > idx; i--) 
+    {
+        pirates->array[i] = pirates->array[i - 1];
+    }
+
+    pirates->array[idx] = p;
+
+    pirates->list_length++;
+
+    return p;
 }
 
 pirate *list_remove(pirate_list *pirates, const char *name)
 {
-    // TODO: implement this function
-    // This line is here only so starter code compiles.
-    return NULL;
+    size_t idx = list_index_of(pirates, name);
+    if (idx == pirates->list_length) 
+    {
+        return NULL;
+    }
+
+    pirate *removed_pirate = pirates->array[idx];
+
+    // shift all elements to the left
+    for (size_t i = idx; i < pirates->list_length - 1; i++) 
+    {
+        pirates->array[i] = pirates->array[i + 1];
+    }
+
+    pirates->list_length--;
+
+    list_contract_if_necessary(pirates);
+
+    // free memory of removed_pirate
+    //pirate_destroy(removed_pirate);
+
+    return removed_pirate;
 }
 
 const pirate *list_access(const pirate_list *pirates, size_t idx)
 {
-    // TODO: implement this function
-    // This line is here only so starter code compiles.
-    return NULL;
+    // owner of the returned pirate remains with the list.
+    if (idx >= pirates->list_length) 
+    {
+        return NULL;
+    }
+    return pirates->array[idx];
 }
-
 void list_sort(pirate_list *pirates)
 {
     // TODO: implement this function
@@ -116,22 +168,69 @@ void list_sort(pirate_list *pirates)
 
 size_t list_length(const pirate_list *pirates)
 {
-    // TODO: implement this function
-    // This line is here only so starter code compiles.
-    return 0;
+    return pirates->list_length;
+
 }
 
 void list_destroy(pirate_list *pirates)
 {
-    // TODO: implement this function
+    // destroy every pirate
+    for (size_t i = 0; i < pirates->list_length; i++) 
+    {
+        pirate_destroy(pirates->array[i]);
+    }
+    // free the array
+    free(pirates->array);
+
+    // free the list
+    free(pirates);
+
 }
 
-void list_expand_if_necessary(pirate_list *pirates)
+void list_expand_if_necessary(pirate_list *pirates) 
 {
-    // TODO: Implement this function.
+    if (pirates->list_length >= pirates->capacity) // if list full, RESIZE_RATIO capacity
+    {
+        pirates->capacity *= RESIZE_RATIO;
+        pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity);
+        fprintf(stderr, "Expand to %zu\n", pirates->capacity);
+    }
 }
 
-void list_contract_if_necessary(pirate_list *pirates)
+void list_contract_if_necessary(pirate_list *pirates) 
 {
-    // TODO: Implement this function.
+    if (pirates->capacity > INITIAL_CAPACITY && pirates->list_length * RESIZE_RATIO <= pirates->capacity / RESIZE_RATIO) // check if list needs to contract
+    {
+        pirates->capacity /= RESIZE_RATIO;
+        pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity); // contract
+        fprintf(stderr, "Contract to %zu\n", pirates->capacity);
+    }
+}
+
+void print_all_pirates(pirate_list *pirates) 
+{
+    if (pirates == NULL || pirates->array == NULL) 
+    {
+        fprintf(stderr, "No pirates to print.\n");
+        return;
+    }
+    for (size_t i = 0; i < pirates->list_length; i++) 
+    {
+        if (pirates->array[i] != NULL && pirates->array[i]->name != NULL) 
+        {
+            printf("%s\n", pirates->array[i]->name);
+        }
+    }
+}
+
+int check_duplicate_pirate(const pirate_list *pirates, char *name)
+{
+    for (size_t i = 0; i < pirates->list_length; i++) 
+    {
+        if (strcmp(pirates->array[i]->name, name) == 0) 
+        {
+            return 1;
+        }
+    }
+    return 0;
 }

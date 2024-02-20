@@ -3,14 +3,23 @@
  *
  * For Hookbook A in CPSC 223 SP2024.
  *
- * Author: [your name here]
+ * Author: Braeden 
  */
 
 #include "libhookbook.h"
 
-char *freadln(char *restrict str, int count, FILE *restrict stream)
+char *freadln(char *str, int count, FILE *stream)
 {
-    // TODO: Implement this function.
-    // This line is here only so starter code compiles.
-    return NULL;
+    size_t i = 0;
+    char c = fgetc(stream);
+    if (c == EOF) {
+        return NULL;
+    }
+    while (c!='\n' && c!=EOF && i<count) {
+        str[i] = c;
+        i = i + 1;
+        c = fgetc(stream);
+    }
+    str[i] = '\0';
+    return str;
 }
