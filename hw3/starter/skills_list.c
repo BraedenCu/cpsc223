@@ -43,19 +43,18 @@ void skills_list_append(skills_list_instance_t *skills, char *skill) {
     strcpy(new_node->skill, skill);
     new_node->next = NULL;
 
-    // If the list is empty, set the new node as the head
-    if (skills->length == 0) 
-    {
-        skills->head->next = new_node;
+    if (skills->length == 0) {
+        skills->head = new_node;
         skills->tail = new_node;
     }
-    else 
-    {
+    else {
         skills->tail->next = new_node;
         skills->tail = new_node;
     }
+
     skills->length++;
 }
+
 
 //int skills_list_remove_last(skills_list_instance_t *skills){return;}
 void skills_list_destroy(skills_list_instance_t* skills) {
