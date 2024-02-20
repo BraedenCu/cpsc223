@@ -12,20 +12,25 @@
 
 #define MAX_LINE_LENGTH 127
 
+/**
+ * Pirates have a name, rank, vessel, port, treasure, and skill. The name of the pirate can be empty.
+ * All of these fields could be empty, or none.
+ * 
+*/
 pirate *pirate_create(char *name)
 {
     pirate *new_pirate = malloc(sizeof(pirate));
-    
+
     new_pirate->name = name;
-
+    
     return new_pirate;
-
-    // done
 }
+
 pirate *pirate_read(FILE *input) 
 {
     int     next_pirate_char;
     char*   line;
+    char*   name;
     pirate* new_pirate;
 
     line = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
@@ -40,13 +45,44 @@ pirate *pirate_read(FILE *input)
         return NULL;
     }
     
-    new_pirate = pirate_create(line);
+    // set the pirates name to the current line, but do NOT set it as a pointer to line
+    name = malloc((strlen(line) + 1) * sizeof(char));
+    strcpy(name, line);
+    new_pirate = pirate_create(name); // we have effectively created a pirate with the proper name
+    
+    // now, continue reading the rest of the pirate's profile until a newline character
+    while (freadln(line, MAX_LINE_LENGTH, input) != NULL && line[0] != '\0') 
+    {
+        if (line[0] == 'r' && line[1] == ':') 
+        {
+            new_pirate->rank = malloc((strlen(line) - 2) * sizeof(char));
+            strcpy(new_pirate->rank, line + 2);
+        }
+        if (line[0] == 'v' && line[1] == ':') 
+        {
+            new_pirate->vessel = malloc((strlen(line) - 2) * sizeof(char));
+            strcpy(new_pirate->vessel, line + 2);
+        }
+        if (line[0] == 'p' && line[1] == ':') 
+        {
+            new_pirate->port = malloc((strlen(line) - 2) * sizeof(char));
+            strcpy(new_pirate->port, line + 2);
+        }
+        if (line[0] == 't' && line[1] == ':') 
+        {
+            new_pirate->treasure = malloc((strlen(line) - 2) * sizeof(char));
+            strcpy(new_pirate->treasure, line + 2);
+        }
+        if (line[0] == 's' && line[1] == ':') 
+        {
+            new_pirate->skill = malloc((strlen(line) - 2) * sizeof(char));
+            strcpy(new_pirate->skill, line + 2);
+        }
+    }
     
     // free(line);       // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY! 
                          // if uncommented, the pirate list will not be populated
     
-    // fscanf(input, "\n"); // cannot simply use fscanf, will skip blank pirate names
-
     next_pirate_char = fgetc(input);
 
     if (next_pirate_char != '\n' && next_pirate_char != EOF) 
@@ -57,11 +93,39 @@ pirate *pirate_read(FILE *input)
     return new_pirate; 
 }
 
-void pirate_print(const pirate *p, FILE *restrict output)
+void pirate_print_A(const pirate *p, FILE *restrict output)
 {
     if (p!=NULL && p->name!=NULL) 
     {
         fprintf(output, "%s\n", p->name);
+    }
+}
+
+void pirate_print(const pirate *p, FILE *restrict output)
+{
+    if (p!=NULL && p->name!=NULL) 
+    {
+        fprintf(output, "Pirate: ""%s\n", p->name);
+    }
+    if (p!=NULL && p->rank!=NULL) 
+    {
+        fprintf(output, "  Rank: %s\n", p->rank);
+    }
+    if (p!=NULL && p->vessel!=NULL) 
+    {
+        fprintf(output, "  Vessel: %s\n", p->vessel);
+    }
+    if (p!=NULL && p->port!=NULL) 
+    {
+        fprintf(output, "  Port: %s\n", p->port);
+    }
+    if (p!=NULL && p->treasure!=NULL) 
+    {
+        fprintf(output, "  Treasure: %s\n", p->treasure);
+    }
+    if (p!=NULL && p->skill!=NULL) 
+    {
+        fprintf(output, "  Skill: %s\n", p->skill);
     }
 }
 

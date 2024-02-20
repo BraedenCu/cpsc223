@@ -19,8 +19,21 @@
 typedef struct pirate_t pirate;
 struct pirate_t
 {
+    /**
+     * The following consecutive non-empty lines hold pirate information, each of which is labeled with the kind of information it provides. Each line is one of the following:
+     * "r:[rank-name]", where [rank-name] is the name of this pirate's rank on their vessel, such as "captain", "first mate", or "sailor"
+     * "v:[vessel-name]", where [vessel-name] is the name of this pirate's current vessel of employ
+     * "p:[port-name]", where [port-name] is the name of this pirate's favorite port of call
+     * "t:[treasure-amount]", where [treasure-amount] is a nonnegative integer that counts the number of treasure pieces this pirate owns
+     * "s:[skill-name]" where [skill-name] is a skill that a pirate might possess, such as "swashbuckling", "treasure hunting", or "navigating"
+     * Each pirate profile in the input is followed by exactly one empty line (the last profile in the file is followed by a single newline character; the last empty line of the file is terminated by the end of the file, not a second newline)
+    */
     char *name;
-    // TODO: Expand this type definition
+    char *rank;
+    char *vessel;
+    char *port;
+    char *treasure;
+    char *skill;
 };
 
 /**
