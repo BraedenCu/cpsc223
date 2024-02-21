@@ -213,45 +213,40 @@ int skills_list_remove_last(skills_list_instance_t *skills)
 }
 
 void skills_list_sort(skills_list_instance_t *skills) {
-    if (!skills || !skills->head || !skills->head->next) {
-        return; // List is empty or has one element
-    }
-    
-    quick_sort_linked_list(skills->head, skills->tail);
-}
-
-void quick_sort_linked_list(skills_list_node* head, skills_list_node* tail) {
-    if (head == tail || head == NULL || tail == NULL) {
+    if (skills == NULL || skills->length <= 1) {
         return;
     }
 
-    // Partition the list and get new pivot
-    skills_list_node* pivot = partition_linked_list(head, tail);
+    skills_list_node *sorted = NULL; 
+    skills_list_node *current = skills->head->next; 
 
-    // Sort the sublists recursively
-    if (pivot != NULL && pivot->next != NULL) {
-        quick_sort_linked_list(head, pivot);
-        quick_sort_linked_list(pivot->next, tail);
-    }
-}
+    skills->head->next = NULL;
+    sorted = skills->head;
 
-skills_list_node* partition_linked_list(skills_list_node* head, skills_list_node* tail) {
-    char* pivotValue = tail->skill;
-    skills_list_node* smallerLast = NULL;
-    skills_list_node* current = head;
-    while (current != tail) {
-        if (strcmp(current->skill, pivotValue) < 0) {
-            // This should move current node to the "smaller" part
-            // Since we're working with a linked list, this might involve node swapping or data swapping
-            // For simplicity, you can swap skills between nodes rather than rearranging nodes
+    while (current != NULL) {
+        skills_list_node *next = current->next; 
+
+        if (strcmp(current->skill, sorted->skill) < 0) {
+            current->next = sorted;
+            sorted = current;
+        } else {
+            skills_list_node *search = sorted;
+            while (search->next != NULL && strcmp(current->skill, search->next->skill) > 0) {
+                search = search->next;
+            }
+
+            current->next = search->next;
+            search->next = current;
         }
-        current = current->next;
+
+        current = next; 
     }
 
-    // Now, move the pivot to its correct position and return its node
-    // This might involve swapping the pivot with the first element of the "greater" part
+    skills->head = sorted;
 
-    skills_list_node *pivotNode = tail;
-
-    return pivotNode; // This should be the node of the pivot after partition
+    skills_list_node *temp = skills->head;
+    while (temp != NULL && temp->next != NULL) {
+        temp = temp->next;
+    }
+    skills->tail = temp; 
 }

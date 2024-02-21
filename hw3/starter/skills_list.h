@@ -106,7 +106,11 @@ int skills_list_index_of(skills_list_instance_t *skills, char *skill);
 */
 void print_skills_list(skills_list_instance_t *skills, FILE* output);
 
-
-skills_list_node* partition_linked_list(skills_list_node* head, skills_list_node* tail);
-void quick_sort_linked_list(skills_list_node* head, skills_list_node* tail);
+/**
+ * Sort the skills list using insertion sort, 
+ * There is no required bound on sorting a skills_list!
+ * 
+ * @param skills the list of skills to sort
+ * @assumes skills is not NULL
+*/
 void skills_list_sort(skills_list_instance_t *skills);
