@@ -168,7 +168,6 @@ void list_sort(pirate_list *pirates)
     {
         return;
     }
-    // sort the skills list for each pirate
 
     for (size_t i = 0; i < pirates->list_length; i++) 
     {
@@ -299,9 +298,9 @@ void quick_sort(pirate **arr, compare_fn comparison_operator, int low, int high)
 {
     if (low < high) 
     {
-        int pi = sort_partition(arr, comparison_operator, low, high);
-        quick_sort(arr, comparison_operator, low, pi - 1);  // Before pi
-        quick_sort(arr, comparison_operator, pi + 1, high); // After pi
+        int pivot = sort_partition(arr, comparison_operator, low, high);
+        quick_sort(arr, comparison_operator, low, pivot - 1);  // before pivot
+        quick_sort(arr, comparison_operator, pivot + 1, high); // after pivot
     }
 }
 

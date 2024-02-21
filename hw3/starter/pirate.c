@@ -67,17 +67,21 @@ pirate *pirate_read(FILE *input)
                 new_pirate->rank = malloc((strlen(line) -2) * sizeof(char));
                 strcpy(new_pirate->rank, item_value);
                 break;
+                
             case 'v':
                 new_pirate->vessel = malloc((strlen(line) - 2) * sizeof(char));
                 strcpy(new_pirate->vessel, item_value);
                 break;
+
             case 'p':
                 new_pirate->port = malloc((strlen(line) - 2) * sizeof(char));
                 strcpy(new_pirate->port, item_value);
                 break;
+
             case 't':
                 new_pirate->treasure = atoi(item_value);
                 break;
+                
             case 's':
                 populate_skills_list(lst, new_pirate, line, input);
                 break;
@@ -121,12 +125,12 @@ void pirate_print(const pirate *p, FILE *restrict output)
 {
     if (p == NULL) return; 
     if (p->name != NULL) fprintf(output, "%s\n", p->name);
-    if (p->captain != NULL) fprintf(output, "    Captain: %s (%s)\n", p->captain, p->captain_vessel);
+    if (p->captain != NULL) fprintf(output, "    Captain: %s (%s)\n", p->captain, p->captain_vessel); // include captain's vessel
     if (p->rank != NULL) fprintf(output, "    Rank: %s\n", p->rank);
     if (p->vessel != NULL) fprintf(output, "    Vessel: %s\n", p->vessel);
     if (p->port != NULL) fprintf(output, "    Port: %s\n", p->port);
     if (p->treasure) fprintf(output, "    Treasure: %i\n", p->treasure); 
-    if (p->skills != NULL) print_skills_list(p->skills, output);    // unique challenges of skills list
+    if (p->skills != NULL) print_skills_list(p->skills, output);    // helper provided due too unique challenges of skills list
 }
 
 int pirate_compare_name(const pirate *a, const pirate *b)

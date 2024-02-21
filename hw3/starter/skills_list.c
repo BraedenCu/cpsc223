@@ -148,8 +148,6 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
     }
 }
 
-
-// 5 BELOW CO CO CO
 int skills_list_length(skills_list_instance_t *skills)
 {
     return skills->length;
@@ -240,7 +238,7 @@ void skills_list_sort(skills_list_instance_t *skills)
     skills->head->next = NULL;
     sorted = skills->head;
 
-    while (curr != NULL) // insertion sort loop, O(n^2)
+    while (curr != NULL) // insertion sort, O(N^2)
     {
         skills_list_node *next = curr->next; 
 
