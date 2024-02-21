@@ -119,13 +119,13 @@ void pirate_print_A(const pirate *p, FILE *restrict output)
 void pirate_print(const pirate *p, FILE *restrict output)
 {
     if (p == NULL) return; 
-    if (p->name != NULL) fprintf(output, "Pirate: %s\n", p->name);
-    if (p->rank != NULL) fprintf(output, "  Rank: %s\n", p->rank);
-    if (p->vessel != NULL) fprintf(output, "  Vessel: %s\n", p->vessel);
-    if (p->port != NULL) fprintf(output, "  Port: %s\n", p->port);
-    if (p->treasure) fprintf(output, "  Treasure: %i\n", p->treasure); 
-    if (p->skills != NULL) print_skills_list(p->skills, output);
-    if (p->captain != NULL) fprintf(output, "  Captain: %s\n", p->captain);
+    if (p->name != NULL) fprintf(output, "%s\n", p->name);
+    if (p->captain != NULL) fprintf(output, "    Captain: %s\n", p->captain);
+    if (p->rank != NULL) fprintf(output, "    Rank: %s\n", p->rank);
+    if (p->vessel != NULL) fprintf(output, "    Vessel: %s\n", p->vessel);
+    if (p->port != NULL) fprintf(output, "    Port: %s\n", p->port);
+    if (p->treasure) fprintf(output, "    Treasure: %i\n", p->treasure); 
+    if (p->skills != NULL) print_skills_list(p->skills, output);    // unique challenges of skills list
 }
 
 int pirate_compare_name(const pirate *a, const pirate *b)

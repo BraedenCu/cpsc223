@@ -168,7 +168,12 @@ void list_sort(pirate_list *pirates)
     {
         return;
     }
-
+    // sort the skills list for each pirate
+    //for (size_t i = 0; i < pirates->list_length; i++) 
+    //{
+    //    printf("sorting pirate skills")
+    //    skills_list_sort(pirates->array[i]->skills);
+    //}
     quick_sort(pirates->array, pirates->compare, 0, pirates->list_length - 1);
 }
 
