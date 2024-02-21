@@ -47,9 +47,11 @@ int main(int argc, char *argv[])
      *      pirate_list*
      *  3. Open the captains file and read from it the list of pirate/captain
      *      pairs, appearing as specified in the README
-     * 
      *  4. Sort the list in the order defined by the sort-flag command-line
      *      argument
+     * 
+     * TODO
+     * 
      *  5. Print the sorted list to stdout, conforming to the format described
      *      in the README
      *  6. Release all resources (files, memory, etc.)
@@ -71,12 +73,6 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-/**
- * Check if a pirate with the same name already exists in the list
- * 
- * @param pirates the list of pirates
- * @param name the name of the pirate
-*/
 char* check_sort_flag(int argc, char *argv[]) 
 {
     if (argc != 3 && argc != 4) 
@@ -96,15 +92,6 @@ char* check_sort_flag(int argc, char *argv[])
     return "-n";
 }
 
-/**
- * Handle Sort Behavior
- * 
- * @param pirates the list of pirates
- * @param sort_flag the sort flag
- * @assumes pirates is not NULL
- * @assumes sort_flag is not NULL
- * @assumes sort_flag is a valid flag
-*/
 compare_fn handle_sort_behavior(char *sort_flag) 
 {
     compare_fn compare;
@@ -123,18 +110,11 @@ compare_fn handle_sort_behavior(char *sort_flag)
     }
     else 
     {
-        // Handle other flags or set a default comparison function
-        compare = pirate_compare_name; // Assume you have a default compare function
+        compare = pirate_compare_name; // default to compare name
     }
     return compare;
 }
 
-/**
- * Load exclusively the pirate profiles from a file
- * 
- * @params filepath: the path to the file containing the pirate profiles
- * @return a pointer to a pirate_list containing all the pirates
-*/
 pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare) 
 {
     FILE *file = fopen(filepath, "r");
@@ -154,13 +134,10 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
         return NULL;
     }
 
-    // read first pirate, ensure that it is not an empty line
     pirate *next_profile = pirate_read(file);
 
-    // continue reading until end of file
-    while(next_profile != NULL)
+    while(next_profile != NULL) // continue reading until EOF
     {
-        // first check if duplicate pirate exists
         if(check_duplicate_pirate(all_profiles, next_profile->name) == 1)
         {
             pirate_destroy(next_profile);
@@ -174,7 +151,7 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
             return NULL;
         }
         
-        //pirate_print(next_profile, stdout);
+        //pirate_print(next_profile, stdout); // crucial debugging checkpoint
 
         next_profile = pirate_read(file);
     }

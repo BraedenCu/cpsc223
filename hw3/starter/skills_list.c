@@ -59,8 +59,6 @@ void skills_list_append(skills_list_instance_t *skills, char *skill)
     skills->length++;
 }
 
-
-//int skills_list_remove_last(skills_list_instance_t *skills){return;}
 void skills_list_destroy(skills_list_instance_t* skills) 
 {
     if (!skills) return;

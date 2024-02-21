@@ -43,23 +43,19 @@ pirate *pirate_read(FILE *input)
     }
     if (freadln(line, MAX_LINE_LENGTH, input) == NULL) 
     {
-        free(line); // clean up allocated memory if failed read
+        free(line); // failed read
         return NULL;
     }
     
-    // set the pirates name to the current line, but do NOT set it as a pointer to line
     name = malloc((strlen(line) + 1) * sizeof(char));
     strcpy(name, line);
-    new_pirate = pirate_create(name); // we have effectively created a pirate with the proper name
+    new_pirate = pirate_create(name); 
     
-    // set captain to NULL, dealt with in populate_captains
     new_pirate->captain = NULL;
 
-    // create skills list 
     skills_list_instance_t *lst = skills_list_create();
     new_pirate->skills = lst;
 
-    // now, continue reading the rest of the pirate's profile until a newline character
     while (freadln(line, MAX_LINE_LENGTH, input) != NULL && line[0] != '\0') 
     {
         if (line[0] == 'r' && line[1] == ':') 
@@ -81,10 +77,9 @@ pirate *pirate_read(FILE *input)
         {
             new_pirate->treasure = atoi(line + 2); 
         }
-        // skill is the most difficult field, send to helper
         if (line[0] == 's' && line[1] == ':') 
         {
-            populate_skills_list(lst, new_pirate, line, input);
+            populate_skills_list(lst, new_pirate, line, input); // linked list helper
         }        
     }
     
@@ -95,7 +90,7 @@ pirate *pirate_read(FILE *input)
 
     if (next_pirate_char != '\n' && next_pirate_char != EOF) 
     {
-        ungetc(next_pirate_char, input); // decrements the stream indicator position by one
+        ungetc(next_pirate_char, input); // decrements stream indicator position by 1
     }
 
     return new_pirate; 
@@ -103,15 +98,12 @@ pirate *pirate_read(FILE *input)
 
 void populate_skills_list(skills_list_instance_t *lst, pirate *p, char* line, FILE *input)
 {
-    // new skills node
     char* skill;
 
     skill = malloc((strlen(line) - 1) * sizeof(char));
 
-    // set the skill to the current line, but do NOT set it as a pointer to line
     strcpy(skill, line + 2);
 
-    // add the skill to the list
     skills_list_append(lst, skill);
 }
 
@@ -131,62 +123,39 @@ void pirate_print(const pirate *p, FILE *restrict output)
     if (p->rank != NULL) fprintf(output, "  Rank: %s\n", p->rank);
     if (p->vessel != NULL) fprintf(output, "  Vessel: %s\n", p->vessel);
     if (p->port != NULL) fprintf(output, "  Port: %s\n", p->port);
-    if (p->treasure) fprintf(output, "  Treasure: %i\n", p->treasure);      // assuming treasure is an int and 0 is considered as 'no treasure'
+    if (p->treasure) fprintf(output, "  Treasure: %i\n", p->treasure); 
     if (p->skills != NULL) print_skills_list(p->skills, output);
     if (p->captain != NULL) fprintf(output, "  Captain: %s\n", p->captain);
 }
 
 int pirate_compare_name(const pirate *a, const pirate *b)
 {
-    if (a->name == NULL && b->name == NULL) {
-        return 0;
-    }
-    else if (a->name == NULL) {
-        return 1;
-    } 
-    else if (b->name == NULL) {
-        return -1;
-    } 
-    else {
-        return strcmp(a->name, b->name); // strcmp returns 0 if equal, -1 if a < b, 1 if a > b
-    }
+    if (a->name == NULL && b->name == NULL) {   return 0;   }
+    else if (a->name == NULL)               {   return 1;   } 
+    else if (b->name == NULL)               {   return -1;  } 
+    else                                    {  return strcmp(a->name, b->name); }
     return 0;
 }
 
 int pirate_compare_vessel(const pirate *a, const pirate *b)
 {
-    if (a->vessel == NULL && b->vessel == NULL) {
-        return 0;
-    }
-    else if (a->vessel == NULL) {
-        return 1;
-    } 
-    else if (b->vessel == NULL) {
-        return -1;
-    } 
-    else {
-        return strcmp(a->vessel, b->vessel); // strcmp returns 0 if equal, -1 if a < b, 1 if a > b
-    }
+    if (a->vessel == NULL && b->vessel == NULL) {   return 0;   }
+    else if (a->vessel == NULL)                 {   return 1;   } 
+    else if (b->vessel == NULL)                 {   return -1;  } 
+    else                                        {   return strcmp(a->vessel, b->vessel); }
     return 0;
 }
 
 int pirate_compare_treasure(const pirate *a, const pirate *b)
 {
-    // note: descending! order
-    if (a->treasure == b->treasure) {
-        return 0;
-    }
-    else if (a->treasure < b->treasure) {
-        return -1;
-    } 
-    else {
-        return 1;
-    }
+    // note: descending order !
+    if (a->treasure == b->treasure)     {   return 0;   }
+    else if (a->treasure < b->treasure) {   return -1;  } 
+    else                                {   return 1;   }
 }
 
 void pirate_destroy(pirate *p)
 {
-    // free the entire pirate
     free(p->name);
     free(p->rank);
     free(p->vessel);

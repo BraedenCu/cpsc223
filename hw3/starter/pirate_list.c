@@ -79,24 +79,24 @@ void list_contract_if_necessary(pirate_list *pirates);
 
 pirate_list *list_create()
 {
-    pirate_list *pir_list = malloc(sizeof(pirate_list)); 
+    pirate_list *lst = malloc(sizeof(pirate_list)); 
 
-    pir_list -> list_length = 0;
+    lst -> list_length = 0;
     
-    pir_list -> capacity = INITIAL_CAPACITY;
+    lst -> capacity = INITIAL_CAPACITY;
     
-    pir_list -> array = calloc(pir_list->capacity, sizeof(pirate *)); // list of pirates
+    lst -> array = calloc(lst->capacity, sizeof(pirate *)); // list of pirates
 
-    return pir_list;
+    return lst;
 }
 
 pirate_list *list_create_with_cmp(compare_fn cmp)
 {
-    pirate_list *pir_list = list_create();
+    pirate_list *lst = list_create();
 
-    pir_list->compare = cmp;
+    lst -> compare = cmp;
 
-    return pir_list;
+    return lst;
 }
 
 size_t list_index_of(const pirate_list *pirates, const char *name)
@@ -114,11 +114,9 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
-    // check if list should be expanded
     list_expand_if_necessary(pirates);
     
-    // shift all elements to the right
-    for (size_t i = pirates->list_length; i > idx; i--) 
+    for (size_t i = pirates->list_length; i > idx; i--) // shift to right
     {
         pirates->array[i] = pirates->array[i - 1];
     }
@@ -140,8 +138,7 @@ pirate *list_remove(pirate_list *pirates, const char *name)
 
     pirate *removed_pirate = pirates->array[idx];
 
-    // shift all elements to the left
-    for (size_t i = idx; i < pirates->list_length - 1; i++) 
+    for (size_t i = idx; i < pirates->list_length - 1; i++) // shift to left
     {
         pirates->array[i] = pirates->array[i + 1];
     }
@@ -150,7 +147,6 @@ pirate *list_remove(pirate_list *pirates, const char *name)
 
     list_contract_if_necessary(pirates);
 
-    // free memory of removed_pirate
     //pirate_destroy(removed_pirate);
 
     return removed_pirate;
@@ -158,39 +154,37 @@ pirate *list_remove(pirate_list *pirates, const char *name)
 
 const pirate *list_access(const pirate_list *pirates, size_t idx)
 {
-    // owner of the returned pirate remains with the list.
     if (idx >= pirates->list_length) 
     {
         return NULL;
     }
+
     return pirates->array[idx];
 }
+
 void list_sort(pirate_list *pirates)
 {
     if (pirates == NULL || pirates->array == NULL || pirates->list_length <= 1) 
     {
         return;
     }
+
     quick_sort(pirates->array, pirates->compare, 0, pirates->list_length - 1);
 }
 
 size_t list_length(const pirate_list *pirates)
 {
     return pirates->list_length;
-
 }
 
 void list_destroy(pirate_list *pirates)
 {
-    // destroy every pirate
     for (size_t i = 0; i < pirates->list_length; i++) 
     {
         pirate_destroy(pirates->array[i]);
     }
-    // free the array
     free(pirates->array);
 
-    // free the list
     free(pirates);
 
 }
@@ -262,7 +256,6 @@ void populate_captains(pirate_list *pirates, const char* filepath)
         return;
     }
 
-
     line = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
     captain = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
     line_next = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
@@ -272,29 +265,19 @@ void populate_captains(pirate_list *pirates, const char* filepath)
 
     while (freadln(line, MAX_LINE_LENGTH, file) != NULL && freadln(line_next, MAX_LINE_LENGTH, file) != NULL)
     {
-
         strcpy(captain_next, line_next);
 
         strcpy(captain, line);  
 
-        //printf("Captain: %s\n", captain_next);
-       //printf("Subject: %s\n", captain);
-
         idx = list_index_of(pirates, captain);
         idx_captain = list_index_of(pirates, captain_next);
-
-
-        //printf("Index: %d\n", idx);
 
         p = (pirate *)list_access(pirates, idx);
         p_captain = (pirate *)list_access(pirates, idx_captain);
 
-        //printf("Pirate: %s\n", p->name);
-
         if (p != NULL) 
         {
             p->captain = p_captain->name;
-            //printf("Captain of %s: %s\n", p->name, p->captain);
         }
     }
 
@@ -336,6 +319,8 @@ int sort_partition(pirate **arr, compare_fn comparison_operator, int low, int hi
             sort_swap(&arr[i], &arr[j]);
         }
     }
+    
     sort_swap(&arr[i + 1], &arr[high]);
+
     return (i + 1);
 }
