@@ -4,6 +4,9 @@ v:the black pearl
 p:tortuga
 t:12
 
+jack sparrow 
+r:penis
+
 william turner
 p:port royal
 s:smithing

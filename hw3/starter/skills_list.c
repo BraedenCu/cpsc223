@@ -1,10 +1,11 @@
 /**
  * Implementation file for skills_list for HookBook B in CPSC 223 SP2024.
  *
- * Author: Braeden
+ * Author: Braeden Cullen
  */
 
 #include "skills_list.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -158,29 +159,34 @@ char *skills_list_get(skills_list_instance_t *skills, int index)
 {
     if (index < 0 || index >= skills->length) 
     {
-        return NULL;
+        return NULL; // improper input
     }
 
-    skills_list_node* current = skills->head;
+    skills_list_node* curr = skills->head;
+
     for (int i = 0; i < index; i++) 
     {
-        current = current->next;
+        curr = curr->next;
     }
-    return current->skill;
+    
+    return curr->skill;
 }
 
 int skills_list_index_of(skills_list_instance_t *skills, char *skill)
 {
-    skills_list_node* current = skills->head;
+    skills_list_node* curr = skills->head;
+
     for (int i = 0; i < skills->length; i++) 
     {
-        if (strcmp(current->skill, skill) == 0) 
+        if (strcmp(curr->skill, skill) == 0) 
         {
-            return i;
+            return i; // hit proper index
         }
-        current = current->next;
+
+        curr = curr->next;
     }
-    return -1;
+
+    return -1; // not found
 }
 
 int skills_list_remove_last(skills_list_instance_t *skills)
@@ -189,65 +195,81 @@ int skills_list_remove_last(skills_list_instance_t *skills)
     {
         return 0;
     }
-    else if (skills->length == 1) 
+
+    else if (skills->length == 1) // only one skill
     {
         free(skills->head->skill);
         free(skills->head);
+
         skills->head = NULL;
         skills->tail = NULL;
         skills->length = 0;
+
         return 1;
     }
-    else 
+    else // traverse to find tail
     {
-        skills_list_node* current = skills->head;
+        skills_list_node* curr = skills->head;
+
         for (int i = 0; i < skills->length - 2; i++) 
         {
-            current = current->next;
+            curr = curr->next;
         }
-        free(current->next->skill);
-        free(current->next);
-        current->next = NULL;
-        skills->tail = current;
+
+        free(curr->next->skill);
+        free(curr->next);
+
+        curr->next = NULL;
+        skills->tail = curr;
         skills->length--;
+
         return 1;
     }
 }
 
-void skills_list_sort(skills_list_instance_t *skills) {
-    if (skills == NULL || skills->length <= 1) {
-        return;
+void skills_list_sort(skills_list_instance_t *skills) 
+{
+    if (skills == NULL || skills->length <= 1) 
+    {
+        return; // cannot perform sort
     }
 
     skills_list_node *sorted = NULL; 
-    skills_list_node *current = skills->head->next; 
+    skills_list_node *curr = skills->head->next; 
 
     skills->head->next = NULL;
     sorted = skills->head;
 
-    while (current != NULL) {
-        skills_list_node *next = current->next; 
+    while (curr != NULL) // insertion sort loop, O(n^2)
+    {
+        skills_list_node *next = curr->next; 
 
-        if (strcmp(current->skill, sorted->skill) < 0) {
-            current->next = sorted;
-            sorted = current;
-        } else {
+        if (strcmp(curr->skill, sorted->skill) < 0) 
+        {
+            curr->next = sorted;
+            sorted = curr;
+        } 
+        else 
+        {
             skills_list_node *search = sorted;
-            while (search->next != NULL && strcmp(current->skill, search->next->skill) > 0) {
+            while (search->next != NULL && strcmp(curr->skill, search->next->skill) > 0) 
+            {
                 search = search->next;
             }
 
-            current->next = search->next;
-            search->next = current;
+            curr->next = search->next;
+            search->next = curr;
         }
 
-        current = next; 
+        curr = next; 
     }
 
     skills->head = sorted;
 
     skills_list_node *temp = skills->head;
-    while (temp != NULL && temp->next != NULL) {
+
+    while (temp != NULL && temp->next != NULL) 
+    {
         temp = temp->next;
     }
     skills->tail = temp; 

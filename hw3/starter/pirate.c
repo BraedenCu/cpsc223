@@ -48,6 +48,7 @@ pirate *pirate_read(FILE *input)
     }
     
     name = malloc((strlen(line) + 1) * sizeof(char));
+
     strcpy(name, line);
     new_pirate = pirate_create(name); 
     
@@ -58,29 +59,29 @@ pirate *pirate_read(FILE *input)
 
     while (freadln(line, MAX_LINE_LENGTH, input) != NULL && line[0] != '\0') 
     {
-        if (line[0] == 'r' && line[1] == ':') 
-        {
-            new_pirate->rank = malloc((strlen(line) - 2) * sizeof(char));
-            strcpy(new_pirate->rank, line + 2);
+        char item_tag = line[0];
+        char *item_value = line + 2; // skip tag
+
+        switch(item_tag) {
+            case 'r':
+                new_pirate->rank = malloc((strlen(line) -2) * sizeof(char));
+                strcpy(new_pirate->rank, item_value);
+                break;
+            case 'v':
+                new_pirate->vessel = malloc((strlen(line) - 2) * sizeof(char));
+                strcpy(new_pirate->vessel, item_value);
+                break;
+            case 'p':
+                new_pirate->port = malloc((strlen(line) - 2) * sizeof(char));
+                strcpy(new_pirate->port, item_value);
+                break;
+            case 't':
+                new_pirate->treasure = atoi(item_value);
+                break;
+            case 's':
+                populate_skills_list(lst, new_pirate, line, input);
+                break;
         }
-        if (line[0] == 'v' && line[1] == ':') 
-        {
-            new_pirate->vessel = malloc((strlen(line) - 2) * sizeof(char));
-            strcpy(new_pirate->vessel, line + 2);
-        }
-        if (line[0] == 'p' && line[1] == ':') 
-        {
-            new_pirate->port = malloc((strlen(line) - 2) * sizeof(char));
-            strcpy(new_pirate->port, line + 2);
-        }
-        if (line[0] == 't' && line[1] == ':') 
-        {
-            new_pirate->treasure = atoi(line + 2); 
-        }
-        if (line[0] == 's' && line[1] == ':') 
-        {
-            populate_skills_list(lst, new_pirate, line, input); // linked list helper
-        }        
     }
     
     // free(line);       // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY! 
