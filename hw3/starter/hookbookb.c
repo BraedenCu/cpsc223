@@ -54,43 +54,17 @@ int main(int argc, char *argv[])
      *      in the README
      *  6. Release all resources (files, memory, etc.)
      */
-
-    if (argc != 3 && argc != 4) 
-    {
-        fprintf(stderr, "You must enter 2 Arguments +/- 1 optional sort flag\n");
-        return 1;
-    }
-
     char* sort_flag = check_sort_flag(argc, argv);
 
-    if (sort_flag == NULL) 
-    {
-        fprintf(stderr, "Error: Invalid sort flag\n");
-        return 1;
-    }
-
-    // define compare function based on sort_flag input
     compare_fn compare = handle_sort_behavior(sort_flag);
 
     pirate_list *all_profiles = load_profiles_from_file(argv[1], compare);
 
-    if (all_profiles == NULL) 
-    {
-        fprintf(stderr, "Error: Failed to load pirates from file %s\n", argv[1]);
-        return 1;
-    }
-
     populate_captains(all_profiles, argv[2]);
-
-    if (all_profiles == NULL) 
-    {
-        fprintf(stderr, "Error: Failed to load captains from file %s\n", argv[2]);
-        return 1;
-    }
 
     list_sort(all_profiles);
 
-    print_all_pirates(all_profiles); // print pirates
+    print_all_pirates(all_profiles); 
 
     list_destroy(all_profiles);
 
@@ -103,14 +77,21 @@ int main(int argc, char *argv[])
  * @param pirates the list of pirates
  * @param name the name of the pirate
 */
-char* check_sort_flag(int argc, char *argv[]) {
+char* check_sort_flag(int argc, char *argv[]) 
+{
+    if (argc != 3 && argc != 4) 
+    {
+        fprintf(stderr, "You must enter 2 Arguments +/- 1 optional sort flag\n");
+        exit(1);
+    }
     for (int i = 0; i < argc; i++) {
         if (strcmp(argv[i], "-n") == 0 || strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "-t") == 0) {
             return argv[i];
         }
     }
     if (argc == 4) {
-        return NULL;
+        fprintf(stderr, "Error: Invalid sort flag\n");
+        exit(1);
     }
     return "-n";
 }
@@ -136,6 +117,10 @@ compare_fn handle_sort_behavior(char *sort_flag)
     {
         compare = pirate_compare_vessel;
     } 
+    else if (strcmp(sort_flag, "-t") == 0) 
+    {
+        compare = pirate_compare_treasure;
+    }
     else 
     {
         // Handle other flags or set a default comparison function
@@ -144,16 +129,14 @@ compare_fn handle_sort_behavior(char *sort_flag)
     return compare;
 }
 
-
-
-
 /**
  * Load exclusively the pirate profiles from a file
  * 
  * @params filepath: the path to the file containing the pirate profiles
  * @return a pointer to a pirate_list containing all the pirates
 */
-pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare) {
+pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare) 
+{
     FILE *file = fopen(filepath, "r");
 
     if (file == NULL) 
@@ -197,6 +180,12 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare) {
     }
 
     fclose(file);
+    
+    if (all_profiles == NULL) 
+    {
+        fprintf(stderr, "Error: Failed to load pirates from file\n");
+        exit(1);
+    }
 
     return all_profiles;
 }

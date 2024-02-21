@@ -172,16 +172,25 @@ int pirate_compare_vessel(const pirate *a, const pirate *b)
 
 int pirate_compare_treasure(const pirate *a, const pirate *b)
 {
-    // TODO: implement this function
-    // This line is here only so starter code compiles.
-    return 0;
+    // note: descending! order
+    if (a->treasure == b->treasure) {
+        return 0;
+    }
+    else if (a->treasure < b->treasure) {
+        return -1;
+    } 
+    else {
+        return 1;
+    }
 }
 
 void pirate_destroy(pirate *p)
 {
-    // free the pirate's name
+    // free the entire pirate
     free(p->name);
-
-    // free the pirate
+    free(p->rank);
+    free(p->vessel);
+    free(p->port);
+    skills_list_destroy(p->skills);
     free(p);
 }
