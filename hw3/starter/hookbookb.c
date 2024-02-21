@@ -49,9 +49,6 @@ int main(int argc, char *argv[])
      *      pairs, appearing as specified in the README
      *  4. Sort the list in the order defined by the sort-flag command-line
      *      argument
-     * 
-     * TODO
-     * 
      *  5. Print the sorted list to stdout, conforming to the format described
      *      in the README
      *  6. Release all resources (files, memory, etc.)

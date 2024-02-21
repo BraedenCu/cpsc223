@@ -120,7 +120,7 @@ void pirate_print(const pirate *p, FILE *restrict output)
 {
     if (p == NULL) return; 
     if (p->name != NULL) fprintf(output, "%s\n", p->name);
-    if (p->captain != NULL) fprintf(output, "    Captain: %s\n", p->captain);
+    if (p->captain != NULL) fprintf(output, "    Captain: %s (%s)\n", p->captain, p->captain_vessel);
     if (p->rank != NULL) fprintf(output, "    Rank: %s\n", p->rank);
     if (p->vessel != NULL) fprintf(output, "    Vessel: %s\n", p->vessel);
     if (p->port != NULL) fprintf(output, "    Port: %s\n", p->port);
@@ -160,6 +160,8 @@ void pirate_destroy(pirate *p)
     free(p->rank);
     free(p->vessel);
     free(p->port);
+    //free(p->captain);
+    //free(p->captain_vessel);
     skills_list_destroy(p->skills);
     free(p);
 }

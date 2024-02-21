@@ -33,13 +33,7 @@ skills_list_instance_t* skills_list_create()
 
 void skills_list_append(skills_list_instance_t *skills, char *skill) 
 {
-    // Create a new node
     skills_list_node *new_node = malloc(sizeof(skills_list_node));
-
-    //printf("Appending skill: %s\n", skill);
-    //printf("    Length: %d\n", skills->length);
-    //printf("    Head Node Skill: %s\n", skills->head->skill);
-    //printf("    Tail Node Skill: %s\n", skills->tail->skill);
 
     new_node->skill = malloc(strlen(skill) + 1);
 
@@ -61,21 +55,29 @@ void skills_list_append(skills_list_instance_t *skills, char *skill)
 
 void skills_list_destroy(skills_list_instance_t* skills) 
 {
-    if (!skills) return;
+    if (!skills) {
+        return; // skills list empty
+    }
 
     skills_list_node* current = skills->head;
-    while (current != NULL) {
+
+    while (current != NULL) 
+    {
         skills_list_node* next = current->next;
+
         free(current->skill);
         free(current);
+
         current = next;
     }
+
     free(skills);
 }
 
 void print_skills_list(skills_list_instance_t *skills, FILE *output) 
 {
     int num_skills_printed = 0;
+    int printed;
 
     if (!skills || skills->length == 0 || skills->head->skill == NULL) 
     {
@@ -86,7 +88,7 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
     
     while (current != NULL && current->skill != NULL) 
     {
-        int printed = 0;
+        printed = 0;
 
         skills_list_node* checker = skills->head;
         while (checker != current) 
@@ -136,7 +138,7 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
             {
                 fprintf(output,"            %s %s\n", current->skill, skill_asterisks);
             }
-            num_skills_printed +=1;
+            num_skills_printed += 1; 
 
             free(skill_asterisks);
         }

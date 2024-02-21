@@ -35,6 +35,7 @@ struct pirate_t
     char *port;
     int   treasure;
     char *captain;
+    char *captain_vessel;
 
     skills_list_instance_t *skills;
 };

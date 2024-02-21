@@ -172,7 +172,6 @@ void list_sort(pirate_list *pirates)
 
     for (size_t i = 0; i < pirates->list_length; i++) 
     {
-        fprintf(stdout, "sorting pirate skills");
         skills_list_sort(pirates->array[i]->skills);
     }
     quick_sort(pirates->array, pirates->compare, 0, pirates->list_length - 1);
@@ -284,6 +283,7 @@ void populate_captains(pirate_list *pirates, const char* filepath)
         if (p != NULL) 
         {
             p->captain = p_captain->name;
+            p->captain_vessel = p_captain->vessel;
         }
     }
 
