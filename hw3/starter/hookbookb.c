@@ -14,7 +14,7 @@
  * 
  * @return a pointer to a new pirate with given name
 */
-pirate_list* load_profiles_from_file(const char* filepath);
+pirate_list* load_profiles_from_file(const char* filepath, compare_fn comparison_function);
 
 /**
  * Check if a pirate with the same name already exists in the list
@@ -33,7 +33,7 @@ char* check_sort_flag(int argc, char *argv[]);
  * @assumes sort_flag is not NULL
  * @assumes sort_flag is a valid flag
 */
-void handle_sort_behavior(pirate_list *pirates, char *sort_flag);
+compare_fn handle_sort_behavior(char *sort_flag);
 
 int main(int argc, char *argv[])
 {
@@ -69,7 +69,10 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    pirate_list *all_profiles = load_profiles_from_file(argv[1]);
+    // define compare function based on sort_flag input
+    compare_fn compare = handle_sort_behavior(sort_flag);
+
+    pirate_list *all_profiles = load_profiles_from_file(argv[1], compare);
 
     if (all_profiles == NULL) 
     {
@@ -85,7 +88,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    handle_sort_behavior(all_profiles, sort_flag); // handle sort
+    list_sort(all_profiles);
 
     print_all_pirates(all_profiles); // print pirates
 
@@ -121,20 +124,27 @@ char* check_sort_flag(int argc, char *argv[]) {
  * @assumes sort_flag is not NULL
  * @assumes sort_flag is a valid flag
 */
-void handle_sort_behavior(pirate_list *pirates, char *sort_flag) {
+compare_fn handle_sort_behavior(char *sort_flag) 
+{
+    compare_fn compare;
+
     if (strcmp(sort_flag, "-n") == 0) 
     {
-        list_sort(pirates);
+        compare = pirate_compare_name;
     } 
     else if (strcmp(sort_flag, "-v") == 0) 
     {
-        return;
+        compare = pirate_compare_vessel;
     } 
-    else if (strcmp(sort_flag, "-t") == 0) 
+    else 
     {
-        return;
+        // Handle other flags or set a default comparison function
+        compare = pirate_compare_name; // Assume you have a default compare function
     }
+    return compare;
 }
+
+
 
 
 /**
@@ -143,7 +153,7 @@ void handle_sort_behavior(pirate_list *pirates, char *sort_flag) {
  * @params filepath: the path to the file containing the pirate profiles
  * @return a pointer to a pirate_list containing all the pirates
 */
-pirate_list* load_profiles_from_file(const char* filepath) {
+pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare) {
     FILE *file = fopen(filepath, "r");
 
     if (file == NULL) 
@@ -152,7 +162,7 @@ pirate_list* load_profiles_from_file(const char* filepath) {
         return NULL;
     }
 
-    pirate_list *all_profiles = list_create();
+    pirate_list *all_profiles = list_create_with_cmp(compare);
 
     if (all_profiles == NULL) 
     {

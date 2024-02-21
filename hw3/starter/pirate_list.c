@@ -17,9 +17,10 @@
 
 struct pirate_list_instance_t
 {
-    size_t list_length;
-    size_t capacity;
-    pirate **array; // pointing to a pointer that points to a pirate
+    size_t      list_length;
+    size_t      capacity;
+    pirate      **array; // pointing to a pointer that points to a pirate
+    compare_fn  compare; // comparison function 
 };
 
 /***********************
@@ -91,9 +92,11 @@ pirate_list *list_create()
 
 pirate_list *list_create_with_cmp(compare_fn cmp)
 {
-    // TODO: implement this function
-    // This line is here only so starter code compiles.
-    return NULL;
+    pirate_list *pir_list = list_create();
+
+    pir_list->compare = cmp;
+
+    return pir_list;
 }
 
 size_t list_index_of(const pirate_list *pirates, const char *name)
@@ -168,7 +171,7 @@ void list_sort(pirate_list *pirates)
     {
         return;
     }
-    quick_sort(pirates->array, 0, pirates->list_length - 1);
+    quick_sort(pirates->array, pirates->compare, 0, pirates->list_length - 1);
 }
 
 size_t list_length(const pirate_list *pirates)
@@ -303,13 +306,13 @@ void populate_captains(pirate_list *pirates, const char* filepath)
 }
 
 
-void quick_sort(pirate **arr, int low, int high) 
+void quick_sort(pirate **arr, compare_fn comparison_operator, int low, int high) 
 {
     if (low < high) 
     {
-        int pi = sort_partition(arr, low, high);
-        quick_sort(arr, low, pi - 1);  // Before pi
-        quick_sort(arr, pi + 1, high); // After pi
+        int pi = sort_partition(arr, comparison_operator, low, high);
+        quick_sort(arr, comparison_operator, low, pi - 1);  // Before pi
+        quick_sort(arr, comparison_operator, pi + 1, high); // After pi
     }
 }
 
@@ -320,14 +323,14 @@ void sort_swap(pirate **a, pirate **b)
     *b = t;
 }
 
-int sort_partition(pirate **arr, int low, int high) 
+int sort_partition(pirate **arr, compare_fn comparison_operator, int low, int high) 
 {
     pirate *pivot = arr[high]; // rightmost element as pivot
     int i = (low - 1); // index of smaller element
 
     for (int j = low; j <= high - 1; j++) 
     {
-        if (pirate_compare_name(arr[j], pivot) <= 0) // if curr element is <= pivot
+        if (comparison_operator(arr[j], pivot) <= 0) // if curr element is <= pivot
         {
             i++; // inc index of smaller element
             sort_swap(&arr[i], &arr[j]);

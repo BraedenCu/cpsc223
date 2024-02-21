@@ -6,6 +6,7 @@ t:12
 
 william turner
 p:port royal
+v:cock
 s:smithing
 s:smithing
 s:fencing
@@ -15,6 +16,7 @@ s:fencing
 
 alph turner
 p:port royal
+v:boob
 s:smithing
 s:smithing
 s:fencing
@@ -24,8 +26,8 @@ s:fencing
 
 elizabeth swan
 r:queen
+v:apple
 t:367
-v:the flying dutchman
 p:port royal
 s:leadership
 s:subterfuge

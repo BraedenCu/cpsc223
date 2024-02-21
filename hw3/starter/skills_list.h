@@ -28,17 +28,17 @@
 
 
 typedef struct skills_list_node {
-    char* skill; // The data in the node
-    struct skills_list_node* next; // The next node in the list
+    char*                       skill; // The data in the node
+    struct skills_list_node*    next; // The next node in the list
 } skills_list_node;
 
 /**
  * Node within a singly-linked list of skills.
 */
 typedef struct skills_list_instance_t {
-    skills_list_node* head;
-    skills_list_node* tail;
-    int length;
+    skills_list_node*   head;
+    skills_list_node*   tail;
+    int                 length;
 } skills_list_instance_t;
 
 /**

@@ -166,6 +166,7 @@ void populate_captains(pirate_list *pirates, const char* filepath);
  * Sort the list of pirates in lexicographical order by name using quick sort.
  * 
  * @param pirates the list to sort
+ * @param comparison_operator the comparison function to use when sorting
  * @param low the lowest index of the list
  * @param high the highest index of the list
  * @does sorts the list of pirates in lexicographical order by name using quick sort
@@ -173,7 +174,7 @@ void populate_captains(pirate_list *pirates, const char* filepath);
  * unique in the list
  *
 */
-void quick_sort(pirate **arr, int low, int high); 
+void quick_sort(pirate **arr, compare_fn comparison_operator, int low, int high); 
 
 /**
  * Helper function sort_swap for quick_sort function
@@ -190,9 +191,10 @@ void sort_swap(pirate **a, pirate **b);
  * Helper function partition for quick_sort function
  * 
  * @param pirates the list to sort
+ * @param comparison_operator the comparison function to use when sorting
  * @param low the lowest index of the list
  * @param high the highest index of the list
  * @does partitions the list of pirates in lexicographical order by name using quick sort
  * @assumes pirates is not NULL and low and high are valid indexes
 */
-int sort_partition(pirate **arr, int low, int high);
+int sort_partition(pirate **arr, compare_fn comparison_operator, int low, int high);

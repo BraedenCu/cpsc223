@@ -155,8 +155,18 @@ int pirate_compare_name(const pirate *a, const pirate *b)
 
 int pirate_compare_vessel(const pirate *a, const pirate *b)
 {
-    // TODO: implement this function
-    // This line is here only so starter code compiles.
+    if (a->vessel == NULL && b->vessel == NULL) {
+        return 0;
+    }
+    else if (a->vessel == NULL) {
+        return 1;
+    } 
+    else if (b->vessel == NULL) {
+        return -1;
+    } 
+    else {
+        return strcmp(a->vessel, b->vessel); // strcmp returns 0 if equal, -1 if a < b, 1 if a > b
+    }
     return 0;
 }
 
