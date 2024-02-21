@@ -33,7 +33,7 @@ struct pirate_t
     char *rank;
     char *vessel;
     char *port;
-    char *treasure;
+    int   treasure;
     char *captain;
 
     skills_list_instance_t *skills;

@@ -1,9 +1,11 @@
 #include "pirate.h"
 #include "pirate_list.h"
 #include "libhookbook.h"
+#include "skills_list.h"
+
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "skills_list.h"
 
 /**
  * Allocates enough memory for a pirate, and sets the pirate's name to name.
@@ -13,6 +15,15 @@
  * @return a pointer to a new pirate with given name
 */
 pirate_list* load_profiles_from_file(const char* filepath);
+
+/**
+ * Check if a pirate with the same name already exists in the list
+ * 
+ * @param pirates the list of pirates
+ * @param name the name of the pirate
+*/
+char* check_sort_flag(int argc, char *argv[]);
+
 
 int main(int argc, char *argv[])
 {
@@ -34,25 +45,20 @@ int main(int argc, char *argv[])
      *  6. Release all resources (files, memory, etc.)
      */
 
-    /**
-     * Step One: Dealing with input
-     * 
-     * 3 CLI arguments, not in order,the name of the profiles file, the name of the captains file, and a flag indicating the method by which to sort the output
-     *      The sort method flag may appear anywhere in the command-line arguments, or not appear at all.
-     *      The two non-sort-flag arguments are to be interpreted in left-to-right order: the first-appearing one is the list of pirate profiles and the second-appearing one is the list of pirates and their captains.
-     * If present, the sort flag argument should be one of "-n", "-v", or "-t"
-     *      -n: sort the output in ascending order by the pirates' names
-     *      -v: sort the output in ascending order by the pirates' vessels
-     *      -t: sort the output in descending order by the pirates' treasures
-     *      Default sort: the output should be sorted in ascending order by the pirates' names (as if the -n sort flag was provided). Your sorting algorithm must break ties by sorting tied pirates in ascending order of their names.
-    */
-    if (argc != 4) 
+    if (argc != 3 && argc != 4) 
     {
-        fprintf(stderr, "Must Enter Three Arguments");
+        fprintf(stderr, "You must enter 2 Arguments +/- 1 optional sort flag\n");
         return 1;
     }
 
-    // first, lets create the pirate profiles.                                  (assume profiles are the first argument, TODO -> resolve assumption)
+    char* sort_flag = check_sort_flag(argc, argv);
+
+    if (sort_flag == NULL) 
+    {
+        fprintf(stderr, "Error: Invalid sort flag\n");
+        return 1;
+    }
+
     pirate_list *all_profiles = load_profiles_from_file(argv[1]);
 
     if (all_profiles == NULL) 
@@ -61,7 +67,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // next, lets create the pirate/captain pairs.                              (assume pairs are the second argument, TODO -> resolve assumption)
     populate_captains(all_profiles, argv[2]);
 
     if (all_profiles == NULL) 
@@ -70,14 +75,32 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // print all pirate profiles
     print_all_pirates(all_profiles);
 
-    // cleanup
     list_destroy(all_profiles);
 
     return 0;
 }
+
+/**
+ * Check if a pirate with the same name already exists in the list
+ * 
+ * @param pirates the list of pirates
+ * @param name the name of the pirate
+*/
+char* check_sort_flag(int argc, char *argv[]) {
+    for (int i = 0; i < argc; i++) {
+        if (strcmp(argv[i], "-n") == 0 || strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "-t") == 0) {
+            return argv[i];
+        }
+    }
+    if (argc == 4) {
+        return NULL;
+    }
+    return "-n";
+}
+
+
 
 /**
  * Load exclusively the pirate profiles from a file
