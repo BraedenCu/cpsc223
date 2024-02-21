@@ -24,6 +24,13 @@ pirate *pirate_create(char *name)
     pirate *new_pirate = malloc(sizeof(pirate));
 
     new_pirate->name = name;
+
+    new_pirate->rank = NULL;
+    new_pirate->vessel = NULL;
+    new_pirate->port = NULL;
+    new_pirate->treasure = 0;
+    new_pirate->captain = NULL;
+    new_pirate->captain_vessel = NULL;
     
     return new_pirate;
 }
@@ -64,17 +71,17 @@ pirate *pirate_read(FILE *input)
 
         switch(item_tag) {
             case 'r':
-                new_pirate->rank = malloc((strlen(line) -2) * sizeof(char));
+                new_pirate->rank = malloc((strlen(line) + 1) * sizeof(char));
                 strcpy(new_pirate->rank, item_value);
                 break;
                 
             case 'v':
-                new_pirate->vessel = malloc((strlen(line) - 2) * sizeof(char));
+                new_pirate->vessel = malloc((strlen(line) + 1) * sizeof(char));
                 strcpy(new_pirate->vessel, item_value);
                 break;
 
             case 'p':
-                new_pirate->port = malloc((strlen(line) - 2) * sizeof(char));
+                new_pirate->port = malloc((strlen(line) + 1) * sizeof(char));
                 strcpy(new_pirate->port, item_value);
                 break;
 
@@ -88,8 +95,8 @@ pirate *pirate_read(FILE *input)
         }
     }
     
-    // free(line);       // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY! 
-                         // if uncommented, the pirate list will not be populated
+    free(line);     // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY! 
+                    // if uncommented, the pirate list will not be populated
     
     next_pirate_char = fgetc(input);
 
@@ -161,10 +168,10 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 
 void pirate_destroy(pirate *p)
 {
-    free(p->name);
-    free(p->rank);
-    free(p->vessel);
-    free(p->port);
+    if (p->name != NULL)    free(p->name);
+    if (p->rank !=NULL)     free(p->rank);
+    if (p->rank !=NULL)     free(p->vessel);
+    if (p->rank !=NULL)     free(p->port);
     //free(p->captain);
     //free(p->captain_vessel);
     skills_list_destroy(p->skills);

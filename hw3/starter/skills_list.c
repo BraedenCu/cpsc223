@@ -60,16 +60,17 @@ void skills_list_destroy(skills_list_instance_t* skills)
         return; // skills list empty
     }
 
-    skills_list_node* current = skills->head;
+    skills_list_node* curr = skills->head;
+    skills_list_node* next  =   NULL;
 
-    while (current != NULL) 
+    while (curr != NULL) 
     {
-        skills_list_node* next = current->next;
+        next = curr->next;
+        
+        free(curr->skill);
+        free(curr);
 
-        free(current->skill);
-        free(current);
-
-        current = next;
+        curr = next;
     }
 
     free(skills);
@@ -92,17 +93,18 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
         printed = 0;
 
         skills_list_node* checker = skills->head;
+
         while (checker != current) 
         {
             if (strcmp(checker->skill, current->skill) == 0) 
             {
-                printed = 1;
+                printed = 1; // already printed
                 break;
             }
-            checker = checker->next;
+            checker = checker->next; // move to next node
         }
 
-        if (printed == 0) 
+        if (printed == 0) // only print if not already printed
         {
             int count = 1; 
             skills_list_node* counter = current->next;
@@ -120,15 +122,17 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
 
             for (int i = 0; i + 1 < count; i++) 
             {
-                skill_asterisks[i] = '*';
+                skill_asterisks[i] = '*'; // add asterisks
             }
 
-            skill_asterisks[count] = '\0'; // Null terminator
+            skill_asterisks[count] = '\0'; // null terminator for strings
             
-            if (count == 1 && num_skills_printed == 0) {
+            if (count == 1 && num_skills_printed == 0) 
+            {
                 fprintf(output, "    Skills: %s\n", current->skill);
             }
-            else if (count == 1 && num_skills_printed >= 0) {
+            else if (count == 1 && num_skills_printed >= 0) 
+            {
                 fprintf(output, "            %s\n", current->skill);
             }
             else if(num_skills_printed == 0 && count >= 1) 
@@ -139,6 +143,7 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
             {
                 fprintf(output,"            %s %s\n", current->skill, skill_asterisks);
             }
+            
             num_skills_printed += 1; 
 
             free(skill_asterisks);
