@@ -13,6 +13,15 @@ s:fencing
 s:fencing
 s:fencing
 
+alph turner
+p:port royal
+s:smithing
+s:smithing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+
 elizabeth swan
 r:queen
 t:367

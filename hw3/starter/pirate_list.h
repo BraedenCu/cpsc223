@@ -7,8 +7,8 @@
  *
  * TO STUDENT: You may add to this file, but do not change anything that is
  *   already here!
- * Modified by: [your name here] on [date of modification]
- * Changelog: [what you added to this file]
+ * Modified by: Braeden on Feb 20
+ * Changelog: Added quicksort and qsort helper functions
  */
 
 #include <stdlib.h>
@@ -160,3 +160,39 @@ int check_duplicate_pirate(const pirate_list *pirates, char *name);
  * @assumes pirates is not NULL
 */
 void populate_captains(pirate_list *pirates, const char* filepath);
+
+
+/**
+ * Sort the list of pirates in lexicographical order by name using quick sort.
+ * 
+ * @param pirates the list to sort
+ * @param low the lowest index of the list
+ * @param high the highest index of the list
+ * @does sorts the list of pirates in lexicographical order by name using quick sort
+ * @assumes pirates is not NULL and every pirate in the list has a name that is
+ * unique in the list
+ *
+*/
+void quick_sort(pirate **arr, int low, int high); 
+
+/**
+ * Helper function sort_swap for quick_sort function
+ * 
+ * @param a the first pirate to swap
+ * @param b the second pirate to swap
+ * @does swaps the pirates at index low and high
+ * @assumes pirates is not NULL and low and high are valid indexes
+ * 
+*/
+void sort_swap(pirate **a, pirate **b); 
+
+/**
+ * Helper function partition for quick_sort function
+ * 
+ * @param pirates the list to sort
+ * @param low the lowest index of the list
+ * @param high the highest index of the list
+ * @does partitions the list of pirates in lexicographical order by name using quick sort
+ * @assumes pirates is not NULL and low and high are valid indexes
+*/
+int sort_partition(pirate **arr, int low, int high);

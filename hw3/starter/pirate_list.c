@@ -164,7 +164,11 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
 }
 void list_sort(pirate_list *pirates)
 {
-    // TODO: implement this function
+    if (pirates == NULL || pirates->array == NULL || pirates->list_length <= 1) 
+    {
+        return;
+    }
+    quick_sort(pirates->array, 0, pirates->list_length - 1);
 }
 
 size_t list_length(const pirate_list *pirates)
@@ -296,4 +300,39 @@ void populate_captains(pirate_list *pirates, const char* filepath)
     free(line_next);
     free(captain_next);
     fclose(file);
+}
+
+
+void quick_sort(pirate **arr, int low, int high) 
+{
+    if (low < high) 
+    {
+        int pi = sort_partition(arr, low, high);
+        quick_sort(arr, low, pi - 1);  // Before pi
+        quick_sort(arr, pi + 1, high); // After pi
+    }
+}
+
+void sort_swap(pirate **a, pirate **b) 
+{
+    pirate *t = *a;
+    *a = *b;
+    *b = t;
+}
+
+int sort_partition(pirate **arr, int low, int high) 
+{
+    pirate *pivot = arr[high]; // rightmost element as pivot
+    int i = (low - 1); // index of smaller element
+
+    for (int j = low; j <= high - 1; j++) 
+    {
+        if (pirate_compare_name(arr[j], pivot) <= 0) // if curr element is <= pivot
+        {
+            i++; // inc index of smaller element
+            sort_swap(&arr[i], &arr[j]);
+        }
+    }
+    sort_swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
 }

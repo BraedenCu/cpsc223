@@ -24,6 +24,16 @@ pirate_list* load_profiles_from_file(const char* filepath);
 */
 char* check_sort_flag(int argc, char *argv[]);
 
+/**
+ * Handle Sort Behavior
+ * 
+ * @param pirates the list of pirates
+ * @param sort_flag the sort flag
+ * @assumes pirates is not NULL
+ * @assumes sort_flag is not NULL
+ * @assumes sort_flag is a valid flag
+*/
+void handle_sort_behavior(pirate_list *pirates, char *sort_flag);
 
 int main(int argc, char *argv[])
 {
@@ -75,7 +85,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    print_all_pirates(all_profiles);
+    handle_sort_behavior(all_profiles, sort_flag); // handle sort
+
+    print_all_pirates(all_profiles); // print pirates
 
     list_destroy(all_profiles);
 
@@ -100,6 +112,29 @@ char* check_sort_flag(int argc, char *argv[]) {
     return "-n";
 }
 
+/**
+ * Handle Sort Behavior
+ * 
+ * @param pirates the list of pirates
+ * @param sort_flag the sort flag
+ * @assumes pirates is not NULL
+ * @assumes sort_flag is not NULL
+ * @assumes sort_flag is a valid flag
+*/
+void handle_sort_behavior(pirate_list *pirates, char *sort_flag) {
+    if (strcmp(sort_flag, "-n") == 0) 
+    {
+        list_sort(pirates);
+    } 
+    else if (strcmp(sort_flag, "-v") == 0) 
+    {
+        return;
+    } 
+    else if (strcmp(sort_flag, "-t") == 0) 
+    {
+        return;
+    }
+}
 
 
 /**
