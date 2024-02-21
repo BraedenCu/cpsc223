@@ -12,9 +12,7 @@
  * 
  * @return a pointer to a new pirate with given name
 */
-pirate_list* load_pirates_from_file(const char* filepath);
 pirate_list* load_profiles_from_file(const char* filepath);
-//pirate_list* populate_captains(pirate_list *pirates, const char* filepath);
 
 int main(int argc, char *argv[])
 {
@@ -28,6 +26,7 @@ int main(int argc, char *argv[])
      *      pirate_list*
      *  3. Open the captains file and read from it the list of pirate/captain
      *      pairs, appearing as specified in the README
+     * 
      *  4. Sort the list in the order defined by the sort-flag command-line
      *      argument
      *  5. Print the sorted list to stdout, conforming to the format described
@@ -47,13 +46,13 @@ int main(int argc, char *argv[])
      *      -t: sort the output in descending order by the pirates' treasures
      *      Default sort: the output should be sorted in ascending order by the pirates' names (as if the -n sort flag was provided). Your sorting algorithm must break ties by sorting tied pirates in ascending order of their names.
     */
-    if (argc != 3) 
+    if (argc != 4) 
     {
         fprintf(stderr, "Must Enter Three Arguments");
         return 1;
     }
 
-    // first, lets create the pirate profiles. (assume profiles are the first argument)
+    // first, lets create the pirate profiles.                                  (assume profiles are the first argument, TODO -> resolve assumption)
     pirate_list *all_profiles = load_profiles_from_file(argv[1]);
 
     if (all_profiles == NULL) 
@@ -62,7 +61,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // next, lets create the pirate/captain pairs. (assume pairs are the second argument)
+    // next, lets create the pirate/captain pairs.                              (assume pairs are the second argument, TODO -> resolve assumption)
     populate_captains(all_profiles, argv[2]);
 
     if (all_profiles == NULL) 
@@ -70,33 +69,12 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error: Failed to load captains from file %s\n", argv[2]);
         return 1;
     }
-    // print all pirates
+
+    // print all pirate profiles
     print_all_pirates(all_profiles);
 
+    // cleanup
     list_destroy(all_profiles);
-
-    // now, lets determine which sorting algorithm should be used (assume sort flag is the third argument)
-
-    /*
-    if (argc != 2) 
-    {
-        fprintf(stderr, "Must Enter Three Arguments");
-        return 1;
-    }
-    //pirate_list *all_pirates = load_pirates_from_file(argv[1]);
-    if (all_pirates == NULL) 
-    {
-        fprintf(stderr, "Error: Failed to load pirates from file %s\n", argv[1]);
-        return 1;
-    }
-        
-    list_sort(all_pirates);
-
-    print_all_pirates(all_pirates);
-
-    list_destroy(all_pirates); 
-
-    */
 
     return 0;
 }
@@ -155,62 +133,3 @@ pirate_list* load_profiles_from_file(const char* filepath) {
     return all_profiles;
 }
 
-
-/**
- * From HookbookA
- * 
-*/
-pirate_list* load_pirates_from_file(const char* filepath) 
-{
-    FILE *file = fopen(filepath, "r");
-    
-    if (file == NULL) 
-    {
-        fprintf(stderr, "Error: Cannot open file %s\n", filepath);
-        return NULL;
-    }
-
-    pirate_list *all_pirates = list_create();
-
-    if (all_pirates == NULL) 
-    {
-        fprintf(stderr, "Error: Failed to create a pirate list\n");
-        fclose(file);
-        return NULL;
-    }
-
-    // read first pirate, ensure that it is not an empty line
-    pirate *next_pirate = pirate_read(file); 
-    
-    if (next_pirate == NULL) 
-    {
-        fprintf(stderr, "Error: Failed to read a pirate from the file\n");
-        list_destroy(all_pirates);
-        fclose(file);
-        return NULL;
-    }
-
-    // continue reading until end of file
-    while (next_pirate != NULL) 
-    {
-        // first check if duplicate pirate exists
-        if(check_duplicate_pirate(all_pirates, next_pirate->name) == 1)
-        {
-            pirate_destroy(next_pirate);
-        }
-        else if (list_insert(all_pirates, next_pirate, list_length(all_pirates)) == NULL)
-        { 
-            fprintf(stderr, "Error: Failed to insert a pirate into the list\n");
-            pirate_destroy(next_pirate);
-            list_destroy(all_pirates);
-            fclose(file);
-            return NULL;
-        }
-        //pirate_print(next_pirate, stdout);
-        next_pirate = pirate_read(file);
-    }
-
-    fclose(file);
-
-    return all_pirates;
-}
