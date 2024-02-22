@@ -11,9 +11,10 @@
  * Changelog: Added quicksort and qsort helper functions
  */
 
-#include <stdlib.h>
 #include "pirate.h"
 #include "libhookbook.h"
+
+#include <stdlib.h>
 
 /**
  * Type of a list of pirates, as an opaque struct.
