@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 pirate_list* load_pirates_from_file(const char* filepath) 
 {
     FILE *file = fopen(filepath, "r");
-    
+
     if (file == NULL) 
     {
         fprintf(stderr, "Error: Cannot open file %s\n", filepath);
@@ -72,7 +72,7 @@ pirate_list* load_pirates_from_file(const char* filepath)
 
     // read first pirate, ensure that it is not an empty line
     pirate *next_pirate = pirate_read(file); 
-    
+
     if (next_pirate == NULL) 
     {
         fprintf(stderr, "Error: Failed to read a pirate from the file\n");
@@ -84,11 +84,12 @@ pirate_list* load_pirates_from_file(const char* filepath)
     // continue reading until end of file
     while (next_pirate != NULL) 
     {
-        // first check if duplicate pirate exists
+        // first check if duplicate pirate_destroyirate exists
         if(check_duplicate_pirate(all_pirates, next_pirate->name) == 1)
         {
             pirate_destroy(next_pirate);
         }
+        /*
         else if (list_insert(all_pirates, next_pirate, list_length(all_pirates)) == NULL)
         { 
             fprintf(stderr, "Error: Failed to insert a pirate into the list\n");
@@ -96,7 +97,8 @@ pirate_list* load_pirates_from_file(const char* filepath)
             list_destroy(all_pirates);
             fclose(file);
             return NULL;
-        }
+        }*/
+        list_insert(all_pirates, next_pirate, list_length(all_pirates));
         //pirate_print(next_pirate, stdout);
         next_pirate = pirate_read(file);
     }

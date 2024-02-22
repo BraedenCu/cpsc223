@@ -106,10 +106,10 @@ int pirate_compare_name(const pirate *a, const pirate *b)
 void pirate_destroy(pirate *p)
 {
     // free the pirate's name
-    free(p->name);
+    //free(p->name);
 
     // free the pirate
-    free(p);
+    //free(p);
 
     // done
 }
