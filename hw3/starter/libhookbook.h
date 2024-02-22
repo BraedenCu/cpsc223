@@ -13,7 +13,6 @@
  * Modified by: [your name here] on [date of modification]
  * Changelog: [what you added to this file]
  */
- 
 #include "pirate.h"
 
 #include <stdio.h>
