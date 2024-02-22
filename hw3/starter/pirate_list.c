@@ -14,7 +14,7 @@
 
 #define INITIAL_CAPACITY 25
 #define RESIZE_RATIO 2
-#define MAX_LINE_LENGTH 127
+#define MAX_LINE_LENGTH 1000
 
 
 struct pirate_list_instance_t

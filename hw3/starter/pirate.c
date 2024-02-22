@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LINE_LENGTH 127
+#define MAX_LINE_LENGTH 1000
 
 /**
  * Pirates have a name, rank, vessel, port, treasure, and skill. The name of the pirate can be empty.
