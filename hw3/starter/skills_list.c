@@ -80,7 +80,8 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
 {
     int num_skills_printed = 0;
     int printed;
-
+    int count;
+    
     if (!skills || skills->length == 0 || skills->head->skill == NULL) 
     {
         return; // skills list empty
@@ -106,7 +107,8 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
 
         if (printed == 0) // only print if not already printed
         {
-            int count = 1; 
+            count = 1; 
+
             skills_list_node* counter = current->next;
 
             while (counter != NULL) 
@@ -120,13 +122,15 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
 
             char* skill_asterisks = malloc((count + 1) * sizeof(char));
 
-            for (int i = 0; i + 1 < count; i++) 
+            for (int i = 0; i < count - 1; i++) 
             {
-                skill_asterisks[i] = '*'; // add asterisks
+                skill_asterisks[i] = '*';
             }
 
+            skill_asterisks[count - 1] = '\0';
+
             skill_asterisks[count] = '\0'; // null terminator for strings
-            
+
             if (count == 1 && num_skills_printed == 0) 
             {
                 fprintf(output, "    Skills: %s\n", current->skill);

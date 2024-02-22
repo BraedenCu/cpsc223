@@ -4,13 +4,49 @@ v:the black pearl
 p:tortuga
 t:12
 
-
-r:penis
+william turner son
+p:port royal
+s:smithing
+s:smithing
+s:smithing
+s:smithing
+s:smithing
+s:smithing
+s:smithing
+s:smithing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
 
 william turner
 p:port royal
 s:smithing
 s:smithing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
+s:fencing
 s:fencing
 s:fencing
 s:fencing
