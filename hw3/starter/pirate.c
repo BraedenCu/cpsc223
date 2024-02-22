@@ -117,6 +117,8 @@ void populate_skills_list(skills_list_instance_t *lst, pirate *p, char* line, FI
     strcpy(skill, line + 2);
 
     skills_list_append(lst, skill);
+    
+    free(skill);
 }
 
 
