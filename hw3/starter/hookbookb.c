@@ -121,7 +121,6 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
     {
         if (check_duplicate_pirate(all_profiles, next_profile->name) == 1)
         {
-            fprintf("Duplicate Pirate: %s\n", next_profile->name);
             pirate_destroy(next_profile);
         }
         else 

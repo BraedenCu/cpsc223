@@ -120,7 +120,7 @@ void print_skills_list(skills_list_instance_t *skills, FILE *output)
 
             char* skill_asterisks = malloc((count + 1) * sizeof(char));
 
-            for (int i = 0; i + 1 < count; i++) 
+            for (int i = 0; i < count; i++) 
             {
                 skill_asterisks[i] = '*'; // add asterisks
             }
