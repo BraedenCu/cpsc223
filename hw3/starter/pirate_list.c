@@ -6,6 +6,8 @@
 
 #include "pirate_list.h"
 #include "pirate.h"
+#include "libhookbook.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
