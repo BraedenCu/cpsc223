@@ -203,18 +203,18 @@ int pirate_compare_vessel(const pirate *a, const pirate *b)
     if (a->vessel && b-> vessel)                        
     { 
         comparison_result = strcmp(a->vessel, b->vessel); 
-        if (comparison_result == 0)                     
+        
+        if (comparison_result != 0)                     
         {   
-            return pirate_compare_name(a, b); 
+            return comparison_result;
         }
         else
         {   
-            return comparison_result; 
+            return pirate_compare_name(a, b); 
         }    
     }
-    else if (a->vessel == NULL && b->vessel == NULL)    {   return 0;   }
-    else if (a->vessel == NULL)                         {   return 1;   } 
-    else if (b->vessel == NULL)                         {   return -1;  } 
+    else if (!a->vessel && b->vessel)                   {   return 1;   }
+    else if (a->vessel && !b->vessel)                   {   return -1;   } 
     else                                                {   return pirate_compare_name(a, b); }
 }
 
