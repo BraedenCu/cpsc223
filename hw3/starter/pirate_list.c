@@ -217,16 +217,26 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
 
 void list_sort(pirate_list *pirates)
 {
-    if (pirates == NULL || pirates->array == NULL || pirates->list_length <= 1) 
-    {
-        return;
-    }
-
+    
     for (size_t i = 0; i < pirates->list_length; i++) 
     {
         skills_list_sort(pirates->array[i]->skills);
     }
-    quick_sort(pirates->array, pirates->compare, 0, pirates->list_length - 1);
+    
+    if (!(pirates == NULL || pirates->array == NULL || pirates->list_length <= 1))
+    {
+        if (pirates->compare == NULL) 
+        {
+            quick_sort(pirates->array, pirate_compare_name, 0, pirates->list_length - 1);
+            return;
+        }
+        else 
+        {
+            quick_sort(pirates->array, pirates->compare, 0, pirates->list_length - 1);
+
+        }
+    }
+    
 }
 
 size_t list_length(const pirate_list *pirates)

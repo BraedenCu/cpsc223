@@ -256,9 +256,6 @@ void pirate_destroy(pirate *p)
     free(p->rank);
     free(p->vessel);
     free(p->port);
-    //free(p->captain);
-    //free(p->captain_vessel);
-    //skills_list_destroy(p->skills);
 
     free(p);
 }
