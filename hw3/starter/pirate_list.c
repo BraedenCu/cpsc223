@@ -88,6 +88,8 @@ pirate_list *list_create()
     lst -> capacity = INITIAL_CAPACITY;
     
     lst -> array = calloc(lst->capacity, sizeof(pirate *)); // list of pirates
+    
+    lst -> compare = pirate_compare_name;
 
     return lst;
 }
@@ -214,30 +216,59 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
     return pirates->array[idx];
 }
 
-
+// single pir edge cases no treasure
 void list_sort(pirate_list *pirates)
 {
-    
-    for (size_t i = 0; i < pirates->list_length; i++) 
-    {
-        skills_list_sort(pirates->array[i]->skills);
-    }
-    
-    if (!(pirates == NULL || pirates->array == NULL || pirates->list_length <= 1))
-    {
-        if (pirates->compare == NULL) 
-        {
-            quick_sort(pirates->array, pirate_compare_name, 0, pirates->list_length - 1);
-            return;
-        }
-        else 
-        {
-            quick_sort(pirates->array, pirates->compare, 0, pirates->list_length - 1);
 
+    quick_sort(pirates, 0, pirates->list_length - 1);
+    // the ONLY line here should be a call to quick_sort, and it should NOT be dependent on the pirate_compare operator
+    // should be the exact same as hookbook A!!!!
+
+    // single pir edge cases no treasure
+    // no treasure vs treasure edge case
+    
+    // list sort should only sort the pirates, implement insertion sort as you insert
+}
+
+void quick_sort(pirate_list* pirates, int low, int high) 
+{
+    if (low < high) 
+    {
+        int pivot = sort_partition(pirates, pirates->array, low, high); // length -1 for high
+        quick_sort(pirates, low, pivot - 1);  // before pivot
+        quick_sort(pirates, pivot + 1, high); // after pivot
+        // pivot needs to be fed into quicksort, remove -1 after first quicksort call pivot
+    }
+}
+
+void sort_swap(pirate **a, pirate **b) 
+{
+    pirate *t = *a;
+    *a = *b;
+    *b = t;
+}
+
+int sort_partition(pirate_list* pirates, pirate **arr, int low, int high) 
+{
+    pirate *pivot = arr[high]; // rightmost element as pivot
+    int i = (low - 1); // index of smaller element
+
+    for (int j = low; j <= high - 1; j++) 
+    {
+        if (pirates->compare(arr[j], pivot) <= 0) // if curr element is <= pivot
+        {
+            i++; // inc index of smaller element
+            sort_swap(&arr[i], &arr[j]);
         }
     }
     
+    sort_swap(&arr[i + 1], &arr[high]);
+
+    return (i + 1);
 }
+
+
+
 
 size_t list_length(const pirate_list *pirates)
 {
@@ -250,6 +281,7 @@ void list_destroy(pirate_list *pirates)
     {
         pirate_destroy(pirates->array[i]);
     }
+    
     free(pirates->array);
 
     free(pirates);
@@ -356,41 +388,4 @@ void populate_captains(pirate_list *pirates, const char* filepath)
     free(line_next);
     free(captain_next);
     fclose(file);
-}
-
-
-void quick_sort(pirate **arr, compare_fn comparison_operator, int low, int high) 
-{
-    if (low < high) 
-    {
-        int pivot = sort_partition(arr, comparison_operator, low, high);
-        quick_sort(arr, comparison_operator, low, pivot - 1);  // before pivot
-        quick_sort(arr, comparison_operator, pivot + 1, high); // after pivot
-    }
-}
-
-void sort_swap(pirate **a, pirate **b) 
-{
-    pirate *t = *a;
-    *a = *b;
-    *b = t;
-}
-
-int sort_partition(pirate **arr, compare_fn comparison_operator, int low, int high) 
-{
-    pirate *pivot = arr[high]; // rightmost element as pivot
-    int i = (low - 1); // index of smaller element
-
-    for (int j = low; j <= high - 1; j++) 
-    {
-        if (comparison_operator(arr[j], pivot) <= 0) // if curr element is <= pivot
-        {
-            i++; // inc index of smaller element
-            sort_swap(&arr[i], &arr[j]);
-        }
-    }
-    
-    sort_swap(&arr[i + 1], &arr[high]);
-
-    return (i + 1);
 }

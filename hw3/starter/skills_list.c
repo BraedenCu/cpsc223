@@ -19,12 +19,14 @@ skills_list_instance_t* skills_list_create()
         return NULL;
     }
 
+    // remove tail, initialize it later when inserting 2nd element
+
     lst->head = malloc(sizeof(skills_list_node));
     lst->tail = malloc(sizeof(skills_list_node));
 
     lst->length = 0;
 
-    lst->head->next = lst->tail;
+    lst->head->next = lst->tail; // NULL, delete all around this 
 
     lst->head->skill = NULL;
     lst->tail->skill = NULL;

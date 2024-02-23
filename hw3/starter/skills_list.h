@@ -37,7 +37,7 @@ typedef struct skills_list_node {
 */
 typedef struct skills_list_instance_t {
     skills_list_node*   head;
-    skills_list_node*   tail;
+    skills_list_node*   tail;           // the instance only needs a head
     int                 length;
 } skills_list_instance_t;
 

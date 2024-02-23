@@ -260,5 +260,27 @@ void pirate_destroy(pirate *p)
     free(p->vessel);
     free(p->port);
 
+    //skills_list_destroy(p->skills);
+
+    /*
+
+    if(p->skills->length >= 0) {
+        skills_list_node* curr = p->skills->head;
+        skills_list_node* next = NULL;
+
+        while (curr != NULL) 
+        {
+            next = curr->next;
+            
+            free(curr->skill);
+            free(curr);
+
+            curr = next;
+        }
+
+        free(p->skills);
+    }
+    */
+
     free(p);
 }

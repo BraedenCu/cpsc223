@@ -41,7 +41,13 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
     {
         str[i] = c;
         i = i + 1;
-        c = fgetc(stream);
+        c = fgetc(stream); // need to unget c if i==count case causes loop to exit
+    }
+
+    // if i == count, then the last character read was not stored in str
+    if (i == count) 
+    {
+        ungetc(c, stream); // put back the last character read (if it was not EOF)
     }
 
     str[i] = '\0';
@@ -49,4 +55,4 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
     return str;
 }
 
-
+// self/crossing captains
