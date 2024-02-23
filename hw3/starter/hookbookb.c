@@ -37,6 +37,18 @@ compare_fn handle_sort_behavior(char *sort_flag);
 
 int main(int argc, char *argv[])
 {
+    /*
+    char* str = malloc(10 * sizeof(char));
+
+    FILE *file = fopen("./temp_test_cases.txt", "r");
+
+    freadln(str, 10, file);
+    printf("%s\n", str);
+
+    freadln(str, 10, file);
+    printf("%s\n", str);
+    */
+   
     char* sort_flag = check_sort_flag(argc, argv);
 
     compare_fn compare = handle_sort_behavior(sort_flag);

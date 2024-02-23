@@ -267,9 +267,6 @@ int sort_partition(pirate_list* pirates, pirate **arr, int low, int high)
     return (i + 1);
 }
 
-
-
-
 size_t list_length(const pirate_list *pirates)
 {
     return pirates->list_length;

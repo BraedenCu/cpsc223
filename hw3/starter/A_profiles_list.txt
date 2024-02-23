@@ -19,10 +19,6 @@ s:fencing
 william turner
 p:port royal
 s:apple 
-s:bone
-s:aanus
-s:ding
-s:cock
 
 elizabeth swan
 r:queen

@@ -45,7 +45,7 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
     }
 
     // if i == count, then the last character read was not stored in str
-    if (i == count) 
+    if (c != '\n') 
     {
         ungetc(c, stream); // put back the last character read (if it was not EOF)
     }
