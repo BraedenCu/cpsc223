@@ -69,6 +69,7 @@ pirate *pirate_read(FILE *input)
     
     if (line == NULL) 
     {
+        free(line);
         return NULL;
     }
     if (freadln(line, MAX_LINE_LENGTH, input) == NULL) 
@@ -80,13 +81,16 @@ pirate *pirate_read(FILE *input)
     if (line[0] == '\n') {
         // Initialize the pirate with an empty name
         pirate* new_pirate = pirate_create("");
-        if (!new_pirate) {
+        if (!new_pirate) 
+        {
+            free(line);
             return NULL; // Failed to create a pirate
         }
 
         new_pirate->captain = NULL;
-        new_pirate->skills = skills_list_create();
-        printf("found empty pirate!");
+
+        skills_list_instance_t *lst = skills_list_create();
+        new_pirate->skills = lst;
     }
     else 
     {
@@ -211,12 +215,15 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 
 void pirate_destroy(pirate *p)
 {
-    if (p->name != NULL)    free(p->name);
-    if (p->rank !=NULL)     free(p->rank);
-    if (p->rank !=NULL)     free(p->vessel);
-    if (p->rank !=NULL)     free(p->port);
+    skills_list_destroy(p->skills);
+
+    free(p->name);
+    free(p->rank);
+    free(p->vessel);
+    free(p->port);
     //free(p->captain);
     //free(p->captain_vessel);
-    skills_list_destroy(p->skills);
+    //skills_list_destroy(p->skills);
+
     free(p);
 }

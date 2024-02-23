@@ -13,9 +13,12 @@
 skills_list_instance_t* skills_list_create() 
 {
     skills_list_instance_t* lst = malloc(sizeof(skills_list_instance_t));
-    if (lst == NULL) {
+
+    if (lst == NULL) 
+    {
         return NULL;
     }
+
     lst->head = malloc(sizeof(skills_list_node));
     lst->tail = malloc(sizeof(skills_list_node));
 
@@ -56,12 +59,8 @@ void skills_list_append(skills_list_instance_t *skills, char *skill)
 
 void skills_list_destroy(skills_list_instance_t* skills) 
 {
-    if (!skills) {
-        return; // skills list empty
-    }
-
     skills_list_node* curr = skills->head;
-    skills_list_node* next  =   NULL;
+    skills_list_node* next = NULL;
 
     while (curr != NULL) 
     {
