@@ -192,25 +192,60 @@ int pirate_compare_name(const pirate *a, const pirate *b)
     if (a->name == NULL && b->name == NULL) {   return 0;   }
     else if (a->name == NULL)               {   return 1;   } 
     else if (b->name == NULL)               {   return -1;  } 
-    else                                    {  return strcmp(a->name, b->name); }
+    else                                    {   return strcmp(a->name, b->name); }
     return 0;
 }
 
 int pirate_compare_vessel(const pirate *a, const pirate *b)
 {
-    if (a->vessel == NULL && b->vessel == NULL) {   return 0;   }
-    else if (a->vessel == NULL)                 {   return 1;   } 
-    else if (b->vessel == NULL)                 {   return -1;  } 
-    else                                        {   return strcmp(a->vessel, b->vessel); }
-    return 0;
+    int comparison_result;
+
+    if (a->vessel && b-> vessel)                        
+    { 
+        comparison_result = strcmp(a->vessel, b->vessel); 
+        if (comparison_result == 0)                     
+        {   
+            return pirate_compare_name(a, b); 
+        }
+        else
+        {   
+            return comparison_result; 
+        }    
+    }
+    else if (a->vessel == NULL && b->vessel == NULL)    {   return 0;   }
+    else if (a->vessel == NULL)                         {   return 1;   } 
+    else if (b->vessel == NULL)                         {   return -1;  } 
+    else                                                {   return pirate_compare_name(a, b); }
 }
 
 int pirate_compare_treasure(const pirate *a, const pirate *b)
 {
-    // note: descending order !
-    if (a->treasure == b->treasure)     {   return 0;   }
-    else if (a->treasure < b->treasure) {   return -1;  } 
-    else                                {   return 1;   }
+    if (a->treasure >= 0 && b->treasure >= 0) 
+    {
+        if (a->treasure > b->treasure) 
+        {
+            return -1; 
+        } else if (a->treasure < b->treasure) 
+        {
+            return 1; 
+        } 
+        else 
+        {
+            return pirate_compare_name(a, b);
+        }
+    }
+
+    if ((a->treasure >= 0) && !(b->treasure >= 0)) 
+    {
+        return -1; 
+    }
+
+    if (!(a->treasure >= 0) && !(b->treasure >= 0)) 
+    {
+        return 1; 
+    }
+
+    return pirate_compare_name(a, b);
 }
 
 void pirate_destroy(pirate *p)
