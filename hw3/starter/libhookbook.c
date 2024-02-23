@@ -18,7 +18,7 @@ char *freadln(char *str, int count, FILE *stream)
         return NULL;
     }
 
-    while (c!='\n' && c!=EOF && i<count) 
+    while (c != '\n' && c != EOF && i < count) 
     {
         str[i] = c;
         i = i + 1;

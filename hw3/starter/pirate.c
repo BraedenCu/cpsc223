@@ -35,14 +35,40 @@ pirate *pirate_create(char *name)
     return new_pirate;
 }
 
+
+/**
+ * Reads a pirate profile from input. Assumes that the input cursor is at the
+ *  beginning of a pirate profile (otherwise, the behavior is undefined).
+ *
+ * Returns a pointer to a pirate created from the profile in input.
+ *
+ * This function consumes the blank line after the end of the current profile
+ *  before returning (that is, the first newline character and the second, if
+ *  there is one, or the EOF marker if not), meaning that after this function
+ *  is done, the input cursor is either at the end of the input file or at the
+ *  beginning of the next pirate profile.
+ *
+ * @param input the stream from which to read a pirate profile
+ * @returns a new pirate based on the contents of input
+ * @assumes input is an open and readable stream
+ * @assumes the next character in input is the first character of a pirate's
+ *  profile, and that input is well-formed according to the input specification
+ *  in the README.
+ * 
+ * MUST be able to handle the case where a pirate has an empty name but still has skills. This case would look
+ * something like two blank lines in a row (immediately, this indicates an empty pirate name) followed by that
+ * empty pirates skills or followed by nothing if it has no skills
+ */
 pirate *pirate_read(FILE *input) 
 {
     int     next_pirate_char;
     char*   line;
+    char*   line2;
     char*   name;
     pirate* new_pirate;
 
     line = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
+    line2 = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
     
     if (line == NULL) 
     {
@@ -53,16 +79,31 @@ pirate *pirate_read(FILE *input)
         free(line); // failed read
         return NULL;
     }
-    
-    name = malloc((strlen(line) + 1) * sizeof(char));
 
-    strcpy(name, line);
-    new_pirate = pirate_create(name); 
-    
-    new_pirate->captain = NULL;
+    if (line[0] == '\n') {
+        // Initialize the pirate with an empty name
+        pirate* new_pirate = pirate_create("");
+        if (!new_pirate) {
+            return NULL; // Failed to create a pirate
+        }
 
-    skills_list_instance_t *lst = skills_list_create();
-    new_pirate->skills = lst;
+        new_pirate->captain = NULL;
+        new_pirate->skills = skills_list_create();
+        printf("found empty pirate!");
+    }
+    else 
+    {
+        name = malloc((strlen(line) + 1) * sizeof(char));
+
+        strcpy(name, line);
+        new_pirate = pirate_create(name); 
+        
+        new_pirate->captain = NULL;
+
+        skills_list_instance_t *lst = skills_list_create();
+        new_pirate->skills = lst;
+    }
+
 
     while (freadln(line, MAX_LINE_LENGTH, input) != NULL && line[0] != '\0') 
     {
@@ -90,20 +131,13 @@ pirate *pirate_read(FILE *input)
                 break;
                 
             case 's':
-                populate_skills_list(lst, new_pirate, line, input);
+                populate_skills_list(new_pirate->skills, new_pirate, line, input);
                 break;
         }
     }
     
     free(line);     // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY! 
                     // if uncommented, the pirate list will not be populated
-    
-    next_pirate_char = fgetc(input);
-
-    if (next_pirate_char != '\n' && next_pirate_char != EOF) 
-    {
-        ungetc(next_pirate_char, input); // decrements stream indicator position by 1
-    }
 
     return new_pirate; 
 }
