@@ -27,7 +27,7 @@
  * @assumes str points to enough memory to hold count+1 chars
  * @assumes stream is open and readable
  */
-char *freadln(char *str, int count, FILE *stream)
+char *freadln(char *restrict str, int count, FILE *restrict stream)
 {
     size_t i = 0;
     char c = fgetc(stream);
