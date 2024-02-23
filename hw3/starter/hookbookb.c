@@ -117,7 +117,7 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
 
     pirate *next_profile = pirate_read(file);
 
-    while (next_profile != NULL) // continue reading until EOF
+    while (next_profile != NULL)
     {
         if (check_duplicate_pirate(all_profiles, next_profile->name) == 1)
         {

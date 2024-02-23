@@ -237,7 +237,7 @@ void skills_list_sort(skills_list_instance_t *skills)
 {
     if (skills == NULL || skills->length <= 1) 
     {
-        return; // cannot perform sort
+        return; 
     }
 
     skills_list_node *sorted = NULL; 

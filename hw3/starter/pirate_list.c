@@ -126,21 +126,21 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
-    // First, check for a duplicate pirate name in the list
-    if (check_duplicate_pirate(pirates, p->name)) {
-        // If a duplicate exists, do nothing and return the pirate that was not inserted
+    if (check_duplicate_pirate(pirates, p->name)) 
+    {
         return p;
     }
 
-    // Ensure the list has enough capacity to insert another pirate
     list_expand_if_necessary(pirates);
 
-    // If idx is beyond the current length of the list, append the pirate at the end
-    if (idx >= pirates->list_length) {
-        idx = pirates->list_length; // Append the pirate to the end
-    } else {
-        // Otherwise, shift pirates to the right to make space for the new pirate
-        for (size_t i = pirates->list_length; i > idx; i--) {
+    if (idx >= pirates->list_length) 
+    {
+        idx = pirates->list_length; 
+    } 
+    else
+     {
+        for (size_t i = pirates->list_length; i > idx; i--) 
+        {
             pirates->array[i] = pirates->array[i - 1];
         }
     }
@@ -189,7 +189,7 @@ pirate *list_remove(pirate_list *pirates, const char *name)
     list_contract_if_necessary(pirates);
 
     // free memory of removed_pirate
-        pirate_destroy(removed_pirate);
+    pirate_destroy(removed_pirate);
 
     return removed_pirate;
 }
@@ -314,7 +314,7 @@ void populate_captains(pirate_list *pirates, const char* filepath)
     char*       captain_next;
     pirate*     p;
     pirate*     p_captain;
-    int idx =   0;
+    int idx         = 0;
     int idx_captain = 0;
 
     FILE *file = fopen(filepath, "r");
