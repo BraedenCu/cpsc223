@@ -61,14 +61,11 @@ pirate *pirate_create(char *name)
  */
 pirate *pirate_read(FILE *input) 
 {
-    int     next_pirate_char;
     char*   line;
-    char*   line2;
     char*   name;
     pirate* new_pirate;
 
     line = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
-    line2 = malloc((MAX_LINE_LENGTH + 1) * sizeof(char));
     
     if (line == NULL) 
     {
