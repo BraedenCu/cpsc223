@@ -59,7 +59,7 @@ pirate *pirate_create(char *name)
  * something like two blank lines in a row (immediately, this indicates an empty pirate name) followed by that
  * empty pirates skills or followed by nothing if it has no skills
  */
-pirate *pirate_read(FILE *input) 
+pirate *pirate_read(FILE *restrict input) 
 {
     char*   line;
     char*   name;
@@ -215,7 +215,7 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 
 void pirate_destroy(pirate *p)
 {
-    skills_list_destroy(p->skills);
+    //skills_list_destroy(p->skills);
 
     free(p->name);
     free(p->rank);
