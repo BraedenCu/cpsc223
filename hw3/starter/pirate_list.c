@@ -116,31 +116,32 @@ size_t list_index_of(const pirate_list *pirates, const char *name)
 
 pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
 {
-    if (check_duplicate_pirate(pirates, p->name)) 
-    {
+    // First, check for a duplicate pirate name in the list
+    if (check_duplicate_pirate(pirates, p->name)) {
+        // If a duplicate exists, do nothing and return the pirate that was not inserted
         return p;
     }
 
+    // Ensure the list has enough capacity to insert another pirate
     list_expand_if_necessary(pirates);
 
-    if (idx >= pirates->list_length) 
-    {
-        idx = pirates->list_length; 
-    } 
-    else 
-    {
-        for (size_t i = pirates->list_length; i > idx; i--) 
-        {
+    // If idx is beyond the current length of the list, append the pirate at the end
+    if (idx >= pirates->list_length) {
+        idx = pirates->list_length; // Append the pirate to the end
+    } else {
+        // Otherwise, shift pirates to the right to make space for the new pirate
+        for (size_t i = pirates->list_length; i > idx; i--) {
             pirates->array[i] = pirates->array[i - 1];
         }
     }
-    
+
+    // Insert the new pirate into the list
     pirates->array[idx] = p;
     pirates->list_length++;
 
+    // Since the pirate was successfully inserted, return NULL
     return NULL;
 }
-
 pirate *list_remove(pirate_list *pirates, const char *name)
 {
     size_t idx = list_index_of(pirates, name);
