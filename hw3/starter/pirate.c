@@ -177,6 +177,9 @@ void pirate_print_A(const pirate *p, FILE *restrict output)
  */
 void pirate_print(const pirate *p, FILE *restrict output)
 {
+    // sort
+    skills_list_sort(p->skills);
+    
     if (p == NULL) return; 
     if (p->name != NULL) fprintf(output, "%s\n", p->name);
     if (p->captain != NULL) fprintf(output, "    Captain: %s (%s)\n", p->captain, p->captain_vessel); // include captain's vessel
