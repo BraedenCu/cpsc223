@@ -18,10 +18,11 @@ s:fencing
 
 william turner
 p:port royal
-s:smithing
-s:smithing
-s:fencing
-s:fencing
+s:apple 
+s:bone
+s:aanus
+s:ding
+s:cock
 
 elizabeth swan
 r:queen

@@ -161,6 +161,16 @@ void pirate_print_A(const pirate *p, FILE *restrict output)
     }
 }
 
+/**
+ * Prints a pirate's profile to output in conformance with the output
+ *  specification in the README.
+ *
+ * @param p the pirate to print
+ * @param output the stream to which the pirate's profile should be printed
+ * @does prints p's profile to output
+ * @assumes p is not NULL
+ * @assumes output is an open, writable stream
+ */
 void pirate_print(const pirate *p, FILE *restrict output)
 {
     if (p == NULL) return; 
@@ -169,7 +179,7 @@ void pirate_print(const pirate *p, FILE *restrict output)
     if (p->rank != NULL) fprintf(output, "    Rank: %s\n", p->rank);
     if (p->vessel != NULL) fprintf(output, "    Vessel: %s\n", p->vessel);
     if (p->port != NULL) fprintf(output, "    Port: %s\n", p->port);
-    if (p->treasure) fprintf(output, "    Treasure: %i\n", p->treasure); 
+    if (p->treasure) fprintf(output, "    Treasure: %li\n", p->treasure); 
     if (p->skills != NULL) print_skills_list(p->skills, output);    // helper provided due too unique challenges of skills list
 }
 
