@@ -250,7 +250,7 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 
 void pirate_destroy(pirate *p)
 {
-    //skills_list_destroy(p->skills);
+    //skills_list_destroy(p->skills); // BUG THIS CAUSES UNIT TESTING SUITE TO FAIL
 
     free(p->name);
     free(p->rank);
