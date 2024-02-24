@@ -37,17 +37,6 @@ compare_fn handle_sort_behavior(char *sort_flag);
 
 int main(int argc, char *argv[])
 {
-    /*
-    char* str = malloc(10 * sizeof(char));
-
-    FILE *file = fopen("./temp_test_cases.txt", "r");
-
-    freadln(str, 10, file);
-    printf("%s\n", str);
-
-    freadln(str, 10, file);
-    printf("%s\n", str);
-    */
    
     char* sort_flag = check_sort_flag(argc, argv);
 
@@ -140,7 +129,7 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
             list_insert(all_profiles, next_profile, list_length(all_profiles));
         }
 
-        //pirate_print(next_profile, stdout); // crucial debugging checkpoint
+        //pirate_print(next_profile, stdout); // crucial debug checkpoint
 
         next_profile = pirate_read(file);
     }

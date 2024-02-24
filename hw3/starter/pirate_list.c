@@ -216,18 +216,9 @@ const pirate *list_access(const pirate_list *pirates, size_t idx)
     return pirates->array[idx];
 }
 
-// single pir edge cases no treasure
 void list_sort(pirate_list *pirates)
 {
-
     quick_sort(pirates, 0, pirates->list_length - 1);
-    // the ONLY line here should be a call to quick_sort, and it should NOT be dependent on the pirate_compare operator
-    // should be the exact same as hookbook A!!!!
-
-    // single pir edge cases no treasure
-    // no treasure vs treasure edge case
-    
-    // list sort should only sort the pirates, implement insertion sort as you insert
 }
 
 void quick_sort(pirate_list* pirates, int low, int high) 
@@ -237,7 +228,6 @@ void quick_sort(pirate_list* pirates, int low, int high)
         int pivot = sort_partition(pirates, pirates->array, low, high); // length -1 for high
         quick_sort(pirates, low, pivot - 1);  // before pivot
         quick_sort(pirates, pivot + 1, high); // after pivot
-        // pivot needs to be fed into quicksort, remove -1 after first quicksort call pivot
     }
 }
 
@@ -332,9 +322,6 @@ int check_duplicate_pirate(const pirate_list *pirates, char *name)
     return 0;
 }
 
-/**
- * Populate all pirate captains from a file
-*/
 void populate_captains(pirate_list *pirates, const char* filepath) 
 {
     char*       line;

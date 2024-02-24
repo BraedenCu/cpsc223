@@ -14,11 +14,7 @@
 
 #define MAX_LINE_LENGTH 1000
 
-/**
- * Pirates have a name, rank, vessel, port, treasure, and skill. The name of the pirate can be empty.
- * All of these fields could be empty, or none.
- * 
-*/
+
 pirate *pirate_create(char *name)
 {
     pirate *new_pirate = malloc(sizeof(pirate));
@@ -35,30 +31,6 @@ pirate *pirate_create(char *name)
     return new_pirate;
 }
 
-
-/**
- * Reads a pirate profile from input. Assumes that the input cursor is at the
- *  beginning of a pirate profile (otherwise, the behavior is undefined).
- *
- * Returns a pointer to a pirate created from the profile in input.
- *
- * This function consumes the blank line after the end of the current profile
- *  before returning (that is, the first newline character and the second, if
- *  there is one, or the EOF marker if not), meaning that after this function
- *  is done, the input cursor is either at the end of the input file or at the
- *  beginning of the next pirate profile.
- *
- * @param input the stream from which to read a pirate profile
- * @returns a new pirate based on the contents of input
- * @assumes input is an open and readable stream
- * @assumes the next character in input is the first character of a pirate's
- *  profile, and that input is well-formed according to the input specification
- *  in the README.
- * 
- * MUST be able to handle the case where a pirate has an empty name but still has skills. This case would look
- * something like two blank lines in a row (immediately, this indicates an empty pirate name) followed by that
- * empty pirates skills or followed by nothing if it has no skills
- */
 pirate *pirate_read(FILE *restrict input) 
 {
     char*   line;
@@ -79,8 +51,8 @@ pirate *pirate_read(FILE *restrict input)
     }
 
     if (line[0] == '\n') {
-        // Initialize the pirate with an empty name
-        pirate* new_pirate = pirate_create("");
+        pirate* new_pirate = pirate_create(""); // empty name
+
         if (!new_pirate) 
         {
             free(line);
@@ -165,16 +137,7 @@ void pirate_print_A(const pirate *p, FILE *restrict output)
     }
 }
 
-/**
- * Prints a pirate's profile to output in conformance with the output
- *  specification in the README.
- *
- * @param p the pirate to print
- * @param output the stream to which the pirate's profile should be printed
- * @does prints p's profile to output
- * @assumes p is not NULL
- * @assumes output is an open, writable stream
- */
+
 void pirate_print(const pirate *p, FILE *restrict output)
 {
     // sort
