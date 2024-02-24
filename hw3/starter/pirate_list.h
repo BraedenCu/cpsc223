@@ -137,6 +137,13 @@ size_t list_length(const pirate_list *pirates);
 void list_destroy(pirate_list *pirates);
 
 /**
+ * Destroy the skills lists of all created pirates.
+ * 
+ * @param pirates the list of pirates
+*/
+void skills_list_destroy_all(pirate_list* pirates);
+
+/**
  * Print all pirates in the list
  * 
  * @param pirates the list to print

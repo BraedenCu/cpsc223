@@ -275,6 +275,33 @@ void list_destroy(pirate_list *pirates)
 
 }
 
+void skills_list_destroy_all(pirate_list* pirates) 
+{
+    for (int i = 0; i < list_length(pirates); i++) 
+    {
+        pirate* p = pirates->array[i];
+    
+        if (p->skills != NULL) 
+        {
+            skills_list_node* curr = p->skills->head;
+            skills_list_node* next = NULL;
+
+            while (curr != NULL) 
+            {
+                next = curr->next;
+                
+                free(curr->skill);
+                free(curr);
+
+                curr = next;
+            }
+
+            free(p->skills);
+        }
+    }
+}
+
+
 void list_expand_if_necessary(pirate_list *pirates) 
 {
     if (pirates->list_length >= pirates->capacity) // if list full, RESIZE_RATIO capacity

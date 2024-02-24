@@ -50,6 +50,8 @@ int main(int argc, char *argv[])
 
     print_all_pirates(all_profiles); 
 
+    skills_list_destroy_all(all_profiles);
+    
     list_destroy(all_profiles);
 
     return 0;
