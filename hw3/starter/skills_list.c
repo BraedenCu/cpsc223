@@ -12,46 +12,41 @@
 
 skills_list_instance_t* skills_list_create() 
 {
-    skills_list_instance_t* lst = malloc(sizeof(skills_list_instance_t));
+    skills_list_instance_t* skills_lst = malloc(sizeof(skills_list_instance_t));
 
-    if (lst == NULL) 
+    if (skills_lst == NULL) 
     {
         return NULL;
     }
 
-    // remove tail, initialize it later when inserting 2nd element
+    skills_lst->head = NULL; 
+    skills_lst->tail = NULL; 
+    skills_lst->length = 0;
 
-    lst->head = malloc(sizeof(skills_list_node));
-    lst->tail = malloc(sizeof(skills_list_node));
-
-    lst->length = 0;
-
-    lst->head->next = lst->tail; // NULL, delete all around this 
-
-    lst->head->skill = NULL;
-    lst->tail->skill = NULL;
-
-    lst->tail->next = NULL;
-    lst->head->next = lst->tail;
-    
-    return lst;
+    return skills_lst;
 }
 
+// Function to append a new skill to the list
 void skills_list_append(skills_list_instance_t *skills, char *skill) 
 {
     skills_list_node *new_node = malloc(sizeof(skills_list_node));
 
+    if (new_node == NULL) {
+        return; 
+    }
+
     new_node->skill = malloc(strlen(skill) + 1);
 
     strcpy(new_node->skill, skill);
-    
     new_node->next = NULL;
 
-    if (skills->length == 0) {
+    if (skills->length == 0) 
+    {
         skills->head = new_node;
         skills->tail = new_node;
-    }
-    else {
+    } 
+    else 
+    {
         skills->tail->next = new_node;
         skills->tail = new_node;
     }

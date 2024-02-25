@@ -13,12 +13,6 @@ s:smithing
 s:smithing
 s:fencing
 s:fencing
-s:fencing
-s:fencing
-
-william turner
-p:port royal
-s:apple 
 
 elizabeth swan
 r:queen

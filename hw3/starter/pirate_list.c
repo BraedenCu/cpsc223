@@ -280,7 +280,7 @@ void skills_list_destroy_all(pirate_list* pirates)
     for (int i = 0; i < list_length(pirates); i++) 
     {
         pirate* p = pirates->array[i];
-    
+
         if (p->skills != NULL) 
         {
             skills_list_node* curr = p->skills->head;
