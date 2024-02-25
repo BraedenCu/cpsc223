@@ -365,7 +365,7 @@ void populate_captains(pirate_list *pirates, const char* filepath)
     
     if (file == NULL) 
     {
-        fprintf(stderr, "Error: Cannot open file %s\n", filepath);
+        fprintf(stderr, "Cannot open file %s\n", filepath);
         return;
     }
 

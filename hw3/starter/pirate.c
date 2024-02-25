@@ -178,9 +178,9 @@ int pirate_compare_vessel(const pirate *a, const pirate *b)
             return pirate_compare_name(a, b); 
         }    
     }
-    else if (!a->vessel && b->vessel)                   {   return 1;   }
-    else if (a->vessel && !b->vessel)                   {   return -1;   } 
-    else                                                {   return pirate_compare_name(a, b); }
+    else if (!a->vessel && b->vessel)   {   return 1;   }
+    else if (a->vessel && !b->vessel)   {   return -1;   } 
+    else                                {   return pirate_compare_name(a, b); }
 }
 
 int pirate_compare_treasure(const pirate *a, const pirate *b)
