@@ -17,10 +17,11 @@
 pirate_list* load_profiles_from_file(const char* filepath, compare_fn comparison_function);
 
 /**
- * Check if a pirate with the same name already exists in the list
+ * Check if a sort flag was passed by the user
  * 
- * @param pirates the list of pirates
- * @param name the name of the pirate
+ * @param argc the number of arguments
+ * @param argv the list of arguments
+ * @return the sort flag
 */
 char* check_sort_flag(int argc, char *argv[]);
 
