@@ -38,7 +38,6 @@ compare_fn handle_sort_behavior(char *sort_flag);
 
 int main(int argc, char *argv[])
 {
-   
     char* sort_flag = check_sort_flag(argc, argv);
 
     compare_fn compare = handle_sort_behavior(sort_flag);
@@ -65,12 +64,15 @@ char* check_sort_flag(int argc, char *argv[])
         fprintf(stderr, "You must enter 2 Arguments and optionally 1 sort flag\n");
         exit(1);
     }
-    for (int i = 0; i < argc; i++) {
-        if (strcmp(argv[i], "-n") == 0 || strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "-t") == 0) {
+    for (int i = 0; i < argc; i++) 
+    {
+        if (strcmp(argv[i], "-n") == 0 || strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "-t") == 0) 
+        {
             return argv[i];
         }
     }
-    if (argc == 4) {
+    if (argc == 4) 
+    {
         fprintf(stderr, "Invalid sort flag\n");
         exit(1);
     }
