@@ -61,7 +61,7 @@ char* check_sort_flag(int argc, char *argv[])
 {
     if (argc != 3 && argc != 4) 
     {
-        fprintf(stderr, "You must enter 2 Arguments +/- 1 optional sort flag\n");
+        fprintf(stderr, "You must enter 2 Arguments and optionally 1 sort flag\n");
         exit(1);
     }
     for (int i = 0; i < argc; i++) {
@@ -70,7 +70,7 @@ char* check_sort_flag(int argc, char *argv[])
         }
     }
     if (argc == 4) {
-        fprintf(stderr, "Error: Invalid sort flag\n");
+        fprintf(stderr, "Invalid sort flag\n");
         exit(1);
     }
     return "-n";
@@ -105,7 +105,7 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
 
     if (file == NULL) 
     {
-        fprintf(stderr, "Error: Cannot open file %s\n", filepath);
+        fprintf(stderr, "Cannot open file %s\n", filepath);
         return NULL;
     }
 
@@ -113,7 +113,7 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
 
     if (all_profiles == NULL) 
     {
-        fprintf(stderr, "Error: Failed to create a pirate list\n");
+        fprintf(stderr, "Failed to create a pirate list\n");
         fclose(file);
         return NULL;
     }
@@ -140,7 +140,7 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
     
     if (all_profiles == NULL) 
     {
-        fprintf(stderr, "Error: Failed to load pirates from file\n");
+        fprintf(stderr, "Failed to load pirates from file\n");
         exit(1);
     }
 

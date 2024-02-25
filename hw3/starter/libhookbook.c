@@ -34,9 +34,3 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
     
     return str;
 }
-
-// self/crossing captains
-// pivot needs to be fed into quicksort, remove -1 after first quicksort call pivot
-// single pir edge cases no treasure
-// no treasure vs treasure edge case
-// list sort should only sort the pirates, implement insertion sort as you insert

@@ -109,8 +109,7 @@ pirate *pirate_read(FILE *restrict input)
         }
     }
     
-    free(line);     // THIS MAY CAUSE A MEMORY LEAK, WE ARE UNSURE WHY! 
-                    // if uncommented, the pirate list will not be populated
+    free(line);    
 
     return new_pirate; 
 }
@@ -216,34 +215,10 @@ int pirate_compare_treasure(const pirate *a, const pirate *b)
 
 void pirate_destroy(pirate *p)
 {
-    //skills_list_destroy(p->skills); // BUG THIS CAUSES UNIT TESTING SUITE TO FAIL
-
     free(p->name);
     free(p->rank);
     free(p->vessel);
     free(p->port);
-
-    //skills_list_destroy(p->skills);
-
-    /*
-
-    if(p->skills->length >= 0) {
-        skills_list_node* curr = p->skills->head;
-        skills_list_node* next = NULL;
-
-        while (curr != NULL) 
-        {
-            next = curr->next;
-            
-            free(curr->skill);
-            free(curr);
-
-            curr = next;
-        }
-
-        free(p->skills);
-    }
-    */
 
     free(p);
 }
