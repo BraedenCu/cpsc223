@@ -131,7 +131,7 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
             list_insert(all_profiles, next_profile, list_length(all_profiles));
         }
 
-        //pirate_print(next_profile, stdout); // crucial debug checkpoint
+        //pirate_print(next_profile, stdout);           // crucial debug checkpoint
 
         next_profile = pirate_read(file);
     }

@@ -241,6 +241,7 @@ void sort_swap(pirate **a, pirate **b)
 int sort_partition(pirate_list* pirates, pirate **arr, int low, int high) 
 {
     pirate *pivot = arr[high]; // rightmost element as pivot
+    
     int i = (low - 1); // index of smaller element
 
     for (int j = low; j <= high - 1; j++) 

@@ -247,33 +247,35 @@ void skills_list_sort(skills_list_instance_t *skills)
     {
         skills_list_node *next = curr->next; 
 
-        if (strcmp(curr->skill, sorted->skill) < 0) 
+        if (strcmp(curr->skill, sorted->skill) < 0) // if less than head, continue
         {
             curr->next = sorted;
             sorted = curr;
         } 
-        else 
+        else // if greater than head, traverse to find proper spot
         {
             skills_list_node *search = sorted;
+
             while (search->next != NULL && strcmp(curr->skill, search->next->skill) > 0) 
             {
-                search = search->next;
+                search = search->next; // continue traversing 
             }
 
-            curr->next = search->next;
+            curr->next = search->next; // found proper spot
             search->next = curr;
         }
 
         curr = next; 
     }
 
-    skills->head = sorted;
+    skills->head = sorted; // update head to sorted head
 
     skills_list_node *temp = skills->head;
 
     while (temp != NULL && temp->next != NULL) 
     {
-        temp = temp->next;
+        temp = temp->next; // traverse one again to find tail
     }
+
     skills->tail = temp; 
 }
