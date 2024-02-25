@@ -233,7 +233,7 @@ void quick_sort(pirate_list* pirates, int low, int high)
 
 void sort_swap(pirate **a, pirate **b) 
 {
-    pirate *t = *a;
+    pirate *t = *a; // swap pirates using temp pirate
     *a = *b;
     *b = t;
 }
@@ -241,7 +241,7 @@ void sort_swap(pirate **a, pirate **b)
 int sort_partition(pirate_list* pirates, pirate **arr, int low, int high) 
 {
     pirate *pivot = arr[high]; // rightmost element as pivot
-    
+
     int i = (low - 1); // index of smaller element
 
     for (int j = low; j <= high - 1; j++) 
