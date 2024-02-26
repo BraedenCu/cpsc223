@@ -26,7 +26,7 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn comparison
 char* check_sort_flag(int argc, char *argv[]);
 
 /**
- * Handle Sort Behavior
+ * Handle sort behavior and return appropriate compare function
  * 
  * @param pirates the list of pirates
  * @param sort_flag the sort flag
@@ -134,7 +134,7 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
             list_insert(all_profiles, next_profile, list_length(all_profiles));
         }
 
-        //pirate_print(next_profile, stdout);           // crucial debug checkpoint
+        //pirate_print(next_profile, stdout);   // crucial debug checkpoint
 
         next_profile = pirate_read(file);
     }

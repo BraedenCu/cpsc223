@@ -136,13 +136,13 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
             pirates->array[i] = pirates->array[i - 1];
         }
     }
-
-    // Insert the new pirate into the list
+    
+    // insert pirate
     pirates->array[idx] = p;
     pirates->list_length++;
 
-    // Since the pirate was successfully inserted, return NULL
-    return NULL;
+    // pirate successfully inserted, return null
+    return NULL; 
 }
 
 pirate *list_remove(pirate_list *pirates, const char *name)
@@ -217,7 +217,7 @@ int sort_partition(pirate_list* pirates, pirate **arr, int low, int high)
         }
     }
     
-    sort_swap(&arr[i + 1], &arr[high]);
+    sort_swap(&arr[i + 1], &arr[high]); // swap pivot with i + 1
 
     return (i + 1);
 }

@@ -22,12 +22,12 @@ char *freadln(char *restrict str, int count, FILE *restrict stream)
     {
         str[i] = c;
         i = i + 1;
-        c = fgetc(stream); // need to unget c if i==count case causes loop to exit
+        c = fgetc(stream); // get next character
     }
 
     if (c != '\n') 
     {
-        ungetc(c, stream); // put back the character (if it was not new line)
+        ungetc(c, stream); // put back the character 
     }
 
     str[i] = '\0';

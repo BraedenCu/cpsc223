@@ -161,7 +161,7 @@ void print_all_pirates(pirate_list *pirates);
 int check_duplicate_pirate(const pirate_list *pirates, char *name);
 
 /**
- * Populate the list of pirates from a file
+ * Populate the list of pirates from a captains file input.
  * 
  * @param pirates the list of pirates
  * @param filepath the path to the file containing the pirates
@@ -171,12 +171,13 @@ void populate_captains(pirate_list *pirates, const char* filepath);
 
 
 /**
- * Sort pirates using the passed compare function using quick sort.
+ * Sort pirates using the passed compare function using quick sort algorithm discussed in lecture.
+ * The compare operator is defined by the user using the sort flag, default is comparison in 
+ * ascending lexographical order by name.
  * 
  * @param pirates the list to sort
  * @param low the lowest index of the list
  * @param high the highest index of the list
- * @does sorts the list of pirates in lexicographical order by name using quick sort
  * @assumes pirates is not NULL and every pirate in the list has a name that is
  * unique in the list
  *
@@ -184,24 +185,25 @@ void populate_captains(pirate_list *pirates, const char* filepath);
 void quick_sort(pirate_list *pirates, int low, int high); 
 
 /**
- * Swap two pirates, necessary for quick sort algorithm.
+ * Swap two pirates, pirates must be passed as pointers to pirate pointers to allow for
+ * swapping of the pirates.
  * 
  * @param a the first pirate to swap
  * @param b the second pirate to swap
- * @does swaps the pirates at index low and high
  * @assumes pirates is not NULL and low and high are valid indexes
  * 
 */
 void sort_swap(pirate **a, pirate **b); 
 
 /**
- * Sorting by name partition function for quick_sort.
+ * Implementation for the partitioning of the quick sort algorithm, used
+ * to find the pivot point for the quick sort algorithm. This pivot is then 
+ * utilized to sort the list of pirates.
  * 
  * @param pirates used to find the compare function
  * @param arr the array of pirates
  * @param low the lowest index of the list
  * @param high the highest index of the list
- * @does partitions the list of pirates in lexicographical order by name using quick sort
  * @assumes pirates is not NULL and low and high are valid indexes
 */
 int sort_partition(pirate_list* pirates, pirate **arr, int low, int high);

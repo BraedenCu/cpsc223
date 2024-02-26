@@ -74,33 +74,22 @@ pirate *pirate_read(FILE *restrict input);
 void pirate_print(const pirate *p, FILE *restrict output);
 
 /**
- * Compares two pirates, returning a negative number, zero, or a positive
- *  number as pirate a "comes before", is equal to, or "comes after" pirate b.
- * For this function, we say a "comes before" b if the a->name is
- *  lexicographically less than the b->name, and that they are equal if they
- *  have the same name.
- *
- * A pirate with no name always comes after a pirate with a name. No order is
- *  defined between two pirates with no name.
+ * Compare the names of two pirates, returning negative number, zero, or a
+ * positive number based on the result of a comparison between pirate a 
+ * and pirate b. Ascending lexographic order. Pirates with no name come after
+ * pirates with a name.
  *
  * @param a the first pirate
  * @param b the second pirate
- * @return a negative number, zero, or a positive number as a "comes before",
- *  is equal to, or "comes after" b according to their names
- * @assumes neither a nor b are NULL
+ * @return a negative number, zero, or a positive number.
  */
 int pirate_compare_name(const pirate *a, const pirate *b);
 
 /**
- * Compares two pirates, returning a negative number, zero, or a positive
- *  number as pirate a "comes before", is equal to, or "comes after" pirate b.
- * For this function, we say a "comes before" b if the vessel of pirate a is
- *  lexicographically less than the vessel of pirate b. Two pirates with the same
- *  vessel compare identically to pirate_compare_name(a,b).
- *
  * A pirate with no vessel always comes after a pirate with a vessel. Two
  *  pirates with no vessels compare identically to pirate_compare_name(a,b)
- *
+ * Compare two pirates by their vessels. Return negative number, zero, or positive based on wether the pirate "comes before" "is equal too" or "comes after"
+ * 
  * @param a the first pirate
  * @param b the second pirate
  * @return a negative number, zero, or a positive number as a "comes before",
@@ -110,16 +99,10 @@ int pirate_compare_name(const pirate *a, const pirate *b);
 int pirate_compare_vessel(const pirate *a, const pirate *b);
 
 /**
- * Compares two pirates, returning a negative number, zero, or a positive
- *  number as pirate a "comes before", is equal to, or "comes after" pirate b.
- * For this function, we say a "comes before" b if the treasure of pirate a is
- *  greater than the treasure of pirate b. Two pirates with the same treasure
- *  compare identically to pirate_compare_name(a,b).
- *
- * A pirate without a specified treasure always comes after a pirate with a
- *  specified treasure, even if that specified treasure is 0. Two pirates
- *  without specified treasure compare identically to pirate_compare_name(a,b)
- *
+ *  Compare the treasure of two pirates, returning negative number, zero, or a
+ * positive number based on the result of a comparison between pirate a 
+ * and pirate b. Pirates with no treasure come last, descending order otherwise.
+ * 
  * @param a the first pirate
  * @param b the second pirate
  * @return a negative number, zero, or a positive number as a "comes before",
@@ -129,7 +112,7 @@ int pirate_compare_vessel(const pirate *a, const pirate *b);
 int pirate_compare_treasure(const pirate *a, const pirate *b);
 
 /**
- * Frees all memory owned by p. This function claims ownership of p.
+ * Free all memory of the pirate.
  *
  * @param p the pirate to destroy
  * @does frees all memory owned by p
@@ -138,7 +121,8 @@ int pirate_compare_treasure(const pirate *a, const pirate *b);
 void pirate_destroy(pirate *p);
 
 /**
- * Populate skills list when creating a pirate
+ * Generate the skills list.
+ * 
  * @param p the pirate to populate the skills list
  * @param skill the skill to add to the skills list
  * @does adds the skill to the skills list of the pirate
