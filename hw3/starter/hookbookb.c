@@ -1,11 +1,19 @@
+/**
+ * Name: Braeden Cullen
+ * Assignment: HookBook B
+ * Class: CPSC223 Spring 2024
+ * Date: Feb 26
+ * Purpose: main driver for hookbook, provides all 
+ *          functionality for creating and sorting 
+ *          pirates and their skills.
+ */
+
 #include "pirate.h"
 #include "pirate_list.h"
 #include "libhookbook.h"
-#include "skills_list.h"
 
 #include <string.h>
 #include <stdio.h> 
-#include <stdlib.h>
 
 /**
  * Allocates enough memory for a pirate, and sets the pirate's name to name.
@@ -17,7 +25,7 @@
 pirate_list* load_profiles_from_file(const char* filepath, compare_fn comparison_function);
 
 /**
- * Check if a sort flag was passed by the user
+ * Check if a sort flag was passed by the user.
  * 
  * @param argc the number of arguments
  * @param argv the list of arguments
@@ -26,25 +34,40 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn comparison
 char* check_sort_flag(int argc, char *argv[]);
 
 /**
- * Handle sort behavior and return appropriate compare function
+ * Handle sort behavior and return appropriate compare function.
  * 
- * @param pirates the list of pirates
  * @param sort_flag the sort flag
- * @assumes pirates is not NULL
- * @assumes sort_flag is not NULL
- * @assumes sort_flag is a valid flag
+ * @return the compare function
 */
 compare_fn handle_sort_behavior(char *sort_flag);
 
+/**
+ * Avoid sort operator segfault when passing sort
+ * operator into load_profiles_from_file or populate_captains 
+ * instead of the files that are supposed to be passed.
+ * 
+ * @param def the default value
+ * @param argv the list of arguments
+ * @return the index of the file
+*/
+int avoid_sort_operator(int def, char* argv[]);
+
 int main(int argc, char *argv[])
 {
-    char* sort_flag = check_sort_flag(argc, argv);
+    char*           sort_flag;
+    int             access_index;
+    compare_fn      compare;
+    pirate_list*    all_profiles;
 
-    compare_fn compare = handle_sort_behavior(sort_flag);
+    sort_flag = check_sort_flag(argc, argv);
 
-    pirate_list *all_profiles = load_profiles_from_file(argv[1], compare);
+    compare = handle_sort_behavior(sort_flag);
 
-    populate_captains(all_profiles, argv[2]);
+    access_index = avoid_sort_operator(1, argv);
+
+    all_profiles = load_profiles_from_file(argv[access_index], compare);
+
+    populate_captains(all_profiles, argv[avoid_sort_operator(2, argv)]);
 
     list_sort(all_profiles);
 
@@ -76,6 +99,7 @@ char* check_sort_flag(int argc, char *argv[])
         fprintf(stderr, "Invalid sort flag\n");
         exit(1);
     }
+    
     return "-n";
 }
 
@@ -99,6 +123,7 @@ compare_fn handle_sort_behavior(char *sort_flag)
     {
         compare = pirate_compare_name; // default to name 
     }
+
     return compare;
 }
 
@@ -148,5 +173,15 @@ pirate_list* load_profiles_from_file(const char* filepath, compare_fn compare)
     }
 
     return all_profiles;
+}
+
+int avoid_sort_operator(int def, char* argv[]) 
+{
+    if (strcmp(argv[1], "-n") == 0 || strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "-t") == 0) 
+    {
+        return 1 + def;
+    }
+
+    return def;
 }
 

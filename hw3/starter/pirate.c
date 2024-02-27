@@ -1,7 +1,10 @@
 /**
- * Implementation file for pirate for HookBook B in CPSC 223 SP2024.
- *
- * Author: Braeden
+ * Name: Braeden Cullen
+ * Assignment: HookBook B
+ * Class: CPSC223 Spring 2024
+ * Date: Feb 26
+ * Purpose: implementation for pirate.h, provides a toolkit
+ *          for creating and populating pirates.
  */
 
 #include "pirate.h"
@@ -13,7 +16,6 @@
 #include <string.h>
 
 #define MAX_LINE_LENGTH 1000
-
 
 pirate *pirate_create(char *name)
 {
@@ -126,16 +128,6 @@ void populate_skills_list(skills_list_instance_t *lst, pirate *p, char* line, FI
     
     free(skill);
 }
-
-
-void pirate_print_A(const pirate *p, FILE *restrict output)
-{
-    if (p!=NULL && p->name!=NULL) 
-    {
-        fprintf(output, "%s\n", p->name);
-    }
-}
-
 
 void pirate_print(const pirate *p, FILE *restrict output)
 {

@@ -1,7 +1,11 @@
 /**
- * Implementation file for pirate_list for HookBook B in CPSC 223 SP2024.
- *
- * Author: Braeden
+ * Name: Braeden Cullen
+ * Assignment: HookBook B
+ * Class: CPSC223 Spring 2024
+ * Date: Feb 26
+ * Purpose: implementation for pirate_list.h, contains all
+ *          necessary functions for creating and manipulating
+ *          a list of pirates.
  */
 
 #include "pirate_list.h"
@@ -9,13 +13,11 @@
 #include "libhookbook.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 #define INITIAL_CAPACITY 25
 #define RESIZE_RATIO 2
 #define MAX_LINE_LENGTH 1000
-
 
 struct pirate_list_instance_t
 {

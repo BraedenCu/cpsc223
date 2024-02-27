@@ -1,9 +1,10 @@
 /**
- * Implementation file for libhookbook.h
- *
- * For Hookbook A in CPSC 223 SP2024.
- *
- * Author: Braeden 
+ * Name: Braeden Cullen
+ * Assignment: HookBook B
+ * Class: CPSC223 Spring 2024
+ * Date: Feb 26
+ * Purpose: interface for libhookbook.h, provide a toolkit
+ *          for reading in lines from a passed file.
  */
 
 #include "libhookbook.h"

@@ -1,14 +1,18 @@
 /**
- * Implementation file for skills_list for HookBook B in CPSC 223 SP2024.
- *
- * Author: Braeden Cullen
+ * Name: Braeden Cullen
+ * Assignment: HookBook B
+ * Class: CPSC223 Spring 2024
+ * Date: Feb 26
+ * Purpose: implementation for skills_list.h, contains 
+ *          all of the necessary components for creating
+ *          and sorting a pirate's skills.
  */
 
 #include "skills_list.h"
 
-#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 skills_list_instance_t* skills_list_create() 
 {
