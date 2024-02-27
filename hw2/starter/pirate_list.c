@@ -95,9 +95,11 @@ pirate *list_insert(pirate_list *pirates, pirate *p, size_t idx)
     list_expand_if_necessary(pirates);
 
     // If idx is beyond the current length of the list, append the pirate at the end
-    if (idx >= pirates->list_length) {
+    if (idx >= pirates->list_length) 
+    {
         idx = pirates->list_length; // Append the pirate to the end
-    } else {
+    } 
+    else {
         // Otherwise, shift pirates to the right to make space for the new pirate
         for (size_t i = pirates->list_length; i > idx; i--) {
             pirates->array[i] = pirates->array[i - 1];
