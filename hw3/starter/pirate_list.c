@@ -191,37 +191,35 @@ void quick_sort(pirate_list* pirates, int low, int high)
 {
     if (low < high) 
     {
-        int pivot = sort_partition(pirates, pirates->array, low, high); // length -1 for high
+        pirate *pivot_pirate = pirates->array[high]; // rightmost element as pivot
+
+        int i = low - 1; // index of smaller element
+
+        for (int j = low; j <= high - 1; j++) 
+        {
+            if (pirates->compare(pirates->array[j], pivot_pirate) <= 0) // if curr element is <= pivot
+            {
+                i++; // inc index of smaller element
+                sort_swap(&pirates->array[i], &pirates->array[j]);
+            }
+        }
+        
+        sort_swap(&pirates->array[i + 1], &pirates->array[high]); // swap pivot with i + 1
+
+        int pivot = i + 1;
+
         quick_sort(pirates, low, pivot - 1);  // before pivot
+        
         quick_sort(pirates, pivot + 1, high); // after pivot
     }
 }
 
-void sort_swap(pirate **a, pirate **b) 
+void sort_swap(pirate **one, pirate **two) 
 {
-    pirate *t = *a; // swap pirates using temp pirate
-    *a = *b;
-    *b = t;
-}
-
-int sort_partition(pirate_list* pirates, pirate **arr, int low, int high) 
-{
-    pirate *pivot = arr[high]; // rightmost element as pivot
-
-    int i = (low - 1); // index of smaller element
-
-    for (int j = low; j <= high - 1; j++) 
-    {
-        if (pirates->compare(arr[j], pivot) <= 0) // if curr element is <= pivot
-        {
-            i++; // inc index of smaller element
-            sort_swap(&arr[i], &arr[j]);
-        }
-    }
+    pirate *temp = *one; // swap pirates using temp pirate
     
-    sort_swap(&arr[i + 1], &arr[high]); // swap pivot with i + 1
-
-    return (i + 1);
+    *one = *two;
+    *two = temp;
 }
 
 size_t list_length(const pirate_list *pirates)
@@ -268,13 +266,13 @@ void skills_list_destroy_all(pirate_list* pirates)
     }
 }
 
-
 void list_expand_if_necessary(pirate_list *pirates) 
 {
     if (pirates->list_length >= pirates->capacity) // if list full, RESIZE_RATIO capacity
     {
         pirates->capacity *= RESIZE_RATIO;
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity);
+
         fprintf(stderr, "Expand to %zu\n", pirates->capacity);
     }
 }
@@ -285,6 +283,7 @@ void list_contract_if_necessary(pirate_list *pirates)
     {
         pirates->capacity /= RESIZE_RATIO;
         pirates->array = realloc(pirates->array, sizeof(pirate *) * pirates->capacity); // contract
+
         fprintf(stderr, "Contract to %zu\n", pirates->capacity);
     }
 }

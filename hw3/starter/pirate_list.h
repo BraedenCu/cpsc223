@@ -156,7 +156,6 @@ void print_all_pirates(pirate_list *pirates);
  * @param pirates the list of pirates
  * @param name the name of the pirate
  * @return 1 if the pirate is a duplicate, 0 if the pirate is not a duplicate
- * @assumes pirates is not NULL
 */
 int check_duplicate_pirate(const pirate_list *pirates, char *name);
 
@@ -165,7 +164,6 @@ int check_duplicate_pirate(const pirate_list *pirates, char *name);
  * 
  * @param pirates the list of pirates
  * @param filepath the path to the file containing the pirates
- * @assumes pirates is not NULL
 */
 void populate_captains(pirate_list *pirates, const char* filepath);
 
@@ -178,9 +176,6 @@ void populate_captains(pirate_list *pirates, const char* filepath);
  * @param pirates the list to sort
  * @param low the lowest index of the list
  * @param high the highest index of the list
- * @assumes pirates is not NULL and every pirate in the list has a name that is
- * unique in the list
- *
 */
 void quick_sort(pirate_list *pirates, int low, int high); 
 
@@ -189,21 +184,6 @@ void quick_sort(pirate_list *pirates, int low, int high);
  * swapping of the pirates.
  * 
  * @param a the first pirate to swap
- * @param b the second pirate to swap
- * @assumes pirates is not NULL and low and high are valid indexes
- * 
+ * @param b the second pirate to swap 
 */
-void sort_swap(pirate **a, pirate **b); 
-
-/**
- * Implementation for the partitioning of the quick sort algorithm, used
- * to find the pivot point for the quick sort algorithm. This pivot is then 
- * utilized to sort the list of pirates.
- * 
- * @param pirates used to find the compare function
- * @param arr the array of pirates
- * @param low the lowest index of the list
- * @param high the highest index of the list
- * @assumes pirates is not NULL and low and high are valid indexes
-*/
-int sort_partition(pirate_list* pirates, pirate **arr, int low, int high);
+void sort_swap(pirate **one, pirate **two); 

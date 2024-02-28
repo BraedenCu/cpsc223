@@ -30,7 +30,6 @@ skills_list_instance_t* skills_list_create()
     return skills_lst;
 }
 
-// Function to append a new skill to the list
 void skills_list_append(skills_list_instance_t *skills, char *skill) 
 {
     skills_list_node *new_node = malloc(sizeof(skills_list_node));
@@ -242,7 +241,7 @@ void skills_list_sort(skills_list_instance_t *skills)
     }
 
     skills_list_node *sorted = NULL; 
-    skills_list_node *curr = skills->head->next; 
+    skills_list_node *curr   = skills->head->next; 
 
     skills->head->next = NULL;
     sorted = skills->head;
@@ -273,7 +272,6 @@ void skills_list_sort(skills_list_instance_t *skills)
     }
 
     skills->head = sorted; // update head to sorted head
-
     skills_list_node *temp = skills->head;
 
     while (temp != NULL && temp->next != NULL) 
