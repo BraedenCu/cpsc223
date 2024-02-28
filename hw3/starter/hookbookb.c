@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 
     all_profiles = load_profiles_from_file(argv[access_index], compare);
 
-    populate_captains(all_profiles, argv[avoid_sort_operator(2, argv)]);
+    populate_captains(all_profiles, argv[access_index + 1]);
 
     list_sort(all_profiles);
 
