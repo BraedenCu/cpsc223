@@ -1,21 +1,25 @@
 CC = gcc
 CFLAGS = -std=c17 -Wall -pedantic -g
 
-TARGET = Blotto
+TARGET1 = Blotto
+TARGET2 = GmapUnit
 
-SOURCES = main.c entry.c gmap_array.c gmap_test_functions.c libmain.c string_key.c
+SOURCES1 = main.c entry.c gmap_array.c gmap_test_functions.c string_key.c
+SOURCES2 = gmap_unit.c gmap_test_functions.c entry.c string_key.c gmap_array.c
 
-OBJECTS = $(SOURCES:.c=.o)
+OBJECTS1 = $(SOURCES1:.c=.o)
+OBJECTS2 = $(SOURCES2:.c=.o)
 
-$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
+all: $(TARGET1) $(TARGET2)
 
-main.c: libmain.h entry.h gmap.h gmap_test_functions.h libmain.h string_key.h 
-entry.c: entry.h
-gmap_array.c: gmap.h
-gmap_test_functions.c: gmap_test_functions.h
-libmain.c: libmain.h
-string_key.c: string_key.h
+$(TARGET1): $(OBJECTS1)
+	$(CC) $(CFLAGS) -o $(TARGET1) $(OBJECTS1)
+
+$(TARGET2): $(OBJECTS2)
+	$(CC) $(CFLAGS) -o $(TARGET2) $(OBJECTS2)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm -f $(TARGET1) $(TARGET2) $(OBJECTS1) $(OBJECTS2)
