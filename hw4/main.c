@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     int num_bf = argc - 1;
 
     FILE *in = entry_parse_args(argc, argv, &max_id, &num_bf);
-
+    
     gmap *map = populate_gmap(in, max_id, num_bf, duplicate, compare_keys, hash29, free);
 
     // gmap_for_each(map, print_entry, &num_bf); 
@@ -119,7 +119,19 @@ void play_single_match(char* id1, char* id2, int *dist1, int *dist2, int *bf_wei
         }
     }
 
-    printf("%s %.1f - %s %.1f\n", id1, score1, id2, score2);
+    // print results -> winnerID - score1, loserID - score2
+    if (score1 > score2)
+    {
+        printf("%s %.1f - %s %.1f\n", id1, score1, id2, score2);
+    }
+    else if (score1 < score2)
+    {
+        printf("%s %.1f - %s %.1f\n", id2, score2, id1, score1);
+    }
+    else
+    {
+        printf("%s %.1f - %s %.1f\n", id1, score1, id2, score2);
+    }
 }
 
 FILE *entry_parse_args(int argc, char *argv[], int *max_id, int *num_bf)
