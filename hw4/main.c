@@ -40,13 +40,15 @@ int main(int argc, char *argv[])
 
     // gmap_for_each(map, print_entry, &num_bf); 
 
-/*==================    STEP TWO, run matches ==================*/
+/*================== run matches ==================*/
 
     int bf_weights[num_bf];
 
     find_weights(bf_weights, num_bf, argc, argv);
 
     play_matches(map, in, bf_weights, num_bf, max_id);
+
+    gmap_destroy(map);
 
     return 0;
 }
@@ -126,7 +128,7 @@ gmap *populate_gmap(FILE *in, int max_id, int num_bf, void *(*cp)(const void *),
     gmap *map = gmap_create(cp, comp, h, f);
 
     fseek(in, 0, SEEK_SET); // reset file pointer to start
-
+    
     while (!feof(in) && !ferror(in))
     {
         char peek = fgetc(in);
