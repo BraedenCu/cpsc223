@@ -15,6 +15,8 @@
 #include <string.h>
 #include <math.h>
 
+/*================== BLOTTO INTERFACE ==================*/
+
 FILE *entry_parse_args(int argc, char *argv[], int *max_id, int *battlefields);
 
 gmap *populate_gmap(FILE *in, int max_id, int num_bf, void *(*cp)(const void *), int (*comp)(const void *, const void *), size_t (*h)(const void *s), void (*f)(void *));
@@ -29,7 +31,7 @@ void play_single_match(char* id1, char* id2, int *dist1, int *dist2, int *bf_wei
 
 int main(int argc, char *argv[])
 {
-/*==================    populate GMAP ==================*/
+/*================== POPULATE GMP ADT ==================*/
 
     int max_id = 32;
     int num_bf = argc - 1;
@@ -40,7 +42,7 @@ int main(int argc, char *argv[])
 
     // gmap_for_each(map, print_entry, &num_bf); 
 
-/*================== run matches ==================*/
+/*================== RUN MATCHES ==================*/
 
     int bf_weights[num_bf];
 
@@ -52,6 +54,8 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
+/*================== BLOTTO HELPER IMPLEMENTATION ==================*/
 
 void find_weights(int bf_weights[], int num_bf, int argc, char *argv[]) 
 {
