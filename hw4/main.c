@@ -67,6 +67,10 @@ int main(int argc, char *argv[])
 
 /*================== BLOTTO IMPLEMENTATION ==================*/
 
+
+/*================== CLEANUP ==================*/
+
+
 void blotto_cleanup(gmap *map, FILE *in) 
 {
     if (map != NULL) 
@@ -93,6 +97,7 @@ void free_distribution(const void *key, void *value, void *arg)
     (void)arg; // ignore arg, avoid warnings
 }
 
+/*================== BLOTTO DISTRIBUTION WEIGHTS ==================*/
 
 void find_weights(gmap* map, FILE* in, int bf_weights[], int num_bf, int argc, char *argv[])
 {
@@ -108,6 +113,8 @@ void find_weights(gmap* map, FILE* in, int bf_weights[], int num_bf, int argc, c
         bf_weights[i] = atoi(argv[i + 1]); 
     }
 }
+
+/*================== BLOTTO MATCH BEHAVIOR ==================*/
 
 void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id) 
 {
@@ -190,6 +197,8 @@ void play_single_match(gmap* map, FILE* in, char* id1, char* id2, int *dist1, in
         printf("%s %.1f - %s %.1f\n", id1, score1, id2, score2);
     }
 }
+
+/*================== BLOTTO UTILITY FUNCTIONS ==================*/
 
 FILE *entry_parse_args(int argc, char *argv[], int *max_id, int *num_bf)
 {

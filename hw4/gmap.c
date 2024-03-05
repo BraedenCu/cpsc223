@@ -12,28 +12,28 @@
 #include <stdbool.h>
 #include <string.h>
 
-
+// structure for individual node within the map
 typedef struct node {
-    void *key;
-    void *value;
-    struct node *next;
+    void *key;             // node key
+    void *value;           // node value
+    struct node *next;     // pointer to next node
 } node;
 
-struct _gmap 
-{
-    node    **table;
-    size_t  capacity;
-    size_t  size;
-    size_t  (*hash)(const void *);
+// structure for generic map
+struct _gmap {
+    node **table;                 // pointer to array of node pointers
+    size_t capacity;              // capacity of table
+    size_t size;                  // size of table table
+    size_t (*hash)(const void *); // pointer to hash function
 
-    int     (*compare)(const void *, const void *);
-    void    *(*copy)(const void *);
-    void    (*free)(void *);
+    int (*compare)(const void *, const void *);    // pointer to comparison function
+    void *(*copy)(const void *);                   // pointer to copy function
+    void (*free)(void *);                          // pointer to free function
 };
 
-char *gmap_error = "gmap ERROR";
+char *gmap_error = "gmap ERROR"; // error message for gmap operations
 
-#define INITIAL_CAPACITY 101 
+#define INITIAL_CAPACITY 101 // initial hash table capacity
 
 
 gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const void *), size_t (*h)(const void *), void (*f)(void *)) 
@@ -72,10 +72,6 @@ size_t gmap_size(const gmap *m)
 {
     return m->size;
 }
-
-
-// node should be inserted as the first element, NOT the last element, and that is O, b/c shifting first two 
-// need to be resizing, because law of large numbers, you get problems <- load_factor, when size = capacity, double is a good way to do it
 
 void *gmap_put(gmap *m, const void *key, void *value) 
 {
@@ -145,6 +141,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
     new_node->key = m->copy(key);
     new_node->value = value;
     new_node->next = m->table[index];
+    
     m->table[index] = new_node;
     m->size++;
 

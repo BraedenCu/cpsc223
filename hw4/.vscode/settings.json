@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "libmain.h": "c",
-        "gmap.h": "c"
+        "gmap.h": "c",
+        "stdlib.h": "c"
     }
 }
