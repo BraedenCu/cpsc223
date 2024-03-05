@@ -92,11 +92,22 @@ size_t gmap_size(const gmap *m)
 }
 
 /**
- * Associates the given value with the given key in the map.
-*/
-
+ * Adds a copy of the given key with value to this map.  If the key is
+ * already present then the old value is replaced and returned.  The
+ * map copies the key, so the caller retains ownership of the original
+ * key and may modify it or destroy it without affecting the map.  The
+ * map copies the pointer to the value, but the caller retains
+ * ownership of the value. Behavior is undefined if either m or key is
+ * NULL.
+ *
+ * @param m a pointer to a map, non-NULL
+ * @param key a pointer to a key, non-NULL
+ * @param value a pointer to a value
+ * @return a pointer to the old value, or NULL, or a pointer to gmap_error
+ */
 // node should be inserted as the first element, NOT the last element, and that is O, b/c shifting first two 
 // need to be resizing, because law of large numbers, you get problems <- load_factor, when size = capacity, double is a good way to do it
+
 void *gmap_put(gmap *m, const void *key, void *value) 
 {
     if (m == NULL || key == NULL) 
@@ -105,9 +116,24 @@ void *gmap_put(gmap *m, const void *key, void *value)
     }
 
     size_t index = m->hash(key) % m->capacity; // get the index
-    node *current = m->table[index]; // get the current node at the index
+    node *current = m->table[index]; // get the current node
+
+    while (current != NULL) 
+    {
+        if (m->compare(current->key, key) == 0)  // key already exists
+        {
+            void *old_value = current->value;
+            current->value = value;
+
+            return old_value;
+        }
+
+        current = current->next; // node should be inserted as the first element, NOT the last element, and that is O, b/c shifting first two 
+                                 // need to be resizing, because law of large numbers, you get problems <- load_factor, when size = capacity, double is a good way to do it
+    }
 
     node *new_node = malloc(sizeof(node));
+
     if (new_node == NULL) 
     {
         return gmap_error;
@@ -115,29 +141,14 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
     new_node->key = m->copy(key);
     new_node->value = value;
-    new_node->next = NULL;
+    new_node->next = m->table[index];
 
-    // Check if the bucket is empty
-    if (current == NULL) 
-    {
-        // If the bucket is empty, insert the new node directly
-        m->table[index] = new_node;
-    } 
-    else 
-    {
-        // Find the last node in the linked list for the bucket
-        while (current->next != NULL) 
-        {
-            current = current->next;
-        }
-        // Add the new node at the end of the linked list
-        current->next = new_node;
-    }
-
-    m->size++; // Increment the size of the map
+    m->table[index] = new_node;
+    m->size++;
 
     return NULL;
 }
+
 
 /**
  * Removes the given key and its associated value from the map.
@@ -256,25 +267,24 @@ void gmap_destroy(gmap *m)
 {
     if (m != NULL) 
     {
-        // iterate over each bucket
         for (size_t i = 0; i < m->capacity; i++) 
         {
-            node *current = m->table[i];
-
+            node *current = m->table[i]; // get the current node
+                
             while (current != NULL) 
             {
                 node *next = current->next;
-
-                m->free(current->key);
-
+                
+                free(current->value);
+                free(current->key); 
+                
                 free(current);
 
                 current = next;
             }
         }
-
         free(m->table);
-
         free(m);
     }
 }
+

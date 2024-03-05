@@ -34,6 +34,8 @@ char* concatenate_ids(const char* id1, const char* id2);
 
 bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2);
 
+void blotto_cleanup(gmap *map, FILE *in);
+
 /*================== ENTER DRIVER ==================*/
 int main(int argc, char *argv[])
 {
@@ -52,6 +54,7 @@ int main(int argc, char *argv[])
     int num_bf = argc - 1;
 
     FILE *in = entry_parse_args(argc, argv, &max_id, &num_bf);
+    
     gmap *map = populate_gmap(in, max_id, num_bf, duplicate, compare_keys, hash29, free);
     
     int bf_weights[num_bf];
@@ -62,12 +65,18 @@ int main(int argc, char *argv[])
 
     play_matches(map, in, bf_weights, num_bf, max_id);
 
-    gmap_destroy(map);
+    blotto_cleanup(map, in);
 
     return 0;
 }
 
 /*================== BLOTTO IMPLEMENTATION ==================*/
+
+void blotto_cleanup(gmap *map, FILE *in) 
+{
+    gmap_destroy(map);
+    fclose(in);
+}
 
 void find_weights(int bf_weights[], int num_bf, int argc, char *argv[]) 
 {
@@ -184,6 +193,8 @@ gmap *populate_gmap(FILE *in, int max_id, int num_bf, void *(*cp)(const void *),
         entry e = entry_read(in, max_id, num_bf);
         
         gmap_put(map, e.id, e.distribution);
+
+        free(e.id); // id ownership retained by entry, therefore free it
     }
 
     return map;
