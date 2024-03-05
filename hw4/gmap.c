@@ -267,24 +267,25 @@ void gmap_destroy(gmap *m)
 {
     if (m != NULL) 
     {
+        // iterate over each bucket
         for (size_t i = 0; i < m->capacity; i++) 
         {
-            node *current = m->table[i]; // get the current node
-                
+            node *current = m->table[i];
+
             while (current != NULL) 
             {
                 node *next = current->next;
-                
-                m->free(current->value);
-                m->free(current->key); 
-                
+
+                m->free(current->key);
+
                 free(current);
 
                 current = next;
             }
         }
+
         free(m->table);
+
         free(m);
     }
 }
-
