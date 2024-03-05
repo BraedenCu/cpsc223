@@ -94,6 +94,9 @@ size_t gmap_size(const gmap *m)
 /**
  * Associates the given value with the given key in the map.
 */
+
+// node should be inserted as the first element, NOT the last element, and that is O, b/c shifting first two 
+// need to be resizing, because law of large numbers, you get problems <- load_factor, when size = capacity, double is a good way to do it
 void *gmap_put(gmap *m, const void *key, void *value) 
 {
     if (m == NULL || key == NULL) 
@@ -101,22 +104,8 @@ void *gmap_put(gmap *m, const void *key, void *value)
         return gmap_error;
     }
 
-    size_t index = m->hash(key) % m->capacity;
-    node *current = m->table[index];
-
-    while (current != NULL) 
-    {
-        if (m->compare(current->key, key) == 0)  // key already exists
-        {
-            void *old_value = current->value;
-            current->value = value;
-
-            return old_value;
-        }
-
-        current = current->next; // node should be inserted as the first element, NOT the last element, and that is O, b/c shifting first two 
-                                 // need to be resizing, because law of large numbers, you get problems <- load_factor, when size = capacity, double is a good way to do it
-    }
+    size_t index = m->hash(key) % m->capacity; // get the index
+    node *current = m->table[index]; // get the current node
 
     node *new_node = malloc(sizeof(node));
 
@@ -125,10 +114,25 @@ void *gmap_put(gmap *m, const void *key, void *value)
         return gmap_error;
     }
 
-    // create new node
     new_node->key = m->copy(key);
     new_node->value = value;
     new_node->next = m->table[index];
+
+    if (gmap_contains_key(m, key)) 
+    {
+        while (current != NULL) 
+        {
+            if (m->compare(current->key, key) == 0) 
+            {
+                void *old_value = current->value;
+                current->value = value;
+                free(new_node->key);
+                free(new_node);
+                return old_value;
+            }
+            current = current->next;
+        }
+    }
 
     m->table[index] = new_node;
     m->size++;
