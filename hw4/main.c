@@ -26,7 +26,7 @@ void print_entry(const void *key, void *value, void *arg);
 
 void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id);
 
-void find_weights(int bf_weights[], int num_bf, int argc, char *argv[]);
+void find_weights(gmap* map, int bf_weights[], int num_bf, int argc, char *argv[]);
 
 void play_single_match(char* id1, char* id2, int *dist1, int *dist2, int *bf_weights, int num_bf);
 
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     
     int bf_weights[num_bf];
 
-    find_weights(bf_weights, num_bf, argc, argv);
+    find_weights(map, bf_weights, num_bf, argc, argv);
     
 /*================== RUN MATCHES ==================*/
 
@@ -78,11 +78,12 @@ void blotto_cleanup(gmap *map, FILE *in)
     fclose(in);
 }
 
-void find_weights(int bf_weights[], int num_bf, int argc, char *argv[]) 
+void find_weights(gmap* map, int bf_weights[], int num_bf, int argc, char *argv[])
 {
     if (argc - 1 < num_bf) 
     { 
         fprintf(stderr, "Error: Expected %d weights, but only %d were provided.\n", num_bf, argc - 1);
+        gmap_destroy(map); // cleanup
         exit(1);
     }
 
@@ -238,6 +239,7 @@ bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2)
     if (!match_id) 
     {
         fprintf(stderr, "Mem alloc failed for match ID.\n");
+        gmap_destroy(played_matches); // cleanup
         exit(1);
     }
 
