@@ -91,6 +91,9 @@ size_t gmap_size(const gmap *m)
     return m->size;
 }
 
+/**
+ * Associates the given value with the given key in the map.
+*/
 void *gmap_put(gmap *m, const void *key, void *value) 
 {
     if (m == NULL || key == NULL) 
@@ -103,7 +106,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
     while (current != NULL) 
     {
-        if (m->compare(current->key, key) == 0) 
+        if (m->compare(current->key, key) == 0)  // key already exists
         {
             void *old_value = current->value;
             current->value = value;
@@ -121,6 +124,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
         return gmap_error;
     }
 
+    // create new node
     new_node->key = m->copy(key);
     new_node->value = value;
     new_node->next = m->table[index];
@@ -142,7 +146,8 @@ void *gmap_remove(gmap *m, const void *key)
 
     while (current != NULL) 
     {
-        if (m->compare(current->key, key) == 0) {
+        if (m->compare(current->key, key) == 0) // key found
+        {
             if (prev == NULL) 
             {
                 m->table[index] = current->next;
@@ -170,12 +175,12 @@ void *gmap_remove(gmap *m, const void *key)
  */
 bool gmap_contains_key(const gmap *m, const void *key) 
 {
-    size_t index = m->hash(key) % m->capacity;
+    size_t index = m->hash(key) % m->capacity; // get the index
     node *current = m->table[index];
 
     while (current != NULL) 
     {
-        if (m->compare(current->key, key) == 0) 
+        if (m->compare(current->key, key) == 0) // key found
         {
             return true;
         }
@@ -212,7 +217,7 @@ void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg)
     {
         for (node *current = m->table[i]; current != NULL; current = current->next) 
         {
-            f(current->key, current->value, arg);
+            f(current->key, current->value, arg); // call the function
         }
     }
 }
@@ -230,17 +235,20 @@ const void **gmap_keys(gmap *m)
     }
 
     size_t idx = 0;
+
     for (size_t i = 0; i < m->capacity; i++) 
     {
         for (node *current = m->table[i]; current != NULL; current = current->next) 
         {
-            keys[idx++] = current->key;
+            keys[idx++] = current->key; // store the key
         }
     }
     return keys;
 }
 
-
+/**
+ * Destroys the given map.
+ */
 void gmap_destroy(gmap *m) 
 {
     if (m != NULL) 
@@ -249,6 +257,7 @@ void gmap_destroy(gmap *m)
         for (size_t i = 0; i < m->capacity; i++) 
         {
             node *current = m->table[i];
+            
             while (current != NULL) 
             {
                 node *next = current->next;

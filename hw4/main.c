@@ -34,16 +34,18 @@ char* concatenate_ids(const char* id1, const char* id2);
 
 bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2);
 
+/*================== ENTER DRIVER ==================*/
 int main(int argc, char *argv[])
 {
 /*================== TODO ==================*/
+
 // FAILED -> cases 55, 53, 52, 51, 43, 26, 16
 
-// case 55 -> invalid matchup, produce error -> RESOLVED
+// case 55 -> invalid matchup, produce error
 // case 53 -> invalid distribution, produce error
 // case 52 -> inconsistent total units, no matches played 
 
-/*================== POPULATE GMP ADT ==================*/
+/*================== POPULATE ADT ==================*/
 
     // Initialization remains unchanged
     int max_id = 32;
@@ -65,7 +67,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-/*================== BLOTTO HELPER IMPLEMENTATION ==================*/
+/*================== BLOTTO IMPLEMENTATION ==================*/
 
 void find_weights(int bf_weights[], int num_bf, int argc, char *argv[]) 
 {
@@ -87,8 +89,11 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
 
     char id1[max_id], id2[max_id];
 
+    int matches_played = 0;
+
     while (fscanf(in, "%s %s", id1, id2) == 2) 
     {
+        matches_played++;
         if (!is_duplicate_match(played_matches, id1, id2)) 
         {
             int *dist1 = (int *)gmap_get(map, id1);
@@ -107,6 +112,12 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
     }
 
     gmap_destroy(played_matches);
+
+    if (matches_played == 0) 
+    {
+        fprintf(stderr, "Error: No matches played\n");
+        exit(1);
+    }
 }
 
 
@@ -204,20 +215,20 @@ char* concatenate_ids(const char* id1, const char* id2)
         strcat(result, id2);
     }
 
-    return result;
+    return result; // useful for dupe matches
 }
 
 bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2) 
 {
-    char* match_id = concatenate_ids(id1, id2);
+    char* match_id = concatenate_ids(id1, id2); // create match ID
 
     if (!match_id) 
     {
-        fprintf(stderr, "Memory allocation failed for match ID.\n");
+        fprintf(stderr, "Mem alloc failed for match ID.\n");
         exit(1);
     }
 
-    bool is_duplicate = gmap_contains_key(played_matches, match_id);
+    bool is_duplicate = gmap_contains_key(played_matches, match_id); // check if match has been played
 
     if (!is_duplicate) 
     {
@@ -226,5 +237,5 @@ bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2)
 
     free(match_id); 
 
-    return is_duplicate;
+    return is_duplicate; 
 }
