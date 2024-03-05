@@ -30,7 +30,7 @@ if ( $nWarn > 0 ) {
     print("$ME: warning messages from $CFLAGS\n");
 }
 
-@rpt = `egrep "/gcc|/cc" [Mm]akefile`;    # Flag circumvention of Wall
+@rpt = `grep -E "/gcc|/cc" [Mm]akefile`;    # Flag circumvention of Wall
 if ( @rpt > 0 ) {
     print("$ME: possible circumvention of $CFLAGS\n");
 }

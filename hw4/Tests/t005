@@ -9,4 +9,4 @@ if [ ! -x ./GmapUnit ]; then
   exit 1
 fi
 
-Tests/bins/bins/bins/bin/run -stderr=/dev/null ./GmapUnit 7 </dev/null
+$BIN/run -stderr=/dev/null ./GmapUnit 7 </dev/null

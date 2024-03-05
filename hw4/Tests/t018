@@ -9,5 +9,5 @@ if [ ! -x ./GmapUnit ]; then
   exit 1
 fi
 
-Tests/bin/run -stdout=/dev/null -stderr=/dev/null /usr/bin/valgrind --tool=memcheck --leak-check=yes -q --log-file=valgrind.out ./GmapUnit 14 </dev/null
+$BIN/run -stdout=/dev/null -stderr=/dev/null /usr/bin/valgrind --tool=memcheck --leak-check=yes -q --log-file=valgrind.out ./GmapUnit 14 </dev/null
 cat valgrind.out

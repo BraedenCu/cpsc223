@@ -19,7 +19,7 @@ fi
 
 for N in 500 2500 12500; do
   for ON in 0 1; do
-    Tests/bin/run -stdout=stdout.out -stderr=/dev/null /usr/bin/valgrind --tool=cachegrind --trace-children=yes --log-file=valgrind.out ./GmapUnit 22 $N $ON </dev/null
+    $BIN/run -stdout=stdout.out -stderr=/dev/null /usr/bin/valgrind --tool=cachegrind --trace-children=yes --log-file=valgrind.out ./GmapUnit 22 $N $ON </dev/null
     COMPLETE=$(grep "I \+refs" valgrind.out)
     if [ "$COMPLETE" == "" ]; then
       echo "FAIL: test did not complete"
@@ -31,5 +31,5 @@ for N in 500 2500 12500; do
   done
 done
 cat stdout.out
-Tests/bin/big_oh.py -message t022 -quadratic 20 500 2500 12500 <i_count.txt
+$BIN/big_oh.py -message t022 -quadratic 20 500 2500 12500 <i_count.txt
 rm i_count.txt

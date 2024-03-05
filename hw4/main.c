@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     int num_bf = argc - 1;
 
     FILE *in = entry_parse_args(argc, argv, &max_id, &num_bf);
-    
+
     gmap *map = populate_gmap(in, max_id, num_bf, duplicate, compare_keys, hash29, free);
 
     // gmap_for_each(map, print_entry, &num_bf); 
@@ -79,16 +79,19 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
     {
         fscanf(in, "%s %s", id1, id2);
 
+        printf("Match: %s vs %s\n", id1, id2);
+        
         int *dist1 = (int *)gmap_get(map, id1);
         int *dist2 = (int *)gmap_get(map, id2);
 
+        
         if (dist1 && dist2)
         {
             play_single_match(id1, id2, dist1, dist2, bf_weights, num_bf);
         }
         else
         {
-            printf("One of the players not found in map\n");
+            fprintf(stderr, "Error: Invalid ID\n");
         }
     }
 }

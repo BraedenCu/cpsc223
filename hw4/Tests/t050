@@ -9,4 +9,4 @@ if [ ! -x ./Blotto ]; then
   exit 1
 fi
 
-Tests/bin/run -stdout=/dev/null -stderr=/dev/null ./Blotto 1 2 3 4 <$WHERE/t050.in
+$BIN/run -stdout=/dev/null -stderr=/dev/null ./Blotto 1 2 3 4 <$WHERE/t050.in

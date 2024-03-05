@@ -9,5 +9,5 @@ if [ ! -x ./GmapUnit ]; then
   exit 1
 fi
 
-Tests/bin/run -stdout=stdout.out -stderr=/dev/null ./GmapUnit 2 </dev/null
+$BIN/run -stdout=stdout.out -stderr=/dev/null ./GmapUnit 2 </dev/null
 cat stdout.out | head -n 1
