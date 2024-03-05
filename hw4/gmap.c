@@ -275,8 +275,7 @@ void gmap_destroy(gmap *m)
             while (current != NULL) 
             {
                 node *next = current->next;
-                
-                m->free(current->value);
+
                 m->free(current->key);
                 //m->free(current->value);
 
