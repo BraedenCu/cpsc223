@@ -34,6 +34,8 @@ char* concatenate_ids(const char* id1, const char* id2);
 
 bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2);
 
+void free_distribution(const void *key, void *value, void *arg);
+
 void blotto_cleanup(gmap *map, FILE *in);
 
 /*================== ENTER DRIVER ==================*/
@@ -74,9 +76,32 @@ int main(int argc, char *argv[])
 
 void blotto_cleanup(gmap *map, FILE *in) 
 {
+    if (map != NULL) {
+        // Use gmap_for_each or equivalent to apply free_distribution to each entry
+        gmap_for_each(map, free_distribution, NULL);
+    }
+
+    // Now that all distributions have been freed, destroy the map
     gmap_destroy(map);
-    fclose(in);
+
+    // Close the input file
+    if (in != NULL) {
+        fclose(in);
+    }
 }
+
+void free_distribution(const void *key, void *value, void *arg) {
+    // The key is not used in this function, but it's part of the signature
+    (void)key; // This line explicitly ignores the key to avoid unused parameter warnings
+
+    // Cast value to the correct type and free it
+    int *distribution = (int *)value;
+    free(distribution);
+
+    // arg is not used but included to match the expected function signature
+    (void)arg;
+}
+
 
 void find_weights(gmap* map, int bf_weights[], int num_bf, int argc, char *argv[])
 {

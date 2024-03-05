@@ -24,10 +24,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-//gmap error
 char *gmap_error = "gmap_error";
 
-// Assuming entry and node structures are defined as previously discussed
 typedef struct node {
     void *key;
     void *value;
