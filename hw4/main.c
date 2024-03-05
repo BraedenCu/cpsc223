@@ -76,29 +76,26 @@ int main(int argc, char *argv[])
 
 void blotto_cleanup(gmap *map, FILE *in) 
 {
-    if (map != NULL) {
-        // Use gmap_for_each or equivalent to apply free_distribution to each entry
+    if (map != NULL) 
+    {
         gmap_for_each(map, free_distribution, NULL);
     }
 
-    // Now that all distributions have been freed, destroy the map
     gmap_destroy(map);
 
-    // Close the input file
     if (in != NULL) {
         fclose(in);
     }
 }
 
-void free_distribution(const void *key, void *value, void *arg) {
-    // The key is not used in this function, but it's part of the signature
-    (void)key; // This line explicitly ignores the key to avoid unused parameter warnings
+void free_distribution(const void *key, void *value, void *arg) 
+{
+    (void)key; // ignore key, avoid warnings
 
-    // Cast value to the correct type and free it
     int *distribution = (int *)value;
+
     free(distribution);
 
-    // arg is not used but included to match the expected function signature
     (void)arg;
 }
 
