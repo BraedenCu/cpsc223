@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
 
 // case 55 -> invalid matchup, produce error -> RESOLVED
 // case 53 -> invalid distribution, produce error
+// case 52 -> inconsistent total units, no matches played 
 
 /*================== POPULATE GMP ADT ==================*/
 
