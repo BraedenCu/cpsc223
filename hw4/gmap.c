@@ -42,7 +42,7 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
 
     if (m == NULL) 
     {
-        return NULL;
+        return gmap_error;
     }
 
     m->table = malloc(sizeof(node *) * INITIAL_CAPACITY);
@@ -50,7 +50,7 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
     if (m->table == NULL) 
     {
         free(m);
-        return NULL;
+        return gmap_error;
     }
 
     for (size_t i = 0; i < INITIAL_CAPACITY; i++) 
@@ -82,9 +82,9 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
     float load_factor = (float)m->size / m->capacity; // get the load factor
 
-    if (load_factor > 0.75) // resize based on load factor
+    if (load_factor > 0.75) // standard load factor of 0.75
     {
-        size_t new_capacity = 2 * m->capacity;
+        size_t new_capacity = 2 * m->capacity; // double capacity
         node **new_table = malloc(sizeof(node *) * new_capacity);
 
         if (new_table == NULL) 
@@ -126,6 +126,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
         { 
             void *old_value = current->value;
             current->value = value;
+
             return old_value;
         }
         current = current->next;
@@ -141,7 +142,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
     new_node->key = m->copy(key);
     new_node->value = value;
     new_node->next = m->table[index];
-    
+
     m->table[index] = new_node;
     m->size++;
 
@@ -218,7 +219,7 @@ void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg)
     {
         for (node *current = m->table[i]; current != NULL; current = current->next) 
         {
-            f(current->key, current->value, arg); // call the function
+            f(current->key, current->value, arg); // call the function on each node
         }
     }
 }
