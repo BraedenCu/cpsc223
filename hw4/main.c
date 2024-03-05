@@ -26,9 +26,9 @@ void print_entry(const void *key, void *value, void *arg);
 
 void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id);
 
-void find_weights(gmap* map, int bf_weights[], int num_bf, int argc, char *argv[]);
+void find_weights(gmap* map, FILE* in, int bf_weights[], int num_bf, int argc, char *argv[]);
 
-void play_single_match(char* id1, char* id2, int *dist1, int *dist2, int *bf_weights, int num_bf);
+void play_single_match(gmap* map, FILE* in, char* id1, char* id2, int *dist1, int *dist2, int *bf_weights, int num_bf);
 
 char* concatenate_ids(const char* id1, const char* id2);
 
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     
     int bf_weights[num_bf];
 
-    find_weights(map, bf_weights, num_bf, argc, argv);
+    find_weights(map, in, bf_weights, num_bf, argc, argv);
     
 /*================== RUN MATCHES ==================*/
 
@@ -100,12 +100,12 @@ void free_distribution(const void *key, void *value, void *arg)
 }
 
 
-void find_weights(gmap* map, int bf_weights[], int num_bf, int argc, char *argv[])
+void find_weights(gmap* map, FILE* in, int bf_weights[], int num_bf, int argc, char *argv[])
 {
     if (argc - 1 < num_bf) 
     { 
         fprintf(stderr, "Error: Expected %d weights, but only %d were provided.\n", num_bf, argc - 1);
-        gmap_destroy(map); // cleanup
+        blotto_cleanup(map, in); // cleanup
         exit(1);
     }
 
@@ -133,12 +133,12 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
 
             if (dist1 && dist2)
             {
-                play_single_match(id1, id2, dist1, dist2, bf_weights, num_bf);
+                play_single_match(map, in, id1, id2, dist1, dist2, bf_weights, num_bf);
             } 
             else 
             {
                 fprintf(stderr, "Error: Invalid ID Pair\n");
-                gmap_destroy(map); // cleanup
+                blotto_cleanup(map, in); // cleanup
                 exit(1); // these are all issues with valgrind, stemming from the fact that cleanup is not done before exit(1) is called
             }
         }
@@ -149,13 +149,13 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
     if (matches_played == 0) 
     {
         fprintf(stderr, "Error: No matches played\n");
-        gmap_destroy(map); // cleanup
+        blotto_cleanup(map, in); // cleanup
         exit(1);
     }
 }
 
 
-void play_single_match(char* id1, char* id2, int *dist1, int *dist2, int *bf_weights, int num_bf)
+void play_single_match(gmap* map, FILE* in, char* id1, char* id2, int *dist1, int *dist2, int *bf_weights, int num_bf)
 {
     float score1 = 0.0, score2 = 0.0;
 
@@ -177,6 +177,7 @@ void play_single_match(char* id1, char* id2, int *dist1, int *dist2, int *bf_wei
         else
         {
             fprintf(stderr, "Error: Invalid distribution\n");
+            blotto_cleanup(map, in); // cleanup
             exit(1);
         }
     }
@@ -262,7 +263,6 @@ bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2)
     {
         fprintf(stderr, "Mem alloc failed for match ID.\n");
         gmap_destroy(played_matches); // cleanup
-        exit(1);
     }
 
     bool is_duplicate = gmap_contains_key(played_matches, match_id); // check if match has been played
