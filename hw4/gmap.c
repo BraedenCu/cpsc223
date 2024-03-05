@@ -6,6 +6,19 @@
  * Purpose: implementation of the gmap abstract data structure
  *
  */
+
+/* RULES
+* `gmap_create`: $O(1)$
+* `gmap_size`: $O(1)$ (worst-case)
+* `gmap_contains_key`: expected $O(1)$, worst-case $O(n)$
+* `gmap_get`: expected $O(1)$, worst-case $O(n)$
+* `gmap_put`: expected $O(1)$, worst-case $O(n)$
+* `gmap_remove`: expected $O(1)$, worst-case $O(n)$
+* `gmap_for_each`: $O(n)$ (assuming `f` runs in $O(1)$ time)
+* `gmap_keys`: $O(n)$
+* `gmap_destroy`: $O(n)$
+*/
+
 #include "gmap.h"
 #include <stdlib.h>
 #include <stdbool.h>
