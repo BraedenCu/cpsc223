@@ -6,7 +6,6 @@
  * Purpose: implementation of the gmap abstract data structure
  *
  */
-
 #include "gmap.h"
 #include <stdlib.h>
 #include <stdbool.h>
@@ -34,7 +33,6 @@ struct _gmap {
 char *gmap_error = "gmap ERROR"; // error message for gmap operations
 
 #define INITIAL_CAPACITY 101 // initial hash table capacity
-
 
 gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const void *), size_t (*h)(const void *), void (*f)(void *)) 
 {
