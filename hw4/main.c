@@ -96,7 +96,7 @@ void free_distribution(const void *key, void *value, void *arg)
 
     free(distribution);
 
-    (void)arg;
+    (void)arg; // ignore arg, avoid warnings
 }
 
 
