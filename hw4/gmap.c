@@ -7,26 +7,11 @@
  *
  */
 
-/* RULES
-* `gmap_create`: $O(1)$
-* `gmap_size`: $O(1)$ (worst-case)
-* `gmap_contains_key`: expected $O(1)$, worst-case $O(n)$
-* `gmap_get`: expected $O(1)$, worst-case $O(n)$
-* `gmap_put`: expected $O(1)$, worst-case $O(n)$
-* `gmap_remove`: expected $O(1)$, worst-case $O(n)$
-* `gmap_for_each`: $O(n)$ (assuming `f` runs in $O(1)$ time)
-* `gmap_keys`: $O(n)$
-* `gmap_destroy`: $O(n)$
-*/
-
 #include "gmap.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 
-void gmap_resize(gmap *m);
-
-char *gmap_error = "gmap_error";
 
 typedef struct node {
     void *key;
@@ -46,11 +31,11 @@ struct _gmap
     void    (*free)(void *);
 };
 
+char *gmap_error = "gmap ERROR";
+
 #define INITIAL_CAPACITY 101 
 
-/**
- * Creates a new, empty map.
- */
+
 gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const void *), size_t (*h)(const void *), void (*f)(void *)) 
 {
     gmap *m = malloc(sizeof(gmap));
@@ -83,28 +68,11 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
     return m;
 }
 
-/**
- * Returns the number of (key, value) pairs in the given map.
- */
 size_t gmap_size(const gmap *m) 
 {
     return m->size;
 }
 
-/**
- * Adds a copy of the given key with value to this map.  If the key is
- * already present then the old value is replaced and returned.  The
- * map copies the key, so the caller retains ownership of the original
- * key and may modify it or destroy it without affecting the map.  The
- * map copies the pointer to the value, but the caller retains
- * ownership of the value. Behavior is undefined if either m or key is
- * NULL.
- *
- * @param m a pointer to a map, non-NULL
- * @param key a pointer to a key, non-NULL
- * @param value a pointer to a value
- * @return a pointer to the old value, or NULL, or a pointer to gmap_error
- */
 
 // node should be inserted as the first element, NOT the last element, and that is O, b/c shifting first two 
 // need to be resizing, because law of large numbers, you get problems <- load_factor, when size = capacity, double is a good way to do it
@@ -120,7 +88,37 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
     if (load_factor > 0.75) // resize based on load factor
     {
-        gmap_resize(m);
+        size_t new_capacity = 2 * m->capacity;
+        node **new_table = malloc(sizeof(node *) * new_capacity);
+
+        if (new_table == NULL) 
+        {
+            return gmap_error; // mem alloc error
+        }
+
+        for (size_t i = 0; i < new_capacity; i++) 
+        {
+            new_table[i] = NULL;
+        }
+
+        for (size_t i = 0; i < m->capacity; i++) 
+        {
+            node *current = m->table[i];
+            while (current != NULL) 
+            {
+                size_t new_index = m->hash(current->key) % new_capacity; // get the new index
+                node *next = current->next;
+
+                current->next = new_table[new_index]; // prepend, necessary for O(1) retrieval
+                new_table[new_index] = current;
+
+                current = next;
+            }
+        }
+
+        free(m->table);
+        m->table = new_table;
+        m->capacity = new_capacity;
     }
 
     size_t index = m->hash(key) % m->capacity; // get the index
@@ -153,47 +151,6 @@ void *gmap_put(gmap *m, const void *key, void *value)
     return NULL;
 }
 
-
-
-void gmap_resize(gmap *m) 
-{
-    size_t new_capacity = 2 * m->capacity;
-    node **new_table = malloc(sizeof(node *) * new_capacity);
-
-    if (new_table == NULL) 
-    {
-        return gmap_error; // mem alloc error
-    }
-
-    for (size_t i = 0; i < new_capacity; i++) 
-    {
-        new_table[i] = NULL;
-    }
-
-    for (size_t i = 0; i < m->capacity; i++) 
-    {
-        node *current = m->table[i];
-        while (current != NULL) 
-        {
-            size_t new_index = m->hash(current->key) % new_capacity; // get the new index
-            node *next = current->next;
-
-            current->next = new_table[new_index]; // prepend, necessary for O(1) retrieval
-            new_table[new_index] = current;
-
-            current = next;
-        }
-    }
-
-    free(m->table);
-    m->table = new_table;
-    m->capacity = new_capacity;
-}
-
-
-/**
- * Removes the given key and its associated value from the map.
- */
 void *gmap_remove(gmap *m, const void *key) 
 {
     size_t index = m->hash(key) % m->capacity;
@@ -225,9 +182,7 @@ void *gmap_remove(gmap *m, const void *key)
     return NULL;
 }
 
-/**
- * Checks if the given key is present in the map.
- */
+
 bool gmap_contains_key(const gmap *m, const void *key) 
 {
     size_t index = m->hash(key) % m->capacity; // get the index
@@ -244,9 +199,6 @@ bool gmap_contains_key(const gmap *m, const void *key)
     return false;
 }
 
-/**
- * Returns the value associated with the given key in the map.
- */
 void *gmap_get(gmap *m, const void *key) 
 {
     size_t index = m->hash(key) % m->capacity;
@@ -263,9 +215,6 @@ void *gmap_get(gmap *m, const void *key)
     return NULL;
 }
 
-/**
- * Calls the given function for each (key, value) pair in the map.
- */
 void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg) 
 {
     for (size_t i = 0; i < m->capacity; i++) 
@@ -277,9 +226,6 @@ void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg)
     }
 }
 
-/**
- * Returns an array of pointers to the keys in the map.
- */
 const void **gmap_keys(gmap *m) 
 {
     const void **keys = malloc(sizeof(void *) * m->size);
@@ -301,15 +247,11 @@ const void **gmap_keys(gmap *m)
     return keys;
 }
 
-/**
- * Destroys the given map.
- */
 void gmap_destroy(gmap *m) 
 {
     if (m != NULL) 
     {
-        // iterate over each bucket
-        for (size_t i = 0; i < m->capacity; i++) 
+        for (size_t i = 0; i < m->capacity; i++) // iterate over buckets
         {
             node *current = m->table[i];
 
@@ -318,7 +260,6 @@ void gmap_destroy(gmap *m)
                 node *next = current->next;
 
                 m->free(current->key);
-                //m->free(current->value);
 
                 free(current);
 

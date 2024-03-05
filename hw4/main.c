@@ -6,6 +6,7 @@
  * Purpose: main driver for blotto
  *
  */
+
 #include "gmap.h"
 #include "entry.h"
 #include "string_key.h"
@@ -38,20 +39,13 @@ void free_distribution(const void *key, void *value, void *arg);
 
 void blotto_cleanup(gmap *map, FILE *in);
 
-/*================== ENTER DRIVER ==================*/
+/*================== BEGIN DRIVER ==================*/
+
 int main(int argc, char *argv[])
 {
-/*================== TODO ==================*/
 
-// FAILED -> cases 55, 53, 52, 51, 43, 26, 16
+/*================== SETUP GMAP ==================*/
 
-// case 55 -> invalid matchup, produce error
-// case 53 -> invalid distribution, produce error
-// case 52 -> inconsistent total units, no matches played 
-
-/*================== POPULATE ADT ==================*/
-
-    // Initialization remains unchanged
     int max_id = 32;
     int num_bf = argc - 1;
 
@@ -83,7 +77,8 @@ void blotto_cleanup(gmap *map, FILE *in)
 
     gmap_destroy(map);
 
-    if (in != NULL) {
+    if (in != NULL) 
+    {
         fclose(in);
     }
 }
@@ -119,7 +114,8 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
 {
     gmap* played_matches = gmap_create(duplicate, compare_keys, hash29, free);
 
-    char id1[max_id], id2[max_id];
+    char id1[max_id];
+    char id2[max_id];
 
     int matches_played = 0;
 
@@ -139,7 +135,7 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
             {
                 fprintf(stderr, "Error: Invalid ID Pair\n");
                 blotto_cleanup(map, in); // cleanup
-                exit(1); // these are all issues with valgrind, stemming from the fact that cleanup is not done before exit(1) is called
+                exit(1); 
             }
         }
     }
@@ -182,7 +178,6 @@ void play_single_match(gmap* map, FILE* in, char* id1, char* id2, int *dist1, in
         }
     }
 
-    // print results -> winnerID - score1, loserID - score2
     if (score1 > score2)
     {
         printf("%s %.1f - %s %.1f\n", id1, score1, id2, score2);
@@ -199,6 +194,13 @@ void play_single_match(gmap* map, FILE* in, char* id1, char* id2, int *dist1, in
 
 FILE *entry_parse_args(int argc, char *argv[], int *max_id, int *num_bf)
 {
+    // make sure distributions are integers, ensure max_id and num_bf 
+    if (argc < 3 || argc > 34)
+    {
+        fprintf(stderr, "Usage: %s max_id num_battlefields\n", argv[0]);
+        exit(1);
+    }
+
     return stdin;
 }
 
@@ -243,16 +245,16 @@ char* concatenate_ids(const char* id1, const char* id2)
     size_t len1 = strlen(id1);
     size_t len2 = strlen(id2);
 
-    char* result = malloc(len1 + len2 + 2); // +1 for the separator, +1 for null-terminator
+    char* result = malloc(len1 + len2 + 2); // +2 for separator & null-terminator
 
     if (result) 
     {
         strcpy(result, id1);
-        strcat(result, "-"); // use a dash as separator
+        strcat(result, "-"); // dash as separator
         strcat(result, id2);
     }
 
-    return result; // useful for dupe matches
+    return result; 
 }
 
 bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2) 
