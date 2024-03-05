@@ -277,7 +277,7 @@ void gmap_destroy(gmap *m)
                 node *next = current->next;
 
                 m->free(current->key);
-                m->free(current->value);
+                //m->free(current->value);
 
                 free(current);
 
