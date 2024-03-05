@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdbool.h>
 
 /*================== BLOTTO INTERFACE ==================*/
 
@@ -28,6 +29,10 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
 void find_weights(int bf_weights[], int num_bf, int argc, char *argv[]);
 
 void play_single_match(char* id1, char* id2, int *dist1, int *dist2, int *bf_weights, int num_bf);
+
+char* concatenate_ids(const char* id1, const char* id2);
+
+bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2);
 
 int main(int argc, char *argv[])
 {
@@ -71,30 +76,33 @@ void find_weights(int bf_weights[], int num_bf, int argc, char *argv[])
     }
 }
 
-void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
+void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id) 
 {
+    gmap* played_matches = gmap_create(duplicate, compare_keys, hash29, free);
+
     char id1[max_id], id2[max_id];
 
-    while (!feof(in) && !ferror(in))
+    while (fscanf(in, "%s %s", id1, id2) == 2) 
     {
-        fscanf(in, "%s %s", id1, id2);
-
-        printf("Match: %s vs %s\n", id1, id2);
-        
-        int *dist1 = (int *)gmap_get(map, id1);
-        int *dist2 = (int *)gmap_get(map, id2);
-
-        
-        if (dist1 && dist2)
+        if (!is_duplicate_match(played_matches, id1, id2)) 
         {
-            play_single_match(id1, id2, dist1, dist2, bf_weights, num_bf);
-        }
-        else
-        {
-            fprintf(stderr, "Error: Invalid ID\n");
+            int *dist1 = (int *)gmap_get(map, id1);
+            int *dist2 = (int *)gmap_get(map, id2);
+
+            if (dist1 && dist2)
+            {
+                play_single_match(id1, id2, dist1, dist2, bf_weights, num_bf);
+            } 
+            else 
+            {
+                fprintf(stderr, "Error: Invalid ID\n");
+            }
         }
     }
+
+    gmap_destroy(played_matches);
 }
+
 
 void play_single_match(char* id1, char* id2, int *dist1, int *dist2, int *bf_weights, int num_bf)
 {
@@ -174,4 +182,41 @@ void print_entry(const void *key, void *value, void *arg)
         printf("%d ", distribution[i]);
     }
     printf("\n");
+}
+
+char* concatenate_ids(const char* id1, const char* id2) 
+{
+    size_t len1 = strlen(id1);
+    size_t len2 = strlen(id2);
+
+    char* result = malloc(len1 + len2 + 2); // +1 for the separator, +1 for null-terminator
+
+    if (result) 
+    {
+        strcpy(result, id1);
+        strcat(result, "-"); // use a dash as separator
+        strcat(result, id2);
+    }
+    return result;
+}
+
+bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2) 
+{
+    char* match_id = concatenate_ids(id1, id2);
+
+    if (!match_id) 
+    {
+        fprintf(stderr, "Memory allocation failed for match ID.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    bool is_duplicate = gmap_contains_key(played_matches, match_id);
+
+    if (!is_duplicate) 
+    {
+        gmap_put(played_matches, match_id, NULL); 
+    }
+
+    free(match_id); 
+    return is_duplicate;
 }
