@@ -24,7 +24,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-void check_and_resize(gmap *m);
+void gmap_resize(gmap *m);
 
 char *gmap_error = "gmap_error";
 
@@ -105,25 +105,31 @@ size_t gmap_size(const gmap *m)
  * @param value a pointer to a value
  * @return a pointer to the old value, or NULL, or a pointer to gmap_error
  */
+
 // node should be inserted as the first element, NOT the last element, and that is O, b/c shifting first two 
 // need to be resizing, because law of large numbers, you get problems <- load_factor, when size = capacity, double is a good way to do it
 
-void *gmap_put(gmap *m, const void *key, void *value) {
-    if (m == NULL || key == NULL) {
+void *gmap_put(gmap *m, const void *key, void *value) 
+{
+    if (m == NULL || key == NULL)
+     {
         return gmap_error;
     }
 
-    // Check and resize if necessary
-    float load_factor = (float)m->size / m->capacity;
-    if (load_factor > 0.75) {
-        check_and_resize(m);
+    float load_factor = (float)m->size / m->capacity; // get the load factor
+
+    if (load_factor > 0.75) // resize based on load factor
+    {
+        gmap_resize(m);
     }
 
     size_t index = m->hash(key) % m->capacity; // get the index
     node *current = m->table[index]; // get the current node
 
-    while (current != NULL) {
-        if (m->compare(current->key, key) == 0) { // key already exists
+    while (current != NULL) 
+    {
+        if (m->compare(current->key, key) == 0) // key already exists
+        { 
             void *old_value = current->value;
             current->value = value;
             return old_value;
@@ -132,9 +138,12 @@ void *gmap_put(gmap *m, const void *key, void *value) {
     }
 
     node *new_node = malloc(sizeof(node));
-    if (new_node == NULL) {
+
+    if (new_node == NULL) 
+    {
         return gmap_error;
     }
+
     new_node->key = m->copy(key);
     new_node->value = value;
     new_node->next = m->table[index];
@@ -146,27 +155,30 @@ void *gmap_put(gmap *m, const void *key, void *value) {
 
 
 
-void check_and_resize(gmap *m) 
+void gmap_resize(gmap *m) 
 {
     size_t new_capacity = 2 * m->capacity;
     node **new_table = malloc(sizeof(node *) * new_capacity);
-    if (new_table == NULL) {
-        // Handle memory allocation failure
-        return;
+
+    if (new_table == NULL) 
+    {
+        return gmap_error; // mem alloc error
     }
 
-    for (size_t i = 0; i < new_capacity; i++) {
+    for (size_t i = 0; i < new_capacity; i++) 
+    {
         new_table[i] = NULL;
     }
 
-    for (size_t i = 0; i < m->capacity; i++) {
+    for (size_t i = 0; i < m->capacity; i++) 
+    {
         node *current = m->table[i];
-        while (current != NULL) {
-            size_t new_index = m->hash(current->key) % new_capacity;
+        while (current != NULL) 
+        {
+            size_t new_index = m->hash(current->key) % new_capacity; // get the new index
             node *next = current->next;
 
-            // Prepend to new bucket to maintain O(1) insertion
-            current->next = new_table[new_index];
+            current->next = new_table[new_index]; // prepend, necessary for O(1) retrieval
             new_table[new_index] = current;
 
             current = next;
