@@ -172,4 +172,3 @@ void print_entry(const void *key, void *value, void *arg)
     }
     printf("\n");
 }
-
