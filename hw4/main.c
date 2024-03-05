@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
 /*================== TODO ==================*/
 // FAILED -> cases 55, 53, 52, 51, 43, 26, 16
 
-// case 55 -> invalid matchup, produce error
+// case 55 -> invalid matchup, produce error -> RESOLVED
+// case 53 -> invalid distribution, produce error
 
 /*================== POPULATE GMP ADT ==================*/
 
@@ -70,7 +71,7 @@ void find_weights(int bf_weights[], int num_bf, int argc, char *argv[])
     if (argc - 1 < num_bf) 
     { 
         fprintf(stderr, "Error: Expected %d weights, but only %d were provided.\n", num_bf, argc - 1);
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     for (int i = 0; i < num_bf; ++i) 
@@ -99,7 +100,7 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
             else 
             {
                 fprintf(stderr, "Error: Invalid ID Pair\n");
-                exit(EXIT_FAILURE);
+                exit(1);
             }
         }
     }
@@ -130,7 +131,7 @@ void play_single_match(char* id1, char* id2, int *dist1, int *dist2, int *bf_wei
         else
         {
             fprintf(stderr, "Error: Invalid distribution\n");
-            exit(EXIT_FAILURE);
+            exit(1);
         }
     }
 
@@ -212,7 +213,7 @@ bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2)
     if (!match_id) 
     {
         fprintf(stderr, "Memory allocation failed for match ID.\n");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     bool is_duplicate = gmap_contains_key(played_matches, match_id);
