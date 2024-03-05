@@ -156,6 +156,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
     newNode->next = m->table[index];
     m->table[index] = newNode;
     m->size++;
+    
     return NULL;
 }
     
