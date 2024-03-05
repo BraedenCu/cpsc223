@@ -114,7 +114,8 @@ void *gmap_put(gmap *m, const void *key, void *value)
             return old_value;
         }
 
-        current = current->next;
+        current = current->next; // node should be inserted as the first element, NOT the last element, and that is O, b/c shifting first two 
+                                 // need to be resizing, because law of large numbers, you get problems <- load_factor, when size = capacity, double is a good way to do it
     }
 
     node *new_node = malloc(sizeof(node));
@@ -257,7 +258,7 @@ void gmap_destroy(gmap *m)
         for (size_t i = 0; i < m->capacity; i++) 
         {
             node *current = m->table[i];
-            
+
             while (current != NULL) 
             {
                 node *next = current->next;

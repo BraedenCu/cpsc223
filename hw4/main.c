@@ -106,7 +106,8 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
             else 
             {
                 fprintf(stderr, "Error: Invalid ID Pair\n");
-                exit(1);
+                gmap_destroy(map); // cleanup
+                exit(1); // these are all issues with valgrind, stemming from the fact that cleanup is not done before exit(1) is called
             }
         }
     }
@@ -116,6 +117,7 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
     if (matches_played == 0) 
     {
         fprintf(stderr, "Error: No matches played\n");
+        gmap_destroy(map); // cleanup
         exit(1);
     }
 }
