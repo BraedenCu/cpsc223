@@ -195,7 +195,6 @@ gmap *populate_gmap(FILE *in, int max_id, int num_bf, void *(*cp)(const void *),
         gmap_put(map, e.id, e.distribution);
 
         free(e.id); // id ownership retained by entry, therefore free it
-        
     }
 
     return map;
