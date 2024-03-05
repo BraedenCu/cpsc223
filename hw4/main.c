@@ -36,25 +36,30 @@ bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2);
 
 int main(int argc, char *argv[])
 {
+/*================== TODO ==================*/
+// FAILED -> cases 55, 53, 52, 51, 43, 26, 16
+
+// case 55 -> invalid matchup, produce error
+
 /*================== POPULATE GMP ADT ==================*/
 
     // Initialization remains unchanged
     int max_id = 32;
     int num_bf = argc - 1;
+
     FILE *in = entry_parse_args(argc, argv, &max_id, &num_bf);
     gmap *map = populate_gmap(in, max_id, num_bf, duplicate, compare_keys, hash29, free);
     
-    // Calculate battlefield weights
     int bf_weights[num_bf];
+
     find_weights(bf_weights, num_bf, argc, argv);
     
 /*================== RUN MATCHES ==================*/
 
-    // Play matches, handling duplicates
     play_matches(map, in, bf_weights, num_bf, max_id);
 
-    // Clean up
     gmap_destroy(map);
+
     return 0;
 }
 
@@ -93,7 +98,8 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
             } 
             else 
             {
-                fprintf(stderr, "Error: Invalid ID\n");
+                fprintf(stderr, "Error: Invalid ID Pair\n");
+                exit(EXIT_FAILURE);
             }
         }
     }
@@ -195,6 +201,7 @@ char* concatenate_ids(const char* id1, const char* id2)
         strcat(result, "-"); // use a dash as separator
         strcat(result, id2);
     }
+
     return result;
 }
 
@@ -216,5 +223,6 @@ bool is_duplicate_match(gmap* played_matches, const char* id1, const char* id2)
     }
 
     free(match_id); 
+
     return is_duplicate;
 }
