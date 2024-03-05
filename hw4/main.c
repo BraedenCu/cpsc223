@@ -216,6 +216,20 @@ gmap *populate_gmap(FILE *in, int max_id, int num_bf, void *(*cp)(const void *),
         ungetc(peek, in);
 
         entry e = entry_read(in, max_id, num_bf);
+
+        if (e.id == NULL) 
+        {
+            fprintf(stderr, "Error: Invalid ID\n");
+            blotto_cleanup(map, in); // cleanup
+            exit(1);
+        }
+
+        if (e.distribution == NULL) 
+        {
+            fprintf(stderr, "Error: Invalid Distribution\n");
+            blotto_cleanup(map, in); // cleanup
+            exit(1);
+        }
         
         gmap_put(map, e.id, e.distribution);
 
