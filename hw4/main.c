@@ -48,13 +48,12 @@ int main(int argc, char *argv[])
 
     int max_id = 32;
     int num_bf = argc - 1;
+    int bf_weights[num_bf];
 
     FILE *in = entry_parse_args(argc, argv, &max_id, &num_bf);
     
     gmap *map = populate_gmap(in, max_id, num_bf, duplicate, compare_keys, hash29, free);
     
-    int bf_weights[num_bf];
-
     find_weights(map, in, bf_weights, num_bf, argc, argv);
     
 /*================== RUN MATCHES ==================*/
@@ -213,7 +212,7 @@ gmap *populate_gmap(FILE *in, int max_id, int num_bf, void *(*cp)(const void *),
     while (!feof(in) && !ferror(in))
     {
         char peek = fgetc(in);
-        if (peek == '\n') break; 
+        if (peek == '\n') break; // stop reading at newline
         ungetc(peek, in);
 
         entry e = entry_read(in, max_id, num_bf);
