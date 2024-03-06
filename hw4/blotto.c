@@ -2,7 +2,7 @@
  * Name: Braeden Cullen
  * Assignment: Blotto
  * Class: CPSC223 Spring 2024
- * Date: March 2nd
+ * Date: March 5th
  * Purpose: implementation for blotto driver
  *
  */

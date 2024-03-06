@@ -2,7 +2,7 @@
  * Name: Braeden Cullen
  * Assignment: Blotto
  * Class: CPSC223 Spring 2024
- * Date: March 2nd
+ * Date: March 5th
  * Purpose: implementation of the gmap abstract data structure
  *
  */
@@ -44,7 +44,7 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
 
     m->table = malloc(sizeof(node *) * INITIAL_CAPACITY);
 
-    if (m->table == NULL) 
+    if (m->table == NULL || m == NULL) 
     {
         free(m);
         return NULL;
@@ -122,25 +122,25 @@ void *gmap_put(gmap *m, const void *key, void *value)
     {
         if (m->compare(curr->key, key) == 0) // key already exists
         { 
-            void *prev_value = curr->value; 
+            void *initial_value = curr->value; 
             curr->value = value;
 
-            return prev_value;
+            return initial_value;
         }
         curr = curr->next; // prepend, necessary for O(1) 
     }
 
-    node *new_link = malloc(sizeof(node));
+    node *create_link = malloc(sizeof(node));
 
-    if (new_link == NULL) 
+    if (create_link == NULL) 
     {
         return NULL;
     }
 
-    new_link->key   = m->copy(key);
-    new_link->value = value;
-    new_link->next  = m->table[idx];
-    m->table[idx]   = new_link;
+    create_link->key   = m->copy(key);
+    create_link->value = value;
+    create_link->next  = m->table[idx];
+    m->table[idx]   = create_link;
 
     m->size++;
 
@@ -155,19 +155,19 @@ void *gmap_remove(gmap *m, const void *key)
 
     while (curr != NULL) 
     {
-        if (m->compare(curr->key, key) == 0) // key found
+        if (m->compare(curr->key, key) == 0) // key found, remove
         {
             if (prev == NULL) 
             {
-                m->table[idx] = curr->next;
+                m->table[idx] = curr->next; // one link
             } 
             else 
             {
                 prev->next = curr->next;
             }
+
             void *value = curr->value;
             m->free(curr->key);
-
             free(curr);
             m->size--;
 
