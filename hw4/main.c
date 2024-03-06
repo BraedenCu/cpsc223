@@ -19,6 +19,8 @@
 #include <math.h>
 #include <stdbool.h>
 
+/*================== BLOTTO DRIVER ==================*/
+
 int main(int argc, char *argv[])
 {
     int max_id = 32;
