@@ -40,7 +40,7 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
 
     if (m == NULL) 
     {
-        return NULL;
+        return gmap_error;
     }
 
     m->table = malloc(sizeof(node *) * INITIAL_CAPACITY);
@@ -48,7 +48,7 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
     if (m->table == NULL) 
     {
         free(m);
-        return NULL;
+        return gmap_error;
     }
 
     for (size_t i = 0; i < INITIAL_CAPACITY; i++) 
@@ -92,7 +92,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
         for (size_t i = 0; i < new_capacity; i++) 
         {
-            new_table[i] = NULL; 
+            new_table[i] = NULL;
         }
 
         for (size_t i = 0; i < m->capacity; i++) 
@@ -100,7 +100,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
             node *current = m->table[i];
             while (current != NULL) 
             {
-                size_t new_index = m->hash(current->key) % new_capacity; // find index where pair should be stored / retrieved 
+                size_t new_index = m->hash(current->key) % new_capacity; // get the new index
                 node *next = current->next;
 
                 current->next = new_table[new_index]; // prepend, necessary for O(1) retrieval
@@ -115,7 +115,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
         m->capacity = new_capacity;
     }
 
-    size_t index = m->hash(key) % m->capacity; // find index where pair should be stored / retrieved 
+    size_t index = m->hash(key) % m->capacity; // get the index
     node *current = m->table[index]; // get the current node
 
     while (current != NULL) 
@@ -149,7 +149,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
 void *gmap_remove(gmap *m, const void *key) 
 {
-    size_t index = m->hash(key) % m->capacity; // find index where pair should be stored / retrieved 
+    size_t index = m->hash(key) % m->capacity;
     node *current = m->table[index], *prev = NULL;
 
     while (current != NULL) 
@@ -178,9 +178,10 @@ void *gmap_remove(gmap *m, const void *key)
     return NULL;
 }
 
+
 bool gmap_contains_key(const gmap *m, const void *key) 
 {
-    size_t index = m->hash(key) % m->capacity; // find index where pair should be stored / retrieved 
+    size_t index = m->hash(key) % m->capacity; // get the index
     node *current = m->table[index];
 
     while (current != NULL) 
@@ -196,7 +197,7 @@ bool gmap_contains_key(const gmap *m, const void *key)
 
 void *gmap_get(gmap *m, const void *key) 
 {
-    size_t index = m->hash(key) % m->capacity; // find index where pair should be stored / retrieved 
+    size_t index = m->hash(key) % m->capacity;
     node *current = m->table[index];
 
     while (current != NULL) 

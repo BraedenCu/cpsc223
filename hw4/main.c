@@ -1,3 +1,4 @@
+
 /**
  * Name: Braeden Cullen
  * Assignment: Blotto
@@ -21,8 +22,6 @@
 // fix entry_read edgecases that are not covered by the func, as if my method of using it is acceptable
 // ask about my score on privates before working on more edgecasing
 // fix warning in gmap.c when gmap_error is being thrown
-// what should initial capacity size be ??  
-
 
 
 /*================== BLOTTO INTERFACE ==================*/
@@ -148,14 +147,13 @@ void play_matches(gmap *map, FILE *in, int bf_weights[], int num_bf, int max_id)
             else 
             {
                 fprintf(stderr, "Error: Invalid ID Pair\n");
-                gmap_destroy(played_matches);
                 blotto_cleanup(map, in); // cleanup
                 exit(1); 
             }
         }
     }
 
-    gmap_destroy(played_matches); // destroy saved matches
+    gmap_destroy(played_matches);
 
     if (matches_played == 0) 
     {
