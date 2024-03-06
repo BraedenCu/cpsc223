@@ -2,6 +2,7 @@
     "files.associations": {
         "libmain.h": "c",
         "gmap.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "type_traits": "c"
     }
 }

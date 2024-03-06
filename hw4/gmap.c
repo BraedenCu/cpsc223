@@ -31,7 +31,7 @@ struct _gmap {
     void (*free)(void *);                          // pointer to free function
 };
 
-#define INITIAL_CAPACITY 101 // initial hash table capacity
+#define INITIAL_CAPACITY 101 // initial hash table capacity, must be odd number
 
 gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const void *), size_t (*h)(const void *), void (*f)(void *)) 
 {
@@ -55,12 +55,12 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
         m->table[i] = NULL;
     }
 
-    m->capacity = INITIAL_CAPACITY;
-    m->size = 0;
-    m->hash = h;
-    m->compare = comp;
-    m->copy = cp;
-    m->free = f;
+    m->capacity     = INITIAL_CAPACITY;
+    m->size         = 0;
+    m->hash         = h;
+    m->compare      = comp;
+    m->copy         = cp;
+    m->free         = f;
 
     return m;
 }
@@ -81,66 +81,67 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
     if (load_factor > 0.75) // standard load factor of 0.75
     {
-        size_t new_capacity = 2 * m->capacity; // double capacity
-        node **new_table = malloc(sizeof(node *) * new_capacity);
+        size_t expanded_capacity = 2 * m->capacity; // double capacity
+        
+        node **expanded_table = malloc(sizeof(node *) * expanded_capacity);
 
-        if (new_table == NULL) 
+        if (expanded_table == NULL) 
         {
             return NULL; // mem alloc error
         }
 
-        for (size_t i = 0; i < new_capacity; i++) 
+        for (size_t i = 0; i < expanded_capacity; i++) 
         {
-            new_table[i] = NULL;
+            expanded_table[i] = NULL;
         }
 
         for (size_t i = 0; i < m->capacity; i++) 
         {
-            node *current = m->table[i];
-            while (current != NULL) 
+            node *curr = m->table[i];
+            while (curr != NULL) 
             {
-                size_t new_index = m->hash(current->key) % new_capacity; // get the new index
-                node *next = current->next;
+                size_t new_index = m->hash(curr->key) % expanded_capacity; // get the new index
+                node *next = curr->next;
 
-                current->next = new_table[new_index]; // prepend, necessary for O(1) retrieval
-                new_table[new_index] = current;
+                curr->next = expanded_table[new_index]; // prepend, necessary for O(1) 
+                expanded_table[new_index] = curr;
 
-                current = next;
+                curr = next;
             }
         }
 
         free(m->table);
-        m->table = new_table;
-        m->capacity = new_capacity;
+        m->table = expanded_table; // update the hashmap
+        m->capacity = expanded_capacity;
     }
 
-    size_t index = m->hash(key) % m->capacity; // get the index
-    node *current = m->table[index]; // get the current node
+    size_t idx = m->hash(key) % m->capacity; // get the index
+    node *curr = m->table[idx]; // get the current node
 
-    while (current != NULL) 
+    while (curr != NULL) 
     {
-        if (m->compare(current->key, key) == 0) // key already exists
+        if (m->compare(curr->key, key) == 0) // key already exists
         { 
-            void *old_value = current->value;
-            current->value = value;
+            void *prev_value = curr->value; 
+            curr->value = value;
 
-            return old_value;
+            return prev_value;
         }
-        current = current->next;
+        curr = curr->next; // prepend, necessary for O(1) 
     }
 
-    node *new_node = malloc(sizeof(node));
+    node *new_link = malloc(sizeof(node));
 
-    if (new_node == NULL) 
+    if (new_link == NULL) 
     {
         return NULL;
     }
 
-    new_node->key = m->copy(key);
-    new_node->value = value;
-    new_node->next = m->table[index];
+    new_link->key   = m->copy(key);
+    new_link->value = value;
+    new_link->next  = m->table[idx];
+    m->table[idx]   = new_link;
 
-    m->table[index] = new_node;
     m->size++;
 
     return NULL;
@@ -148,64 +149,66 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
 void *gmap_remove(gmap *m, const void *key) 
 {
-    size_t index = m->hash(key) % m->capacity;
-    node *current = m->table[index], *prev = NULL;
+    size_t idx = m->hash(key) % m->capacity;
+    node *curr = m->table[idx];
+    node *prev = NULL;
 
-    while (current != NULL) 
+    while (curr != NULL) 
     {
-        if (m->compare(current->key, key) == 0) // key found
+        if (m->compare(curr->key, key) == 0) // key found
         {
             if (prev == NULL) 
             {
-                m->table[index] = current->next;
+                m->table[idx] = curr->next;
             } 
             else 
             {
-                prev->next = current->next;
+                prev->next = curr->next;
             }
-            void *value = current->value;
-            m->free(current->key);
+            void *value = curr->value;
+            m->free(curr->key);
 
-            free(current);
+            free(curr);
             m->size--;
 
             return value;
         }
-        prev = current;
-        current = current->next;
+        prev = curr;
+        curr = curr->next;
     }
+
     return NULL;
 }
 
 
 bool gmap_contains_key(const gmap *m, const void *key) 
 {
-    size_t index = m->hash(key) % m->capacity; // get the index
-    node *current = m->table[index];
+    size_t idx = m->hash(key) % m->capacity; // get the index
+    node *curr   = m->table[idx];
 
-    while (current != NULL) 
+    while (curr != NULL) 
     {
-        if (m->compare(current->key, key) == 0) // key found
+        if (m->compare(curr->key, key) == 0) // key found
         {
             return true;
         }
-        current = current->next;
+        curr = curr->next;
     }
     return false;
 }
 
 void *gmap_get(gmap *m, const void *key) 
 {
-    size_t index = m->hash(key) % m->capacity;
-    node *current = m->table[index];
+    size_t idx = m->hash(key) % m->capacity;
+    node *curr = m->table[idx];
 
-    while (current != NULL) 
+    while (curr != NULL) 
     {
-        if (m->compare(current->key, key) == 0) 
+        if (m->compare(curr->key, key) == 0) 
         {
-            return current->value;
+            return curr->value;
         }
-        current = current->next;
+        curr = curr->next;
     }
     return NULL;
 }
@@ -214,9 +217,9 @@ void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg)
 {
     for (size_t i = 0; i < m->capacity; i++) 
     {
-        for (node *current = m->table[i]; current != NULL; current = current->next) 
+        for (node *curr = m->table[i]; curr != NULL; curr = curr->next) // iterate over buckets
         {
-            f(current->key, current->value, arg); // call the function on each node
+            f(curr->key, curr->value, arg); // call the function on each node
         }
     }
 }
@@ -234,9 +237,9 @@ const void **gmap_keys(gmap *m)
 
     for (size_t i = 0; i < m->capacity; i++) 
     {
-        for (node *current = m->table[i]; current != NULL; current = current->next) 
+        for (node *curr = m->table[i]; curr != NULL; curr = curr->next) // iterate over buckets
         {
-            keys[idx++] = current->key; // store the key
+            keys[idx++] = curr->key; // store the key
         }
     }
     return keys;
@@ -248,17 +251,17 @@ void gmap_destroy(gmap *m)
     {
         for (size_t i = 0; i < m->capacity; i++) // iterate over buckets
         {
-            node *current = m->table[i];
+            node *curr = m->table[i];
 
-            while (current != NULL) 
+            while (curr != NULL) 
             {
-                node *next = current->next;
+                node *next = curr->next;
 
-                m->free(current->key);
+                m->free(curr->key);
 
-                free(current);
+                free(curr);
 
-                current = next;
+                curr = next;
             }
         }
 
