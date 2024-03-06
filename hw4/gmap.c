@@ -7,6 +7,7 @@
  *
  */
 #include "gmap.h"
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
@@ -30,8 +31,6 @@ struct _gmap {
     void (*free)(void *);                          // pointer to free function
 };
 
-char *gmap_error = "gmap ERROR"; // error message for gmap operations
-
 #define INITIAL_CAPACITY 101 // initial hash table capacity
 
 gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const void *), size_t (*h)(const void *), void (*f)(void *)) 
@@ -40,7 +39,7 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
 
     if (m == NULL) 
     {
-        return gmap_error;
+        return NULL;
     }
 
     m->table = malloc(sizeof(node *) * INITIAL_CAPACITY);
@@ -48,7 +47,7 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
     if (m->table == NULL) 
     {
         free(m);
-        return gmap_error;
+        return NULL;
     }
 
     for (size_t i = 0; i < INITIAL_CAPACITY; i++) 
@@ -75,7 +74,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
 {
     if (m == NULL || key == NULL)
      {
-        return gmap_error;
+        return NULL;
     }
 
     float load_factor = (float)m->size / m->capacity; // get the load factor
@@ -87,7 +86,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
         if (new_table == NULL) 
         {
-            return gmap_error; // mem alloc error
+            return NULL; // mem alloc error
         }
 
         for (size_t i = 0; i < new_capacity; i++) 
@@ -134,7 +133,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
     if (new_node == NULL) 
     {
-        return gmap_error;
+        return NULL;
     }
 
     new_node->key = m->copy(key);

@@ -4,8 +4,8 @@ CFLAGS = -std=c17 -Wall -pedantic -g
 TARGET1 = Blotto
 TARGET2 = GmapUnit
 
-SOURCES1 = main.c entry.c gmap.c gmap_test_functions.c string_key.c
-SOURCES2 = gmap_unit.c gmap_test_functions.c entry.c string_key.c gmap.c
+SOURCES1 = main.c entry.c gmap.c gmap_test_functions.c string_key.c blotto.c
+SOURCES2 = gmap_unit.c gmap_test_functions.c entry.c string_key.c gmap.c blotto.c
 
 OBJECTS1 = $(SOURCES1:.c=.o)
 OBJECTS2 = $(SOURCES2:.c=.o)
