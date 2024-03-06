@@ -67,12 +67,17 @@ gmap *gmap_create(void *(*cp)(const void *), int (*comp)(const void *, const voi
 
 size_t gmap_size(const gmap *m) 
 {
+    if (m == NULL) 
+    {
+        return 0;
+    }
+    
     return m->size;
 }
 
 void *gmap_put(gmap *m, const void *key, void *value) 
 {
-    if (m == NULL || key == NULL)
+    if (m == NULL || key == NULL || value == NULL)
      {
         return NULL;
     }
@@ -140,7 +145,7 @@ void *gmap_put(gmap *m, const void *key, void *value)
     create_link->key   = m->copy(key);
     create_link->value = value;
     create_link->next  = m->table[idx];
-    m->table[idx]   = create_link;
+    m->table[idx]      = create_link;
 
     m->size++;
 
@@ -149,6 +154,11 @@ void *gmap_put(gmap *m, const void *key, void *value)
 
 void *gmap_remove(gmap *m, const void *key) 
 {
+    if (m == NULL || key == NULL) 
+    {
+        return NULL;
+    }
+
     size_t idx = m->hash(key) % m->capacity;
     node *curr = m->table[idx];
     node *prev = NULL;
@@ -183,6 +193,11 @@ void *gmap_remove(gmap *m, const void *key)
 
 bool gmap_contains_key(const gmap *m, const void *key) 
 {
+    if (m == NULL || key == NULL) 
+    {
+        return false;
+    }
+
     size_t idx = m->hash(key) % m->capacity; // get the index
     node *curr   = m->table[idx];
 
@@ -199,6 +214,11 @@ bool gmap_contains_key(const gmap *m, const void *key)
 
 void *gmap_get(gmap *m, const void *key) 
 {
+    if (m == NULL || key == NULL) 
+    {
+        return NULL;
+    }
+
     size_t idx = m->hash(key) % m->capacity;
     node *curr = m->table[idx];
 
@@ -215,6 +235,11 @@ void *gmap_get(gmap *m, const void *key)
 
 void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg) 
 {
+    if (m == NULL || f == NULL) 
+    {
+        return;
+    }
+
     for (size_t i = 0; i < m->capacity; i++) 
     {
         for (node *curr = m->table[i]; curr != NULL; curr = curr->next) // iterate over buckets
@@ -226,6 +251,11 @@ void gmap_for_each(gmap *m, void (*f)(const void *, void *, void *), void *arg)
 
 const void **gmap_keys(gmap *m) 
 {
+    if (m == NULL) 
+    {
+        return NULL;
+    }
+
     const void **keys = malloc(sizeof(void *) * m->size);
 
     if (keys == NULL) 
