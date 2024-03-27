@@ -22,7 +22,7 @@ Island::Island(string name, bool access)
     // TODO: Implement parameterized constructor
 }
 
-bool Island::isEqual(Island s)
+bool Island::isEqual(Island other)
 {
     // TODO: Implement this
 

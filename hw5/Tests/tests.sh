@@ -37,7 +37,7 @@ else
 	exit 1
 fi
 
-GLXFILE=carribbean.txt
+GLXFILE=caribbean.txt
 ALLSTATIONSFILE=all_islands.txt
 REMOVESOMEFILE=remove_some.txt
 NUMREMOVE=10

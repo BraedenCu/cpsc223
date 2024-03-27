@@ -1,4 +1,4 @@
-# Pset 5: Train Conductor
+# Pset 5: Treasure Hunter
 
 ## CPSC 223 Spring 2024
 
@@ -11,7 +11,7 @@
 Your pirate crew is planning a voyage to hunt for treasures around the seven seas.
 To do so, they need to keep track of islands they must stop at to seek clues and maps along their hunt, including whether their ship can dock at the island or if they will have to anchor offshore.
 Your captain has also given the requirement that should plans change, islands must be easily added and removed from the list during the planning process.
-Your "treasure map" is given to you in a file named `glx.txt` that contains the names of all planned stops and whether they have a berth for your ship (Y/N).
+Your "treasure map" is given to you in a file named `caribbean.txt` that contains the names of all planned stops and whether they have a berth for your ship (Y/N).
 In the end, you will need to neatly print the islands in order (as on a map).
 
 ## Objectives
@@ -126,6 +126,29 @@ In the comments, the word `NULL` is used to express the notion that a thing "has
 To express this in C++, you should use `nullptr`, which is [the pointer literal](https://en.cppreference.com/w/cpp/language/nullptr).
 
 (Actually, if this were a C++ software engineering course we would force you to use [`std::optional`](https://en.cppreference.com/w/cpp/utility/optional) to express "has no value" but that's beyond the scope of our brief foray into C++ this semester.)
+
+## Reference Files
+
+Included in the starter code is an executable named `the_train_conductor`.
+This file is a reference executable you may use to assess the correctness of the output for your program.
+
+There are three plain text files included with the starter code:
+
+* `carribbean.txt`, which is a valid input file containing some islands and cities in the Carribbean
+* `reference_all_islands.txt`, which is a reference output file
+* `reference_remove_some.txt`, which is a second reference output file
+
+The two reference files were generated with the following command (which should produce the given output in the terminal):
+
+```
+$ ./the-train-conductor carribbean.txt reference_all_islands.txt reference_remove_some.txt 10 1
+***REFERENCE EXECUTABLE***
+I just read and inserted 30 islands
+Removed 10 islands and printed to file
+Done!
+```
+
+(Your compiled executable **must not** display the line "`***REFERENCE EXECUTABLE***`, but everything else must match the behavior of this reference program exactly.)
 
 ## Testing Script
 

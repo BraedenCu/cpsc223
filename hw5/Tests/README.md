@@ -58,7 +58,7 @@ Doing so will tell `make` to search in the current directory for those two sourc
 If you opt for this approach, to receive reliable results you must **not** copy the following files:
 * `Makefile`
 * `treasure-hunter.cpp`
-* `carribbean.txt`, if you modified it
+* `caribbean.txt`, if you modified it
 
 ### Delegation to `make`
 
@@ -83,7 +83,7 @@ Suppose your project looks like the following, and the current directory (`Tests
 ~/cs223 /
     ...
     hw5 /
-        carribbean.txt
+        caribbean.txt
         LinkedList.cpp
         LinkedList.h
         Makefile
@@ -95,7 +95,7 @@ Suppose your project looks like the following, and the current directory (`Tests
         ...
         Tests /                     * (current directory)
             input /
-                carribbean.txt
+                caribbean.txt
             LinkedList.h
             Makefile
             NodeType.h
@@ -127,7 +127,7 @@ output passed!
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ~~running valgrind~~
-==1838790== Command: ./treasure-hunter input/carribbean.txt output/all_islands.txt output/remove_some.txt 10 1
+==1838790== Command: ./treasure-hunter input/caribbean.txt output/all_islands.txt output/remove_some.txt 10 1
 ==1838790== 
 I just read and inserted 30 islands
 Removed 10 islands and printed to file
