@@ -19,18 +19,31 @@ Island::Island()
 
 Island::Island(string name, bool access)
 {
-    // TODO: Implement parameterized constructor
+    Island newIsland; 
+    newIsland.name = name;
+    newIsland.access = access;
 }
 
 bool Island::isEqual(Island other)
 {
-    // TODO: Implement this
-
-    // TODO: Remove this line, which is here only so the starter code compiles.
+    // name and accessiblity levels must both be equal
+    if (this->name == other.name && this->access == other.access)
+    {
+        return true;
+    }
     return false;
 }
 
 void Island::print(ostream &outfile)
 {
-    // TODO: Implement this
+    // print the name and accessiblity level of the island
+    outfile << this->name << " ";
+    if (this->access)
+    {
+        outfile << "A" << endl;
+    }
+    else
+    {
+        outfile << "U" << endl;
+    }
 }
