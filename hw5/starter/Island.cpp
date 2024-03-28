@@ -5,7 +5,7 @@
  * Implementation of the Island class
  * TO STUDENT: Don't forget to remove // TODO before you submit!
  *
- * Author: [YOUR NAME HERE]
+ * Author: Braeden Cullen
  */
 
 #include "Island.h"

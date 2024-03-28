@@ -39,6 +39,12 @@
  */
 class LinkedList
 {
+
+private:
+    NodeType *head; // Declare head as a member variable
+    NodeType *tail; // Declare tail as a member variable
+    NodeType *currPos; // Declare currPos as a member variable
+
 public:
     /**
      * Default constructor.
