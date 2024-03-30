@@ -19,14 +19,50 @@ LinkedList::~LinkedList()
     makeEmpty();
 }
 
-// copy constructor, using colon syntax to initialize
-LinkedList::LinkedList(const LinkedList& other) : head(nullptr), currPos(nullptr) 
+// copy constructor, using colon syntax to initialize, ISSUE IS HERE --> all unit tests failing are related to copy constructor
+// currPos is not properly being updated, this must be copied over
+// b d nextIsland failing due to curr pos, get next island currPost
+// copy constructor
+LinkedList::LinkedList(const LinkedList& other) 
 {
-    NodeType* temp = other.head;
-    while (temp != nullptr) 
+    if (other.head == nullptr) 
     {
-        insertIsland(temp->info);
-        temp = temp->next;
+        // if the other list is empty, ensure this list is initialized empty.
+        head = nullptr;
+        currPos = nullptr;
+    } 
+    else 
+    {
+        // start by copying the head node
+        head = new NodeType;
+        head->info = other.head->info;
+        head->next = nullptr;
+
+        // if other.currPos is at the head, set this.currPos to this head
+        if (other.currPos == other.head) 
+        {
+            currPos = head;
+        }
+
+        NodeType* newCurrent = head; // current new node being added to 'this' list
+        NodeType* otherCurrent = other.head->next; // current node in 'other' list being copied
+
+        // copy the rest of the nodes
+        while (otherCurrent != nullptr) 
+        {
+            newCurrent->next = new NodeType;
+            newCurrent = newCurrent->next;
+            newCurrent->info = otherCurrent->info;
+            newCurrent->next = nullptr;
+
+            // if otherCurrent is the currPos in 'other', update currPos in 'this'
+            if (otherCurrent == other.currPos) 
+            {
+                currPos = newCurrent;
+            }
+
+            otherCurrent = otherCurrent->next;
+        }
     }
 }
 
@@ -48,10 +84,11 @@ LinkedList& LinkedList::operator=(const LinkedList& rhs)
 
 void LinkedList::insertIsland(Island is) 
 {
-    NodeType* newNode = new NodeType;
-    newNode->info = is;
-    newNode->next = head;
-    head = newNode;
+    NodeType* newNode = new NodeType();
+    newNode->info = is; 
+    newNode->next = this->head;
+    
+    this->head = newNode; 
 }
 
 void LinkedList::removeIsland(Island is) 
@@ -71,6 +108,9 @@ void LinkedList::removeIsland(Island is)
             }
             delete current;
             break; // found island, exit loop
+        }
+        if(current == currPos) {
+            currPos = nullptr;
         }
         prev = current;
         current = current->next;
