@@ -25,7 +25,6 @@ Island::Island(string name, bool access)
 
 bool Island::isEqual(Island other)
 {
-    // name and accessiblity levels must both be equal
     if (this->name == other.name && this->access == other.access)
     {
         return true;
@@ -35,7 +34,6 @@ bool Island::isEqual(Island other)
 
 void Island::print(ostream &outfile)
 {
-    // print the name and accessiblity level of the island
     outfile << this->name << " ";
     if (this->access)
     {
