@@ -1,11 +1,10 @@
-/*
- * Island.cpp
- * CPSC 223 Pset 5
- *
- * Implementation of the Island class
- * TO STUDENT: Don't forget to remove // TODO before you submit!
- *
- * Author: Braeden Cullen
+/**
+ * Name: Braeden Cullen
+ * Assignment: Treasure Hunter
+ * Class: CPSC223 Spring 2024
+ * Date: March 30th
+ * Implementation of the Island class 
+ * 
  */
 
 #include "Island.h"
