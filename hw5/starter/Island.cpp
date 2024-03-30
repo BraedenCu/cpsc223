@@ -19,9 +19,8 @@ Island::Island()
 
 Island::Island(string name, bool access)
 {
-    Island newIsland; 
-    newIsland.name = name;
-    newIsland.access = access;
+    this->name = name;
+    this->access = access;
 }
 
 bool Island::isEqual(Island other)
