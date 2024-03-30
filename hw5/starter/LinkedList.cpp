@@ -107,11 +107,13 @@ void LinkedList::removeIsland(Island is)
                 prev->next = current->next;
             }
             delete current;
+            if(current == currPos) 
+            {
+                currPos = nullptr;
+            }
             break; // found island, exit loop
         }
-        if(current == currPos) {
-            currPos = nullptr;
-        }
+        
         prev = current;
         current = current->next;
     }
