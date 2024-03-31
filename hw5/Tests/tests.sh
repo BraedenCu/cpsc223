@@ -106,7 +106,7 @@ fi
 echo '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
 echo ""
 
-if ! command -v valgrind &>/dev/null; then
+if ! command -v valgrind --leak-check=full &>/dev/null; then
 	echo "~~valgrind not found on this system...skipping valgrind~~"
 else
 	echo "~~running valgrind~~"

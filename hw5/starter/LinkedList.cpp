@@ -11,12 +11,16 @@
 #include <iostream>
 
 // constructor, using colon syntax to initialize
-LinkedList::LinkedList() : head(nullptr), currPos(nullptr) {} 
+LinkedList::LinkedList() : head(nullptr), currPos(nullptr), previous_head_pointer(nullptr) {} 
 
 // destructor
 LinkedList::~LinkedList() 
 {
     makeEmpty();
+    if (previous_head_pointer != nullptr)
+    {
+        delete previous_head_pointer;
+    }
 }
 
 // copy constructor, using colon syntax to initialize, ISSUE IS HERE --> all unit tests failing are related to copy constructor
@@ -95,33 +99,44 @@ void LinkedList::insertIsland(Island is)
 
 void LinkedList::removeIsland(Island is)
 {
-   NodeType* current = head;
-   NodeType* previous = nullptr;
-  
-   while (current != nullptr)
-   {
-       if (current->info.isEqual(is))
-       {
-           if (current == head)
-           {
-               head = current->next;
-           }
-           else
-           {
-               /// curr-next , currpos null.. currnext= currnextnext
-               previous->next = current->next;
-               if (currPos == current)
-               {
-                   resetCurrPos();
-               }
-           }
-           //delete current;
-           return;
-       }
-       // advance to the next node
-       previous = current;
-       current = current->next;
-   }
+    NodeType* current = head;
+    NodeType* previous = nullptr;
+
+    while (current != nullptr)
+    {
+        if (current->info.isEqual(is))
+        {
+            if (current == head)
+            {
+                this->head = current->next;
+                //currPos = nullptr;
+                previous_head_pointer = current;
+                //if (current->next == currPos){
+                //    currPos = nullptr;
+                //}
+                //delete current;
+                //currPos = head;
+                //delete current;
+
+                // put all the nodes into a vector<NodeType>
+            }
+            else
+            {
+                // curr-next , currpos null.. currnext= currnextnext
+                previous->next = current->next;
+                if (currPos == current)
+                {
+                    resetCurrPos();
+                }
+                delete current;
+            }
+            return;
+        }
+        // advance to the next node
+        previous = current;
+        current = current->next;
+    }
+
 }
 
 
@@ -151,6 +166,8 @@ Island LinkedList::getNextIsland()
     else 
     {
         currPos = currPos->next;
+        delete previous_head_pointer;
+        previous_head_pointer = nullptr;
     }
     if (currPos != nullptr) 
     {
