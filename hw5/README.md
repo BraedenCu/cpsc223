@@ -141,7 +141,7 @@ There are three plain text files included with the starter code:
 The two reference files were generated with the following command (which should produce the given output in the terminal):
 
 ```
-$ ./the-train-conductor carribbean.txt reference_all_islands.txt reference_remove_some.txt 10 1
+$ ./the-treasure-hunter caribbean.txt reference_all_islands.txt reference_remove_some.txt 10 1
 ***REFERENCE EXECUTABLE***
 I just read and inserted 30 islands
 Removed 10 islands and printed to file
