@@ -100,34 +100,23 @@ void LinkedList::removeIsland(Island is)
     {
         if (current->info.isEqual(is)) 
         {
-            // Found the island to remove
             if (current == head) 
             {
-                // Removing the head of the list
                 head = current->next;
-                // If currPos was also at the head, move it to the new head (which might be nullptr if list becomes empty)
-                if (currPos == current) 
-                {
-                    currPos = head;
-                }
             } 
             else 
             {
-                // Removing a node not at the head
+                /// curr-next , currpos null.. currnext= currnextnext
                 previous->next = current->next;
-                // If currPos was at the node being removed, set it to the next node (which might be nullptr if removing the last node)
                 if (currPos == current) 
                 {
-                    currPos = current->next;
+                    resetCurrPos();
                 }
             }
-            
             delete current;
-            
             return;
         }
-        
-        // Advance to the next node
+        // advance to the next node
         previous = current;
         current = current->next;
     }
@@ -155,15 +144,17 @@ Island LinkedList::getNextIsland()
 {
     if (currPos == nullptr) 
     {
-        currPos = head;
+        currPos = head->next;
     } 
-    else 
-    {
-        currPos = currPos->next;
-    }
+    // else 
+    // {
+    //     currPos = currPos->next;
+    // }
     if (currPos != nullptr) 
     {
-        return currPos->info;
+        Island temp = currPos->info;
+        currPos = currPos->next;
+        return temp;
     } 
     else 
     {
