@@ -91,35 +91,37 @@ void LinkedList::insertIsland(Island is)
     this->head = newNode; 
 }
 
-void LinkedList::removeIsland(Island is) 
+
+
+void LinkedList::removeIsland(Island is)
 {
-    NodeType* current = head;
-    NodeType* previous = nullptr;
-    
-    while (current != nullptr) 
-    {
-        if (current->info.isEqual(is)) 
-        {
-            if (current == head) 
-            {
-                head = current->next;
-            } 
-            else 
-            {
-                /// curr-next , currpos null.. currnext= currnextnext
-                previous->next = current->next;
-                if (currPos == current) 
-                {
-                    resetCurrPos();
-                }
-            }
-            delete current;
-            return;
-        }
-        // advance to the next node
-        previous = current;
-        current = current->next;
-    }
+   NodeType* current = head;
+   NodeType* previous = nullptr;
+  
+   while (current != nullptr)
+   {
+       if (current->info.isEqual(is))
+       {
+           if (current == head)
+           {
+               head = current->next;
+           }
+           else
+           {
+               /// curr-next , currpos null.. currnext= currnextnext
+               previous->next = current->next;
+               if (currPos == current)
+               {
+                   resetCurrPos();
+               }
+           }
+           //delete current;
+           return;
+       }
+       // advance to the next node
+       previous = current;
+       current = current->next;
+   }
 }
 
 
@@ -144,17 +146,15 @@ Island LinkedList::getNextIsland()
 {
     if (currPos == nullptr) 
     {
-        currPos = head->next;
+        currPos = head;
     } 
-    // else 
-    // {
-    //     currPos = currPos->next;
-    // }
+    else 
+    {
+        currPos = currPos->next;
+    }
     if (currPos != nullptr) 
     {
-        Island temp = currPos->info;
-        currPos = currPos->next;
-        return temp;
+        return currPos->info;
     } 
     else 
     {
