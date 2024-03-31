@@ -44,6 +44,7 @@ private:
     NodeType *head; // Declare head as a member variable
     NodeType *currPos; // Declare currPos as a member variable
     NodeType *previous_head_pointer; // Used for deleting the head
+    NodeType *previous_current_pointer;
 
 public:
     /**

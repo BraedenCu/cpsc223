@@ -11,7 +11,7 @@
 #include <iostream>
 
 // constructor, using colon syntax to initialize
-LinkedList::LinkedList() : head(nullptr), currPos(nullptr), previous_head_pointer(nullptr) {} 
+LinkedList::LinkedList() : head(nullptr), currPos(nullptr), previous_head_pointer(nullptr), previous_current_pointer(nullptr) {} 
 
 // destructor
 LinkedList::~LinkedList() 
@@ -21,11 +21,11 @@ LinkedList::~LinkedList()
     {
         delete previous_head_pointer;
     }
+    if (previous_current_pointer != nullptr) {
+        delete previous_current_pointer;
+    }
 }
 
-// copy constructor, using colon syntax to initialize, ISSUE IS HERE --> all unit tests failing are related to copy constructor
-// currPos is not properly being updated, this must be copied over
-// b d nextIsland failing due to curr pos, get next island currPost
 // copy constructor
 LinkedList::LinkedList(const LinkedList& other) 
 {
@@ -111,14 +111,6 @@ void LinkedList::removeIsland(Island is)
                 this->head = current->next;
                 //currPos = nullptr;
                 previous_head_pointer = current;
-                //if (current->next == currPos){
-                //    currPos = nullptr;
-                //}
-                //delete current;
-                //currPos = head;
-                //delete current;
-
-                // put all the nodes into a vector<NodeType>
             }
             else
             {
@@ -126,9 +118,10 @@ void LinkedList::removeIsland(Island is)
                 previous->next = current->next;
                 if (currPos == current)
                 {
-                    resetCurrPos();
+                    //resetCurrPos();
                 }
-                delete current;
+                previous_current_pointer = current;
+                //delete current;
             }
             return;
         }
@@ -168,6 +161,8 @@ Island LinkedList::getNextIsland()
         currPos = currPos->next;
         delete previous_head_pointer;
         previous_head_pointer = nullptr;
+        delete previous_current_pointer;
+        previous_current_pointer = nullptr;
     }
     if (currPos != nullptr) 
     {
