@@ -110,7 +110,7 @@ if ! command -v valgrind &>/dev/null; then
 	echo "~~valgrind not found on this system...skipping valgrind~~"
 else
 	echo "~~running valgrind~~"
-	timeout 600s valgrind $cmd &>output/student.valgrind
+	timeout 600s valgrind -s $cmd &>output/student.valgrind
 	tail -n 14 output/student.valgrind
 fi
 echo ""
