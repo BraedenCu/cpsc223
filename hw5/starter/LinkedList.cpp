@@ -176,10 +176,20 @@ int LinkedList::getLength() const
 void LinkedList::print(std::ostream& out) 
 {
     NodeType* temp = head;
+    int totalLength = getLength();
+    int index = totalLength - 1;
     while (temp != nullptr) 
     {
         temp->info.print(out);
-        out << std::endl; // move to next line
+        if (index == 0) 
+        {
+            out << index << "\n";
+        }
+        else 
+        {
+            out << index << " ~~ ";
+        }
         temp = temp->next;
+        index--;
     }
 }

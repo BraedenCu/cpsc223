@@ -36,10 +36,10 @@ void Island::print(ostream &outfile)
     outfile << this->name << " ";
     if (this->access)
     {
-        outfile << "A" << endl;
+        outfile << "A" << " ";
     }
     else
     {
-        outfile << "U" << endl;
+        outfile << "U" <<  " ";
     }
 }
