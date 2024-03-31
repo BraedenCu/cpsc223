@@ -93,31 +93,46 @@ void LinkedList::insertIsland(Island is)
 
 void LinkedList::removeIsland(Island is) 
 {
-    NodeType *current = head, *prev = nullptr;
+    NodeType* current = head;
+    NodeType* previous = nullptr;
+    
     while (current != nullptr) 
     {
-        if (current->info.isEqual(is)) // check if island found 
+        if (current->info.isEqual(is)) 
         {
-            if (prev == nullptr) 
+            // Found the island to remove
+            if (current == head) 
             {
-                head = current->next; // remove first element
+                // Removing the head of the list
+                head = current->next;
+                // If currPos was also at the head, move it to the new head (which might be nullptr if list becomes empty)
+                if (currPos == current) 
+                {
+                    currPos = head;
+                }
             } 
             else 
             {
-                prev->next = current->next;
+                // Removing a node not at the head
+                previous->next = current->next;
+                // If currPos was at the node being removed, set it to the next node (which might be nullptr if removing the last node)
+                if (currPos == current) 
+                {
+                    currPos = current->next;
+                }
             }
+            
             delete current;
-            if(current == currPos) 
-            {
-                currPos = nullptr;
-            }
-            break; // found island, exit loop
+            
+            return;
         }
         
-        prev = current;
+        // Advance to the next node
+        previous = current;
         current = current->next;
     }
 }
+
 
 void LinkedList::makeEmpty() 
 {
