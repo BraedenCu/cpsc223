@@ -99,46 +99,136 @@ BSTNode::BSTNode(int data)
  *  use an initializer list, or you may write a traditional constructor
  *  function, or both.
  */
-BSTNode::BSTNode(const BSTNode &other){
-#pragma message "TODO: Students write code here"
+
+/**
+ * Copy constructor.
+ *
+ * @param other the node to copy
+ * @return the root of a tree that is a copy of the tree rooted at other
+ * @result creates a new node with the same properties as other by
+ *  performing a pre-order deep copy of the tree rooted at other. The root
+ *  of the new tree has parent nullptr (it is considered the ultimate root
+ *  of its tree).
+ *
+ * Runtime Complexity: O(n)
+ */
+BSTNode::BSTNode(const BSTNode &other)
+{
+//  TODO TODO FIX FIX FIX
+    if (&other == nullptr) {
+        return;
+    }
+
+    // Perform a pre-order deep copy of the tree rooted at other
+    this->mData = other.mData;
+    this->mCount = other.mCount;
+    this->mHeight = other.mHeight;
+    this->mColor = other.mColor;
+
+    if (other.mLeft != nullptr) {
+        this->mLeft = new BSTNode(*other.mLeft);
+        this->mLeft->parent = this;
+    }
+
+    if (other.mRight != nullptr) {
+        this->mRight = new BSTNode(*other.mRight);
+        this->mRight->parent = this;
+    }
 }
 
+/**
+ * Destructor.
+ *
+ * @param this the root of the tree to free
+ * @result Performs a post-order delete to free all memory owned by this.
+ *
+ * Remember: `this` is automatically freed at the end of a destructor.
+ *
+ * Runtime Complexity: O(n)
+ */
 BSTNode::~BSTNode()
 {
-#pragma message "TODO: Students write code here"
+//  TODO TODO FIX FIX FIX
+    if (mLeft != nullptr) {
+        delete mLeft;
+    }
+
+    if (mRight != nullptr) {
+        delete mRight;
+    }
 }
 
 /********************
  * PUBLIC FUNCTIONS *
  ********************/
 
+/**
+ * Returns the minimum value in the tree rooted at this.
+ *
+ * @param this the root of the tree
+ * @return a pointer to the node with the minimum value in the tree rooted
+ *  at this
+ * @assumes this is not an empty tree
+ *
+ * Runtime Complexity: O([height of tree rooted at this])
+ */
 const BSTNode *BSTNode::minimum_value() const
 {
-#pragma message "TODO: Students write code here"
+// TODO TODO FIX FIX FIX
 
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return nullptr;
+    const BSTNode* current = this;
+    while (current->right_child() != nullptr) 
+    {
+        current = current->right_child();
+    }
+
+    return current;
+
 }
 
-const BSTNode *BSTNode::maximum_value() const
-{
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return nullptr;
-}
-
+/**
+ * Searches for value in this.
+ *
+ * @param this the root of the tree
+ * @param value the value for which to search in the tree
+ * @return a pointer to the node with value in the tree rooted at this, or
+ *  an empty tree if value is not in this
+ *
+ * Runtime Complexity: O([height of tree rooted at this])
+ */
 const BSTNode *BSTNode::search(int value) const
 {
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return nullptr;
+// TODO TODO FIX FIX
+    if (value == mData) 
+    {
+        return this;
+    } 
+    else if (value < mData && mLeft != nullptr) 
+    {
+        return mLeft->search(value);
+    } 
+    else if (value > mData && mRight != nullptr) 
+    {
+        return mRight->search(value);
+    } 
+    else 
+    {
+        return nullptr;
+    }
 }
 
+/**
+ * Inserts value into this.
+ *
+ * @param this the root of the tree
+ * @param value the value to insert
+ * @return a pointer to the root of the tree into which value has just been
+ *  inserted, with parent `nullptr`
+ * @result inserts (a single occurrence of) value into the tree rooted at
+ *  this. Uses the "naive BST" insertion algorithm.
+ *
+ * Runtime Complexity: O([height of tree rooted at this])
+ */
 BSTNode *BSTNode::bst_insert(int value)
 {
     BSTNode *root = this;
@@ -147,10 +237,34 @@ BSTNode *BSTNode::bst_insert(int value)
      ***** BST Insertion Begins *****
      ********************************/
 
-#pragma message "TODO: Students write code here"
-    // Perform the insertion
+    if (value < mData)
+    {
+        if (mLeft == nullptr)
+        {
+            mLeft = new BSTNode(value);
+            mLeft->parent = this;
+        }
+        else
+        {
+            mLeft->bst_insert(value);
+        }
+    }
+    else if (value > mData)
+    {
+        if (mRight == nullptr)
+        {
+            mRight = new BSTNode(value);
+            mRight->parent = this;
+        }
+        else
+        {
+            mRight->bst_insert(value);
+        }
+    }
 
     // Make root locally consistent
+    mCount++;
+    mHeight = std::max(mLeft != nullptr ? mLeft->mHeight : -1, mRight != nullptr ? mRight->mHeight : -1) + 1;
 
     /********************************
      ****** BST Insertion Ends ******
@@ -159,6 +273,18 @@ BSTNode *BSTNode::bst_insert(int value)
     return root;
 }
 
+/**
+ * Inserts value into this.
+ *
+ * @param value the value to insert
+ * @return a pointer to the root of the tree into which value has just been
+ *  inserted, with parent `nullptr`. The returned tree is an AVL Tree.
+ * @result inserts (a single occurrence of) value into the tree rooted at
+ *  this. Uses the AVL Tree insertion algorithm.
+ * @assumes this is the root of an AVL Tree
+ *
+ * Runtime Complexity: O(log n)
+ */
 BSTNode *BSTNode::avl_insert(int value)
 {
     BSTNode *root = this;
@@ -167,8 +293,35 @@ BSTNode *BSTNode::avl_insert(int value)
      ***** BST Insertion Begins *****
      ********************************/
 
-#pragma message "TODO: Students write code here"
     // Perform the insertion
+    if (value < mData)
+    {
+        if (mLeft == nullptr)
+        {
+            mLeft = new BSTNode(value);
+            mLeft->parent = this;
+        }
+        else
+        {
+            mLeft->avl_insert(value);
+        }
+    }
+    else if (value > mData)
+    {
+        if (mRight == nullptr)
+        {
+            mRight = new BSTNode(value);
+            mRight->parent = this;
+        }
+        else
+        {
+            mRight->avl_insert(value);
+        }
+    }
+
+    // Make root locally consistent
+    mCount++;
+    mHeight = std::max(mLeft != nullptr ? mLeft->mHeight : -1, mRight != nullptr ? mRight->mHeight : -1) + 1;
 
     /********************************
      ****** BST Insertion Ends ******
@@ -178,9 +331,11 @@ BSTNode *BSTNode::avl_insert(int value)
      **** AVL Maintenance Begins ****
      ********************************/
 
-#pragma message "TODO: Students write code here"
     // Make root locally consistent
+    make_locally_consistent();
+
     // Ensure root is balanced
+    root = avl_balance();
 
     /********************************
      ***** AVL Maintenance Ends *****
@@ -192,7 +347,7 @@ BSTNode *BSTNode::avl_insert(int value)
 BSTNode *BSTNode::rbt_insert(int value)
 {
     // This function is implemented for you, but rbt_insert_helper is not.
-    // TODO: Think about why the helper function is useful or necessary.
+    // Think about why the helper function is useful or necessary.
 
     BSTNode *root = this->rbt_insert_helper(value);
     root->mColor = Color::BLACK;
@@ -294,22 +449,32 @@ BSTNode *BSTNode::rbt_remove(int value)
     return root;
 }
 
+/**
+ * @param this the root of the tree
+ * @return the number of non-empty nodes in the tree rooted at this
+ *
+ * Runtime Complexity: O(n)
+ */
 int BSTNode::node_count() const
 {
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return 0;
-}
-
-int BSTNode::count_total() const
-{
-#pragma message "TODO: Students write code here"
-
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return 0;
+// TODO TODO FIX FIX FIX
+    if (is_empty()) 
+    {
+        return 0;
+    } 
+    else 
+    {
+        int count = 1;
+        if (has_child(LEFT)) 
+        {
+            count += left_child()->node_count();
+        }
+        if (has_child(RIGHT)) 
+        {
+            count += right_child()->node_count();
+        }
+        return count;
+    }
 }
 
 bool BSTNode::is_empty() const
@@ -668,41 +833,73 @@ BSTNode *BSTNode::dir_rotate(Direction dir)
     }
     return root;
 }
-
+/**
+ * @param this the root of the tree.
+ * @return pointer to the root of rotated tree, whose parent pointer is the
+ *  parent of this.
+ * @result right rotate tree rooted at this
+ * @assumes this has a non-empty left subtree
+ *
+ * Runtime Complexity: O(1)
+ */
 BSTNode *BSTNode::right_rotate()
 {
+// TODO TODO TODO FIX FIX
     // Leave this assert statement here for your own benefit.
     assert(!this->mLeft->is_empty());
 
-#pragma message "TODO: Students write code here"
     // Perform the rotation
-    // Make the rotated tree locally consistent
+    BSTNode *newRoot = this->mLeft;
+    this->mLeft = newRoot->mRight;
+    newRoot->mRight = this;
 
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return this;
+    // Make the rotated tree locally consistent
+    this->make_locally_consistent();
+    newRoot->make_locally_consistent();
+
+    return newRoot;
 }
 
+/**
+ * @param this the root of the tree.
+ * @return pointer to the root of rotated tree, whose parent pointer is the
+ *  parent of this.
+ * @result left rotate tree rooted at this
+ * @assumes this has a non-empty right subtree
+ *
+ * Runtime Complexity: O(1)
+ */
 BSTNode *BSTNode::left_rotate()
 {
+// TODO TODO TODO FIX FIX
     // Leave this assert statement here for your own benefit.
     assert(!this->mRight->is_empty());
 
-#pragma message "TODO: Students write code here"
     // Perform the rotation
-    // Make the rotated tree locally consistent
+    BSTNode *newRoot = this->mRight;
+    this->mRight = newRoot->mLeft;
+    newRoot->mLeft = this;
 
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
-    return this;
+    // Make the rotated tree locally consistent
+    this->make_locally_consistent();
+    newRoot->make_locally_consistent();
+
+    return newRoot;
 }
 
+/**
+ * @param this the root of an almost-balanced AVL Tree.
+ * @return the balanced tree.
+ * @result If unbalanced, balances the tree rooted at node.
+ * @assumes the height difference between this's left and right children is
+ *  no more than 2.
+ *
+ * Runtime Complexity: O(1)
+ */
 BSTNode *BSTNode::avl_balance()
 {
-#pragma message "TODO: Students write code here"
+    // TODO: Implement AVL balancing algorithm here
 
-#pragma message "TODO: This line is in here so that the starter code compiles. " \
-                "Remove or modify it when implementing."
     return this;
 }
 

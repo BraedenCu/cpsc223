@@ -28,18 +28,62 @@ BSTree::~BSTree()
     delete this->root;
 }
 
-BSTree &BSTree::operator=(const BSTree &source)
+// implement tree_clear
+void BSTree::tree_clear(const BSTNode* node)
 {
-#pragma message "TODO: Students write code here"
-    // Check for self-assignment
+// TODO TODO FIX FIX
+    if (node == nullptr)
+    {
+        return;
+    }
 
+    tree_clear(node->left_child());
+    tree_clear(node->right_child());
+
+    delete node;
+}
+
+/*
+ *
+ * Deep copy constructor: make a copy of everything from the “other” BSTNode
+    ○ Some values can be easily copied over by simply setting them equal to your “this” values,
+    others require a more in-depth approach
+    ○ Should be a pre-order deep copy (visit root, then left, then right). All nodes should be copied,
+    not just direct children.
+    ○ As you copy all nodes, update other values as needed
+    ○ Have default values if we don’t know something exists yet
+ * 
+*/
+BSTree &BSTree::operator=(const BSTree &source)
+{   
+// TODO TODO FIX FIX
+    // Assigns rhs to this by deep copy.
+
+    // Check for self-assignment
+    if (this == &source)
+    {
+        return *this; // return a reference to the current object
+    }
     // Delete existing tree, if it exists
+    if(this->root != nullptr)
+    {
+        tree_clear(this->root); // recursively delete starting from root
+    }
 
     // Copy root from source.root, if it exists
+    if(source.root != nullptr)
+    {
+        this->root = new BSTNode(*source.root);
+    }
+    else
+    {
+        this->root = nullptr;
+    }
 
     // Don't forget to return *this
     return *this;
 }
+
 
 bool BSTree::is_valid() const
 {

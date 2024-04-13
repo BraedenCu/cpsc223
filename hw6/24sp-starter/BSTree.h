@@ -18,6 +18,12 @@ private:
      */
     BSTNode *root;
 
+    /**
+     * Perform deep deletion of nodes in a tree.
+     * 
+    */
+    void tree_clear(const BSTNode* node);
+
 public:
     /**
      * Default constructor. Creates an empty tree.
