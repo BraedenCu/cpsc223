@@ -187,6 +187,48 @@ const BSTNode *BSTNode::minimum_value() const
 }
 
 /**
+ * Returns the maximum value in the tree rooted at this.
+ *
+ * @param this the root of the tree
+ * @return a pointer to the node with the maximum value in the tree rooted
+ *  at this
+ * @assumes this is not an empty tree
+ *
+ * Runtime Complexity: O([height of tree rooted at this])
+ */
+const BSTNode *BSTNode::maximum_value() const
+{
+// TODO TODO FIX FIX FIX
+    const BSTNode* current = this;
+    while (current->left_child() != nullptr) 
+    {
+        current = current->left_child();
+    }
+
+    return current;
+}
+
+/**
+ * @param this the root of the tree
+ * @return the total of all counts in the tree rooted at this
+ *
+ * Runtime Complexity: O(n)
+ */
+int BSTNode::count_total() const
+{
+// TODO TODO FIX FIX FIX
+    if (is_empty()) 
+    {
+        return 0;
+    } 
+    else 
+    {
+        return mCount + (mLeft != nullptr ? mLeft->count_total() : 0) + (mRight != nullptr ? mRight->count_total() : 0);
+    }
+}
+
+
+/**
  * Searches for value in this.
  *
  * @param this the root of the tree

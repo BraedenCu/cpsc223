@@ -98,7 +98,7 @@ int BSTree::minimum_value() const
 
 int BSTree::maximum_value() const
 {
-    return this->root->maximum_value()->data();
+    return this->root->maximum_value()->data(); // error ?
 }
 
 int BSTree::count_of(int value) const
@@ -128,7 +128,7 @@ int BSTree::node_count() const
 
 int BSTree::count_total() const
 {
-    return this->root->count_total();
+    return this->root->count_total(); // error ?
 }
 
 void BSTree::print_tree() const
