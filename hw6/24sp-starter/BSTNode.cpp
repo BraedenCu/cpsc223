@@ -112,30 +112,39 @@ BSTNode::BSTNode(int data)
  *
  * Runtime Complexity: O(n)
  */
+/**
+ * Copy constructor: make a copy of everything from the “other” BSTNode
+○ Some values can be easily copied over by simply setting them equal to your “this” values,
+others require a more in-depth approach
+○ Should be a pre-order deep copy (visit root, then left, then right). All nodes should be copied,
+not just direct children.
+○ As you copy all nodes, update other values as needed
+○ Have default values if we don’t know something exists yet*/
 BSTNode::BSTNode(const BSTNode &other)
+    : mData(other.mData), mCount(other.mCount), mHeight(other.mHeight), mColor(other.mColor), parent(nullptr)
 {
-//  TODO TODO FIX FIX FIX
-    if (other.is_empty()) 
+    if (other.has_child(LEFT) && !other.mLeft->is_empty()) 
     {
-        return;
-    }   
-
-    // Perform a pre-order deep copy of the tree rooted at other
-    this->mData = other.mData;
-    this->mCount = other.mCount;
-    this->mHeight = other.mHeight;
-    this->mColor = other.mColor;
-
-    if (other.mLeft != nullptr) {
-        this->mLeft = new BSTNode(*other.mLeft);
-        this->mLeft->parent = this;
+        mLeft = new BSTNode(*other.mLeft);
+        mLeft->parent = this;  // Set the parent pointer of the left child
+    } 
+    else 
+    {
+        mLeft = new BSTNode();  // Create a sentinel node for the left child
     }
 
-    if (other.mRight != nullptr) {
-        this->mRight = new BSTNode(*other.mRight);
-        this->mRight->parent = this;
+    // Copy the right subtree if it exists and is not a sentinel node
+    if (other.has_child(RIGHT) && !other.mRight->is_empty()) 
+    {
+        mRight = new BSTNode(*other.mRight);
+        mRight->parent = this;  // Set the parent pointer of the right child
+    } 
+    else 
+    {
+        mRight = new BSTNode();  // Create a sentinel node for the right child
     }
 }
+
 
 /**
  * Destructor.
@@ -150,11 +159,11 @@ BSTNode::BSTNode(const BSTNode &other)
 BSTNode::~BSTNode()
 {
 //  TODO TODO FIX FIX FIX
-    if (mLeft != nullptr) {
+    if (this->has_child(LEFT)) {
         delete mLeft;
     }
 
-    if (mRight != nullptr) {
+    if (this->has_child(RIGHT)) {
         delete mRight;
     }
 }
@@ -254,17 +263,18 @@ const BSTNode *BSTNode::search(int value) const
     {
         return this;
     } 
-    else if (value < mData && mLeft != nullptr) 
+    else if (value < mData && !has_child(LEFT)) 
     {
         return mLeft->search(value);
     } 
-    else if (value > mData && mRight != nullptr) 
+    else if (value > mData && !has_child(RIGHT))
     {
         return mRight->search(value);
     } 
     else 
     {
-        return nullptr;
+        // return empty tree
+        return new BSTNode();
     }
 }
 
@@ -291,7 +301,7 @@ empty node there. Make sure you deal with it
 */
 BSTNode* BSTNode::bst_insert(int value) 
 {
-// TODO TODO FIX FIX FIX
+// TODO TODO WORKING
     BSTNode *root = this;
 
     if(is_empty()) 
@@ -503,7 +513,7 @@ BSTNode *BSTNode::bst_remove(int value)
         }
         else
         {
-            if (mLeft->is_empty() && mRight->is_empty())
+            if (this->has_child(LEFT) && this->has_child(RIGHT))
             {
                 // this has no children. We may have to do extra work.
                 // Get its neighborhood
@@ -513,7 +523,7 @@ BSTNode *BSTNode::bst_remove(int value)
                 root = new BSTNode();
                 delete this;
             }
-            else if (!mLeft->is_empty() && mRight->is_empty())
+            else if (this->has_child(LEFT) && !this->has_child(RIGHT))
             {
                 // this has one (left) child. 
                 // Promote this's child
@@ -522,7 +532,7 @@ BSTNode *BSTNode::bst_remove(int value)
                 mLeft = nullptr;
                 delete this;
             }
-            else if (mLeft->is_empty() && !mRight->is_empty())
+            else if (this->has_child(LEFT) && !this->has_child(RIGHT))
             {
                 // this has one (right) child
                 // Promote this's child
