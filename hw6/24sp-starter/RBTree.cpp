@@ -28,14 +28,46 @@ RBTree::~RBTree()
     delete this->root;
 }
 
+// implement tree_clear
+void tree_clear(const BSTNode* node)
+{
+// TODO TODO FIX FIX
+    if (node == nullptr)
+    {
+        return;
+    }
+
+    tree_clear(node->left_child());
+    tree_clear(node->right_child());
+
+    delete node;
+}
+
 RBTree &RBTree::operator=(const RBTree &source)
 {
-#pragma message "TODO: Students write code here"
-    // Check for self-assignment
+// TODO TODO FIX FIX
+    // Assigns rhs to this by deep copy.
 
+    // Check for self-assignment
+    if (this == &source)
+    {
+        return *this; // return a reference to the current object
+    }
     // Delete existing tree, if it exists
+    if(this->root != nullptr)
+    {
+        tree_clear(this->root); // recursively delete starting from root
+    }
 
     // Copy root from source.root, if it exists
+    if(source.root != nullptr)
+    {
+        this->root = new BSTNode(*source.root);
+    }
+    else
+    {
+        this->root = nullptr;
+    }
 
     // Don't forget to return *this
     return *this;

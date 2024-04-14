@@ -115,9 +115,10 @@ BSTNode::BSTNode(int data)
 BSTNode::BSTNode(const BSTNode &other)
 {
 //  TODO TODO FIX FIX FIX
-    if (&other == nullptr) {
+    if (other.is_empty()) 
+    {
         return;
-    }
+    }   
 
     // Perform a pre-order deep copy of the tree rooted at other
     this->mData = other.mData;
@@ -177,13 +178,12 @@ const BSTNode *BSTNode::minimum_value() const
 // TODO TODO FIX FIX FIX
 
     const BSTNode* current = this;
-    while (current->right_child() != nullptr) 
+    while (current->has_child(LEFT)) 
     {
-        current = current->right_child();
+        current = current->left_child();
     }
 
     return current;
-
 }
 
 /**
@@ -200,9 +200,9 @@ const BSTNode *BSTNode::maximum_value() const
 {
 // TODO TODO FIX FIX FIX
     const BSTNode* current = this;
-    while (current->left_child() != nullptr) 
+    while (current->has_child(RIGHT)) 
     {
-        current = current->left_child();
+        current = current->right_child();
     }
 
     return current;
@@ -223,7 +223,16 @@ int BSTNode::count_total() const
     } 
     else 
     {
-        return mCount + (mLeft != nullptr ? mLeft->count_total() : 0) + (mRight != nullptr ? mRight->count_total() : 0);
+        int count = mCount;
+        if (has_child(LEFT)) 
+        {
+            count += left_child()->count_total();
+        }
+        if (has_child(RIGHT)) 
+        {
+            count += right_child()->count_total();
+        }
+        return count;
     }
 }
 
@@ -271,49 +280,54 @@ const BSTNode *BSTNode::search(int value) const
  *
  * Runtime Complexity: O([height of tree rooted at this])
  */
-BSTNode *BSTNode::bst_insert(int value)
+
+/**
+ * Insert: Insert a particular value into the tree
+○ Find where the value should go using the binary search tree invariant
+○ Note the case of that value already existing in the tree (mCount)
+○ Assuming you get to where the value should go and it doesn’t already exist, there should be an
+empty node there. Make sure you deal with it
+○ Return root of the tree into which value was just inserted
+*/
+BSTNode* BSTNode::bst_insert(int value) 
 {
+// TODO TODO FIX FIX FIX
     BSTNode *root = this;
 
-    /********************************
-     ***** BST Insertion Begins *****
-     ********************************/
-
-    if (value < mData)
+    if(is_empty()) 
     {
-        if (mLeft == nullptr)
+        BSTNode* left = new BSTNode();
+        BSTNode* right = new BSTNode();
+        this->mData = value;
+        this->mCount += 1;
+        this->mRight = left;
+        this->mLeft = right;
+        this->mHeight = 0;
+    }
+    else if(this->mData == value) 
+    {
+        mCount +=1;
+    }
+    else if(this->mData == value) 
+    {
+        mCount += 1;
+    }
+    else 
+    {
+        if (value > mData) 
         {
-            mLeft = new BSTNode(value);
-            mLeft->parent = this;
+            mRight -> bst_insert(value);
         }
-        else
+        else 
         {
-            mLeft->bst_insert(value);
+            mLeft -> bst_insert(value);
         }
     }
-    else if (value > mData)
-    {
-        if (mRight == nullptr)
-        {
-            mRight = new BSTNode(value);
-            mRight->parent = this;
-        }
-        else
-        {
-            mRight->bst_insert(value);
-        }
-    }
 
-    // Make root locally consistent
-    mCount++;
-    mHeight = std::max(mLeft != nullptr ? mLeft->mHeight : -1, mRight != nullptr ? mRight->mHeight : -1) + 1;
-
-    /********************************
-     ****** BST Insertion Ends ******
-     ********************************/
-
+    make_locally_consistent();
     return root;
 }
+
 
 /**
  * Inserts value into this.
@@ -329,6 +343,7 @@ BSTNode *BSTNode::bst_insert(int value)
  */
 BSTNode *BSTNode::avl_insert(int value)
 {
+// TODO TODO FIX FIX FIX
     BSTNode *root = this;
 
     /********************************
@@ -401,14 +416,38 @@ BSTNode *BSTNode::rbt_insert(int value)
  */
 BSTNode *BSTNode::rbt_insert_helper(int value)
 {
+// TODO TODO FIX FIX FIX
     BSTNode *root = this;
 
     /********************************
      ***** BST Insertion Begins *****
      ********************************/
 
-#pragma message "TODO: Students write code here"
-    // Perform the insertion
+    // Perform the insertion, binary search tree
+    if (value < mData)
+    {
+        if (mLeft == nullptr)
+        {
+            mLeft = new BSTNode(value);
+            mLeft->parent = this;
+        }
+        else
+        {
+            mLeft->rbt_insert_helper(value);
+        }
+    }
+    else if (value > mData)
+    {
+        if (mRight == nullptr)
+        {
+            mRight = new BSTNode(value);
+            mRight->parent = this;
+        }
+        else
+        {
+            mRight->rbt_insert_helper(value);
+        }
+    }
 
     /********************************
      ****** BST Insertion Ends ******
@@ -418,9 +457,11 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
      ***** RB Maintenance Begins ****
      ********************************/
 
-#pragma message "TODO: Students write code here"
     // Make root locally consistent
     // Eliminate a potential red-red violation near root
+
+    BHVNeighborhood nb(this, ROOT);
+    root = rbt_eliminate_red_red_violation();
 
     /********************************
      ****** RB Maintenance Ends *****
@@ -431,16 +472,78 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
 
 BSTNode *BSTNode::bst_remove(int value)
 {
+// TODO TODO FIX FIX FIX
     BSTNode *root = this;
 
     /********************************
      ****** BST Removal Begins ******
      ********************************/
 
-#pragma message "TODO: Students write code here"
     // Do the removal
-
     // Make the root locally consistent
+    if (value < mData)
+    {
+        if (mLeft != nullptr)
+        {
+            mLeft = mLeft->bst_remove(value);
+        }
+    }
+    else if (value > mData)
+    {
+        if (mRight != nullptr)
+        {
+            mRight = mRight->bst_remove(value);
+        }
+    }
+    else
+    {
+        if (mCount > 1)
+        {
+            mCount--;
+        }
+        else
+        {
+            if (mLeft->is_empty() && mRight->is_empty())
+            {
+                // this has no children. We may have to do extra work.
+                // Get its neighborhood
+                BHVNeighborhood nb(this, ROOT);
+
+                // Delete it
+                root = new BSTNode();
+                delete this;
+            }
+            else if (!mLeft->is_empty() && mRight->is_empty())
+            {
+                // this has one (left) child. 
+                // Promote this's child
+                mLeft->parent = parent;
+                root = mLeft;
+                mLeft = nullptr;
+                delete this;
+            }
+            else if (mLeft->is_empty() && !mRight->is_empty())
+            {
+                // this has one (right) child
+                // Promote this's child
+                mRight->parent = parent;
+                root = mRight;
+                mRight = nullptr;
+                delete this;
+            }
+            else
+            {
+                // this has two children. Find the successor to use as a replacement, then remove it entirely from this's right subtree.
+                // This requires setting the replacement's multiplicity to 1 so that the node is entirely removed rather than simply having 
+                // its multiplicity decremented. Removal is the only place a const-to-non-const cast should appear in your solution.
+                BSTNode *replacement = (BSTNode *)mRight->minimum_value();
+                mData = replacement->mData;
+                mCount = replacement->mCount;
+                replacement->mCount = 1;
+                mRight = mRight->bst_remove(replacement->mData);
+            }
+        }
+    }
 
     /********************************
      ****** BST Removal Ends ******
@@ -451,15 +554,73 @@ BSTNode *BSTNode::bst_remove(int value)
 
 BSTNode *BSTNode::avl_remove(int value)
 {
+// TODO TODO FIX FIX FIX
     BSTNode *root = this;
 
     /********************************
      ****** BST Removal Begins ******
      ********************************/
 
-#pragma message "TODO: Students write code here"
     // Do the removal
     // Make the root locally consistent
+    if (value < mData)
+    {
+        if (mLeft != nullptr)
+        {
+            mLeft = mLeft->avl_remove(value);
+        }
+    }
+    else if (value > mData)
+    {
+        if (mRight != nullptr)
+        {
+            mRight = mRight->avl_remove(value);
+        }
+    }
+    else
+    {
+        if (mCount > 1)
+        {
+            mCount--;
+        }
+        else
+        {
+            if (mLeft->is_empty() && mRight->is_empty())
+            {
+                // this has no children. We may have to do extra work.
+                // Get its neighborhood
+                BHVNeighborhood nb(this, ROOT);
+
+                // Delete it
+                root = new BSTNode();
+                delete this;
+            }
+            else if (!mLeft->is_empty() && mRight->is_empty())
+            {
+                // this has one (left) child. Promote this's child
+                mLeft->parent = parent;
+                root = mLeft;
+                mLeft = nullptr;
+                delete this;
+            }
+            else if (mLeft->is_empty() && !mRight->is_empty())
+            {
+                // this has one (right) child. Promote this's child
+                mRight->parent = parent;
+                root = mRight;
+                mRight = nullptr;
+                delete this;
+            }
+            else
+            {
+                BSTNode *replacement = (BSTNode *)mRight->minimum_value();
+                mData = replacement->mData;
+                mCount = replacement->mCount;
+                replacement->mCount = 1;
+                mRight = mRight->avl_remove(replacement->mData);
+            }
+        }
+    }
 
     /********************************
      ******* BST Removal Ends *******
@@ -469,8 +630,9 @@ BSTNode *BSTNode::avl_remove(int value)
      **** AVL Maintenance Begins ****
      ********************************/
 
-#pragma message "TODO: Students write code here"
     // Ensure the tree is AVL-balanced
+    make_locally_consistent();
+    root = avl_balance();
 
     /********************************
      ***** AVL Maintenance Ends *****
@@ -961,26 +1123,36 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
          *  Fix it.
          */
 
-#pragma message "TODO: Students fill in the code below"
         if (nb.y->mColor == RED)
         {
-#pragma message "TODO: Eliminate the red-red violation when y is red"
+            // Eliminate the red-red violation when y is red
+            // TODO TODO TODO FIX FIX
+            nb.g->mColor = RED;
+            nb.p->mColor = BLACK;
+            nb.y->mColor = BLACK;
         }
         else
         {
             switch (nb.shape)
             {
             case LR:
-#pragma message "TODO: Handle LR case"
+                // handle LR case
                 break;
             case LL:
-#pragma message "TODO: Handle LL case"
-                break;
+                // handle LL case
+                nb.p->mColor = BLACK;
+                nb.g->mColor = RED;
+                nb.g = nb.g->right_rotate();
             case RL:
-#pragma message "TODO: Handle RL case"
-                break;
+                // handle RL case, RRV neighborhood has members p, g, x, y
+                nb.p->mColor = BLACK;
+                nb.g->mColor = RED;
+                nb.p = nb.p->left_rotate();
             case RR:
-#pragma message "TODO: Handle RR case"
+                // Handle RR case
+                nb.p->mColor = BLACK;
+                nb.g->mColor = RED;
+                nb.g = nb.g->left_rotate();
                 break;
             default:
                 // INVALID case. Do nothing.

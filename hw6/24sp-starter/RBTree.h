@@ -19,6 +19,15 @@ private:
      */
     BSTNode *root;
 
+    /**
+     * Helper function for deep copy
+     *
+     * @param source the node to copy
+     * @return cleared tree
+     */
+    //void tree_clear(const BSTNode *node);
+
+
 public:
     /**
      * Default constructor. Creates an empty tree.

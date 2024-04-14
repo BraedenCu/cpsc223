@@ -28,10 +28,9 @@ BSTree::~BSTree()
     delete this->root;
 }
 
-// implement tree_clear
-void BSTree::tree_clear(const BSTNode* node)
+void tree_clear(const BSTNode* node)
 {
-// TODO TODO FIX FIX
+// TODO TODO TODO
     if (node == nullptr)
     {
         return;
@@ -56,7 +55,7 @@ void BSTree::tree_clear(const BSTNode* node)
 */
 BSTree &BSTree::operator=(const BSTree &source)
 {   
-// TODO TODO FIX FIX
+// TODO TODO TODO
     // Assigns rhs to this by deep copy.
 
     // Check for self-assignment
