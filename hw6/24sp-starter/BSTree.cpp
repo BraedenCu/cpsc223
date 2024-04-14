@@ -64,10 +64,8 @@ BSTree &BSTree::operator=(const BSTree &source)
         return *this; // return a reference to the current object
     }
     // Delete existing tree, if it exists
-    if(this->root != nullptr)
-    {
-        tree_clear(this->root); // recursively delete starting from root
-    }
+
+    delete this->root;
 
     // Copy root from source.root, if it exists
     if(source.root != nullptr)

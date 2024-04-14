@@ -51,7 +51,7 @@ int main()
         t.remove(9);
         print_tree_details(t);
 
-        t = t_copy_1;
+        t = t_copy_1; // this is not working
 
         // remove a node with one child
         cout << "Removing 1 from original tree:\n";

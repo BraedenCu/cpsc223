@@ -480,80 +480,86 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
     return root;
 }
 
+/**
+ * Removes value from this.
+ *
+ * @param this the root of the tree
+ * @param value the value to remove
+ * @return a pointer to the root of the tree from which value has just been
+ *  removed, whose parent pointer is `nullptr`. This method may return an
+ *  empty tree.
+ * @result removes (a single occurrence of) value from the tree rooted at
+ *  this. Uses the "naive BST" removal algorithm. Does nothing if value is
+ *  not in this.
+ *
+ * Runtime Complexity: O([height of tree rooted at this])
+ */
+/*
+Remove: remove a value from “this”
+○ Traverse using binary search tree invariant to get to where the value should be
+○ Consider the 5 cases:
+■ mCount greater than 1
+■ Node has 2 children
+■ Node has 1 child (either left or right)
+■ Node has no children
+*/
 BSTNode *BSTNode::bst_remove(int value)
 {
-// TODO TODO FIX FIX FIX
-    BSTNode *root = this;
-
     /********************************
      ****** BST Removal Begins ******
      ********************************/
 
     // Do the removal
+    BSTNode *root = this;
+    
+    // Case One: mCount greater than 1
+    if (value == mData && mCount > 1) 
+    {
+        mCount -= 1; // decrement the count
+    } 
+    else if (value < mData && has_child(LEFT)) 
+    {
+        mLeft = mLeft->bst_remove(value); // continue recursing
+    } 
+    else if (value > mData && has_child(RIGHT)) 
+    {
+        mRight = mRight->bst_remove(value); // continue recursing
+    } 
+    else if (value == mData) // when value to remove is found
+    {
+        if (has_child(LEFT) && has_child(RIGHT)) 
+        {
+            // Case Two: Node has 2 children
+            const BSTNode* replacement = mRight->minimum_value();
+            mData = replacement->mData;
+            mCount = replacement->mCount;
+            mRight = mRight->bst_remove(replacement->mData);
+           
+            // replace the node with the minimum value in the right subtree in this 
+        } 
+        else if (has_child(LEFT) && !has_child(RIGHT)) 
+        {
+            // Case Three: Node has 1 child (left)
+            BSTNode* left = mLeft;    
+            return left;
+            
+        } 
+        else if (!has_child(LEFT) && has_child(RIGHT)) 
+        {
+            // Case Three: Node has 1 child (right)
+            BSTNode* right = mRight;
+            return right;
+        } 
+        else 
+        {
+            // Case Four: Node has no children
+            //delete this;
+            //return new BSTNode();
+            return new BSTNode();
+        }
+    }
     // Make the root locally consistent
-    if (value < mData)
-    {
-        if (mLeft != nullptr)
-        {
-            mLeft = mLeft->bst_remove(value);
-        }
-    }
-    else if (value > mData)
-    {
-        if (mRight != nullptr)
-        {
-            mRight = mRight->bst_remove(value);
-        }
-    }
-    else
-    {
-        if (mCount > 1)
-        {
-            mCount--;
-        }
-        else
-        {
-            if (this->has_child(LEFT) && this->has_child(RIGHT))
-            {
-                // this has no children. We may have to do extra work.
-                // Get its neighborhood
-                BHVNeighborhood nb(this, ROOT);
-
-                // Delete it
-                root = new BSTNode();
-                delete this;
-            }
-            else if (this->has_child(LEFT) && !this->has_child(RIGHT))
-            {
-                // this has one (left) child. 
-                // Promote this's child
-                mLeft->parent = parent;
-                root = mLeft;
-                mLeft = nullptr;
-                delete this;
-            }
-            else if (this->has_child(LEFT) && !this->has_child(RIGHT))
-            {
-                // this has one (right) child
-                // Promote this's child
-                mRight->parent = parent;
-                root = mRight;
-                mRight = nullptr;
-                delete this;
-            }
-            else
-            {
-                // this has two children. Find the successor to use as a replacement, then remove it entirely from this's right subtree.
-                // This requires setting the replacement's multiplicity to 1 so that the node is entirely removed rather than simply having 
-                // its multiplicity decremented. Removal is the only place a const-to-non-const cast should appear in your solution.
-                BSTNode *replacement = (BSTNode *)mRight->minimum_value();
-                mData = replacement->mData;
-                mCount = replacement->mCount;
-                replacement->mCount = 1;
-                mRight = mRight->bst_remove(replacement->mData);
-            }
-        }
-    }
+    make_locally_consistent();
 
     /********************************
      ****** BST Removal Ends ******
