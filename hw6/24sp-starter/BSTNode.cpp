@@ -359,9 +359,9 @@ BSTNode *BSTNode::avl_insert(int value)
      ***** BST Insertion Begins *****
      ********************************/
 
-    // TODO TODO WORKING
+    
     BSTNode *root = this;
-
+    /*
     if(is_empty()) 
     {
         BSTNode* left = new BSTNode();
@@ -391,6 +391,8 @@ BSTNode *BSTNode::avl_insert(int value)
             mLeft -> avl_insert(value);
         }
     }
+    */
+   bst_insert(value);
 
     /********************************
      ****** BST Insertion Ends ******
