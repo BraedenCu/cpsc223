@@ -648,6 +648,8 @@ private:
      */
     BSTNode *avl_balance();
 
+    int get_balance(BSTNode *node);
+    
     /**
      * @param this the root of an almost-balanced Red-Black tree.
      * @return A pointer to the root of the balanced tree
