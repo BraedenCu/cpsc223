@@ -263,11 +263,11 @@ const BSTNode *BSTNode::search(int value) const
     {
         return this;
     } 
-    else if (value < mData && !has_child(LEFT)) 
+    else if (value < mData && has_child(LEFT)) 
     {
         return mLeft->search(value);
     } 
-    else if (value > mData && !has_child(RIGHT))
+    else if (value > mData && has_child(RIGHT))
     {
         return mRight->search(value);
     } 
