@@ -1040,52 +1040,42 @@ BSTNode *BSTNode::left_rotate()
     return y;
 }
 
-/**
- * @param this the root of an almost-balanced AVL Tree.
- * @return the balanced tree.
- * @result If unbalanced, balances the tree rooted at node.
- * @assumes the height difference between this's left and right children is
- *  no more than 2.
- *
- * Runtime Complexity: O(1)
- */
-// DUUUUUUP
-int BSTNode::get_balance(BSTNode *node)
+
+int BSTNode::find_avl_balance(BSTNode *node)
 {
     if (node->is_empty())
     {
         return 0;
     }
-    return node->mLeft->mHeight - node->mRight->mHeight;
+    else {
+        return node->mLeft->mHeight - node->mRight->mHeight;
+    }
 }
+
 BSTNode *BSTNode::avl_balance()
 {
-    int balance = get_balance(this);
-    if (balance < -1)
+    int bal = find_avl_balance(this);
+    if (bal < -1)
     {
-        if (get_balance(this->mRight) <= 0)
+        if (find_avl_balance(this->mRight) <= 0) // R
         {
-            // RR
-            return this->left_rotate();
+            return this->left_rotate(); // R + R
         }
         else
         {
-            // RL
-            this->mRight = this->mRight->right_rotate();
-            return this->left_rotate();
+            this->mRight = this->mRight->right_rotate(); // R + L
+            return this->left_rotate(); 
         }
     }
-    else if (balance > 1)
+    else if (bal > 1)
     {
-        if (get_balance(this->mLeft) >= 0)
+        if (find_avl_balance(this->mLeft) >= 0) // L
         {
-            // LL
-            return this->right_rotate();
+            return this->right_rotate(); // L + L
         }
         else
         {
-            // LR
-            this->mLeft = this->mLeft->left_rotate();
+            this->mLeft = this->mLeft->left_rotate(); // L + R
             return this->right_rotate();
         }
     }

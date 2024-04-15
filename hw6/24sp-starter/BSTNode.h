@@ -648,7 +648,7 @@ private:
      */
     BSTNode *avl_balance();
 
-    int get_balance(BSTNode *node);
+    int find_avl_balance(BSTNode *node);
 
     /**
      * @param this the root of an almost-balanced Red-Black tree.
