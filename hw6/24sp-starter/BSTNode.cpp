@@ -158,12 +158,13 @@ BSTNode::BSTNode(const BSTNode &other)
  */
 BSTNode::~BSTNode()
 {
-//  TODO TODO FIX FIX FIX
-    if (this->has_child(LEFT)) {
+    if (this->has_child(LEFT)) 
+    {
         delete mLeft;
     }
 
-    if (this->has_child(RIGHT)) {
+    if (this->has_child(RIGHT)) 
+    {
         delete mRight;
     }
 }
@@ -184,9 +185,8 @@ BSTNode::~BSTNode()
  */
 const BSTNode *BSTNode::minimum_value() const
 {
-// TODO TODO FIX FIX FIX
-
     const BSTNode* current = this;
+
     while (current->has_child(LEFT)) 
     {
         current = current->left_child();
@@ -207,8 +207,8 @@ const BSTNode *BSTNode::minimum_value() const
  */
 const BSTNode *BSTNode::maximum_value() const
 {
-// TODO TODO FIX FIX FIX
     const BSTNode* current = this;
+
     while (current->has_child(RIGHT)) 
     {
         current = current->right_child();
@@ -225,7 +225,6 @@ const BSTNode *BSTNode::maximum_value() const
  */
 int BSTNode::count_total() const
 {
-// TODO TODO FIX FIX FIX
     if (is_empty()) 
     {
         return 0;
@@ -273,7 +272,6 @@ const BSTNode *BSTNode::search(int value) const
     } 
     else 
     {
-        // return empty tree
         return new BSTNode();
     }
 }
@@ -831,15 +829,9 @@ BSTNode *BSTNode::rbt_remove_helper(int value, BHVNeighborhood &nb, BSTNode *&to
             }
             else
             {
-                if (root->mLeft->is_empty() &&
-                    root->mRight->is_empty())
+                if (root->mLeft->is_empty() && root->mRight->is_empty())
                 {
-                    // root has no children. We may have to do extra work.
-
-                    // Get its neighborhood
                     nb = BHVNeighborhood(this, nb.dir);
-
-                    // Delete it
                     root = new BSTNode();
                     to_delete = this;
                 }
@@ -990,16 +982,10 @@ BSTNode *BSTNode::avl_balance()
 
 BSTNode *BSTNode::rbt_eliminate_red_red_violation()
 {
-    /*
-     * Get this's neighborhood (children + grandchildren), which might have
-     *  shape NONE if this is BLACK or this.height <= 1 or there is no red-red
-     *  violation in the neighborhood of this.
-     */
     RRVNeighborhood nb(this);
 
     if (nb.shape != SHAPE_NONE)
     {
-        //uncle is red then swap colors
         if (nb.y->mColor == RED)
         {
             nb.g->mColor = RED;
@@ -1010,33 +996,32 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
         {
             switch (nb.shape)
             {
-            case LR: // fixing LR case
+            case LR: 
                 nb.g->mLeft = nb.g->mLeft->left_rotate();
                 nb.g = nb.g->right_rotate();
                 nb.g->swap_colors_with(nb.g->mRight);
                 nb.g->make_locally_consistent();
                 break;
-            case LL: // fixing LL case 
+            case LL: 
                 nb.g = nb.g->right_rotate();
                 nb.g->swap_colors_with(nb.g->mRight);
                 nb.g->make_locally_consistent();
                 break;
-            case RL: // fixing RL case
+            case RL: 
                 nb.g->mRight = nb.g->mRight->right_rotate();
                 nb.g = nb.g->left_rotate();
                 nb.g->swap_colors_with(nb.g->mLeft);
                 nb.g->make_locally_consistent();
                 break;
-            case RR: // fixing RR case
+            case RR: 
                 nb.g = nb.g->left_rotate(); 
                 nb.g->swap_colors_with(nb.g->mLeft);
                 nb.g->make_locally_consistent();
                 break;
             default:
-                // INVALID case. Do nothing.
                 break;
             }
-            return nb.g; // new root
+            return nb.g; // root
         }
     }
     return this;
