@@ -288,30 +288,35 @@ const BSTNode *BSTNode::search(int value) const
  *
  * Runtime Complexity: O([height of tree rooted at this])
  */
-BSTNode *BSTNode::bst_insert(int value)
+BSTNode* BSTNode::bst_insert(int value) 
 {
     BSTNode *root = this;
 
-    if (root->is_empty())
+    if(is_empty()) 
     {
         delete root;
         root = new BSTNode(value);
     }
-    else if (root->mData > value) // recurse on left
+    else if(this->mData == value) 
     {
-        root->mLeft = root->mLeft->bst_insert(value);
+        mCount +=1;
     }
-    else if (root->mData < value) // recurse on right
+    else 
     {
-        root->mRight = root->mRight->bst_insert(value);
+        if (value > mData) 
+        {
+            mRight -> bst_insert(value);
+        }
+        else 
+        {
+            mLeft -> bst_insert(value);
+        }
     }
-    else // have a duplicate
-    {
-        root->mCount++;
-    }
-    root->make_locally_consistent(); //update height
+
+    make_locally_consistent();
     return root;
 }
+
 
 BSTNode *BSTNode::avl_insert(int value)
 {
