@@ -989,55 +989,40 @@ BSTNode *BSTNode::dir_rotate(Direction dir)
     }
     return root;
 }
-/**
- * @param this the root of the tree.
- * @return pointer to the root of rotated tree, whose parent pointer is the
- *  parent of this.
- * @result right rotate tree rooted at this
- * @assumes this has a non-empty left subtree
- *
- * Runtime Complexity: O(1)
- */
+
+
 BSTNode *BSTNode::right_rotate()
 {
-    // DUUP
     // Leave this assert statement here for your own benefit.
     assert(!this->mLeft->is_empty());
-    // y is new root
-    BSTNode *y = this->mLeft;
-    BSTNode *t3 = y->mRight;
-    // rotating right
-    y->mRight = this;
-    this->mLeft = t3;
+
+    BSTNode *new_root       = this->mLeft;
+    BSTNode *new_root_child = new_root->mRight;
+    
+    new_root->mRight = this;
+    this->mLeft = new_root_child;
+
     this->make_locally_consistent();
-    y->make_locally_consistent();
-    return y;
+    new_root->make_locally_consistent();
+
+    return new_root;
 }
 
-/**
- * @param this the root of the tree.
- * @return pointer to the root of rotated tree, whose parent pointer is the
- *  parent of this.
- * @result left rotate tree rooted at this
- * @assumes this has a non-empty right subtree
- *
- * Runtime Complexity: O(1)
- */
 BSTNode *BSTNode::left_rotate()
 {
-    // DUUUP
     // Leave this assert statement here for your own benefit.
     assert(!this->mRight->is_empty());
-    // y is new root
-    BSTNode *y = this->mRight;
-    BSTNode *t2 = y->mLeft;
-    //rotating left
-    y->mLeft = this;
-    this->mRight = t2;
+
+    BSTNode *new_root       = this->mRight;
+    BSTNode *new_root_child = new_root->mLeft;
+
+    new_root->mLeft = this;
+    this->mRight = new_root_child;
 
     this->make_locally_consistent();
-    y->make_locally_consistent();
-    return y;
+    new_root->make_locally_consistent();
+
+    return new_root;
 }
 
 
