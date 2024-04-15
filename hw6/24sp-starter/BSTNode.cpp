@@ -288,35 +288,30 @@ const BSTNode *BSTNode::search(int value) const
  *
  * Runtime Complexity: O([height of tree rooted at this])
  */
-BSTNode* BSTNode::bst_insert(int value) 
+BSTNode *BSTNode::bst_insert(int value)
 {
     BSTNode *root = this;
 
-    if(is_empty()) 
+    if (root->is_empty())
     {
         delete root;
         root = new BSTNode(value);
     }
-    else if(this->mData == value) 
+    else if (root->mData > value) // recurse on left
     {
-        mCount +=1;
+        root->mLeft = root->mLeft->bst_insert(value);
     }
-    else 
+    else if (root->mData < value) // recurse on right
     {
-        if (value > mData) 
-        {
-            mRight -> bst_insert(value);
-        }
-        else 
-        {
-            mLeft -> bst_insert(value);
-        }
+        root->mRight = root->mRight->bst_insert(value);
     }
-
-    make_locally_consistent();
+    else // have a duplicate
+    {
+        root->mCount++;
+    }
+    root->make_locally_consistent(); //update height
     return root;
 }
-
 
 BSTNode *BSTNode::avl_insert(int value)
 {
@@ -389,72 +384,63 @@ BSTNode *BSTNode::rbt_insert_helper(int value)
 
 BSTNode *BSTNode::bst_remove(int value)
 {
-    /********************************
-     ****** BST Removal Begins ******
-     ********************************/
-
+    // refrenced from the rbt_remove
     BSTNode *root = this;
-
-    if (root->is_empty())
+    
+    if (!root->is_empty())
     {
-        return root;
-    }
-    else if (root->mData > value) // left move
+        if (root->mData > value) // recurse on left
         {
             root->mLeft = root->mLeft->bst_remove(value);
         }
-    else if (root->mData < value) // right move
-    {
-        root->mRight = root->mRight->bst_remove(value);
-    }
-    else  // when value to remove is found
-    {
-        // case one: mCount greater than 1
-        if (mCount > 1) 
+        // go right
+        else if (root->mData < value) // recurse on right
         {
-            root->mCount -= 1; // decrement the count
-        } 
-
-        else if (has_child(LEFT) && has_child(RIGHT)) 
+            root->mRight = root->mRight->bst_remove(value);
+        }
+        else // found node
         {
-            // case two: node has 2 children
-            BSTNode* replacement = (BSTNode*) root->mRight->minimum_value();
-            root->mData = replacement->mData;
-            root->mCount = replacement->mCount;
-            replacement->mCount = 1;
-            root->mRight = root->mRight->bst_remove(replacement->mData);
-           
-        } 
-        else if (has_child(LEFT) && !has_child(RIGHT)) 
-        {
-            // case three: node has 1 child (left)
-            root = this->mLeft;
-            this->mLeft = nullptr;
-            //delete this;
-            
-        } 
-        else if (!has_child(LEFT) && has_child(RIGHT)) 
-        {
-            // case three: node has 1 child (right)
-            root = this->mRight;
-            this->mRight = nullptr;
-            //delete this;
-        } 
-        else 
-        {
-            // case four: node has no children
-            root = new BSTNode();
-            //delete this;
+            // duplicate remove one from count
+            if (root->mCount > 1)
+            {
+                root->mCount--;
+            }
+            else
+            {
+                // remove if leaf
+                if (root->mLeft->is_empty() && root->mRight->is_empty())
+                {
+                    root = new BSTNode();
+                    delete this;
+                }
+                // repalce with left node
+                else if (!root->mLeft->is_empty() && root->mRight->is_empty())
+                {
+                    root = this->mLeft;
+                    this->mLeft = nullptr;
+                    delete this;
+                }
+                // replace with right node
+                else if (root->mLeft->is_empty() && !root->mRight->is_empty())
+                {
+                    root = this->mRight;
+                    this->mRight = nullptr;
+                    delete this;
+                }
+                else
+                {
+                    // case two: node has 2 children
+                    BSTNode* replacement = (BSTNode*) root->mRight->minimum_value();
+                    root->mData = replacement->mData;
+                    root->mCount = replacement->mCount;
+                    replacement->mCount = 1;
+                    root->mRight = root->mRight->bst_remove(replacement->mData);
+                }
+            }
         }
     }
-
-    // Make the root locally consistent
+// update height
     root->make_locally_consistent();
-
-    /********************************
-     ****** BST Removal Ends ******
-     ********************************/
-
     return root;
 }
 

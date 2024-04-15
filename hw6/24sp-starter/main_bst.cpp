@@ -24,7 +24,8 @@ void print_tree_details(BSTree &t)
 int main()
 {
         BSTree t;
-        int values[] = {4, 2, 11, 15, 9, 1, -6, 5, 3, 15, 2, 5, 13, 14};
+        //int values[] = {4, 2, 11, 15, 9, 1, -6, 5, 3, 15, 2, 5, 13, 14};
+        int values[] = {5,4,6};
         int num_values = sizeof(values) / sizeof(int);
 
         for (int i = 0; i < num_values; i++)
@@ -66,7 +67,7 @@ int main()
         print_tree_details(t);
 
         t = t_copy_1;
-
+        
         // remove a node with one child (but the multiplicity is 2)
         cout << "Removing 5 from original tree "
              << "(should still have one 5):\n";
