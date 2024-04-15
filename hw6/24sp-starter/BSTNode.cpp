@@ -290,37 +290,18 @@ const BSTNode *BSTNode::search(int value) const
  *
  * Runtime Complexity: O([height of tree rooted at this])
  */
-
-/**
- * Insert: Insert a particular value into the tree
-○ Find where the value should go using the binary search tree invariant
-○ Note the case of that value already existing in the tree (mCount)
-○ Assuming you get to where the value should go and it doesn’t already exist, there should be an
-empty node there. Make sure you deal with it
-○ Return root of the tree into which value was just inserted
-*/
 BSTNode* BSTNode::bst_insert(int value) 
 {
-// TODO TODO WORKING
     BSTNode *root = this;
 
     if(is_empty()) 
     {
-        BSTNode* left = new BSTNode();
-        BSTNode* right = new BSTNode();
-        this->mData = value;
-        this->mCount += 1;
-        this->mRight = left;
-        this->mLeft = right;
-        this->mHeight = 0;
+        delete root;
+        root = new BSTNode(value);
     }
     else if(this->mData == value) 
     {
         mCount +=1;
-    }
-    else if(this->mData == value) 
-    {
-        mCount += 1;
     }
     else 
     {
@@ -414,58 +395,66 @@ BSTNode *BSTNode::bst_remove(int value)
      ****** BST Removal Begins ******
      ********************************/
 
-    // Do the removal
     BSTNode *root = this;
-    
-    // case one: mCount greater than 1
-    if (value == mData && mCount > 1) 
+
+    if (root->is_empty())
     {
-        mCount -= 1; // decrement the count
-    } 
-    else if (value < mData && has_child(LEFT)) 
+        return root;
+    }
+
+    if (value < mData && has_child(LEFT)) 
     {
-        mLeft = mLeft->bst_remove(value); // continue recursing
+        root->mLeft = root->mLeft->bst_remove(value); // continue recursing
     } 
     else if (value > mData && has_child(RIGHT)) 
     {
-        mRight = mRight->bst_remove(value); // continue recursing
+        root->mRight = root->mRight->bst_remove(value); // continue recursing
     } 
     else if (value == mData) // when value to remove is found
     {
-        if (has_child(LEFT) && has_child(RIGHT)) 
+        // case one: mCount greater than 1
+        if (value == mData && mCount > 1) 
+        {
+            root->mCount -= 1; // decrement the count
+        } 
+
+        else if (has_child(LEFT) && has_child(RIGHT)) 
         {
             // case two: node has 2 children
-            BSTNode* replacement = (BSTNode*) mRight->minimum_value();
-            mData = replacement->mData;
-            mCount = replacement->mCount;
+            BSTNode* replacement = (BSTNode*) root->mRight->minimum_value();
+            root->mData = replacement->mData;
+            root->mCount = replacement->mCount;
             replacement->mCount = 1;
-            mRight = mRight->bst_remove(replacement->mData);
+            root->mRight = root->mRight->bst_remove(replacement->mData);
            
         } 
         else if (has_child(LEFT) && !has_child(RIGHT)) 
         {
             // case three: node has 1 child (left)
-            BSTNode* left = mLeft;    
             //delete this;
-            return left;
+            root = this->mLeft;
+            this->mLeft = nullptr;
+            delete this;
             
         } 
         else if (!has_child(LEFT) && has_child(RIGHT)) 
         {
             // case three: node has 1 child (right)
-            BSTNode* right = mRight;
             //delete this;
-            return right;
+            root = this->mRight;
+            this->mRight = nullptr;
+            delete this;
         } 
         else 
         {
             // case four: node has no children
-            //delete this;
-            return new BSTNode();
+            root = new BSTNode();
+            delete this;
         }
     }
+
     // Make the root locally consistent
-    make_locally_consistent();
+    root->make_locally_consistent();
 
     /********************************
      ****** BST Removal Ends ******
