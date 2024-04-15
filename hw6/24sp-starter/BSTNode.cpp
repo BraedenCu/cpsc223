@@ -361,7 +361,7 @@ BSTNode *BSTNode::avl_insert(int value)
 
     
     BSTNode *root = this;
-    /*
+    
     if(is_empty()) 
     {
         BSTNode* left = new BSTNode();
@@ -391,8 +391,7 @@ BSTNode *BSTNode::avl_insert(int value)
             mLeft -> avl_insert(value);
         }
     }
-    */
-   bst_insert(value);
+    
 
     /********************************
      ****** BST Insertion Ends ******
@@ -582,7 +581,6 @@ BSTNode *BSTNode::avl_remove(int value)
      ********************************/
     
     // Case One: mCount greater than 1
-    /*
     if (value == mData && mCount > 1) 
     {
         mCount -= 1; // decrement the count
@@ -611,14 +609,14 @@ BSTNode *BSTNode::avl_remove(int value)
         {
             // Case Three: Node has 1 child (left)
             BSTNode* left = mLeft;    
-            return left;
+            return left->avl_balance();
             
         } 
         else if (!has_child(LEFT) && has_child(RIGHT)) 
         {
             // Case Three: Node has 1 child (right)
             BSTNode* right = mRight;
-            return right;
+            return right->avl_balance();
         } 
         else 
         {
@@ -627,8 +625,7 @@ BSTNode *BSTNode::avl_remove(int value)
             return new BSTNode();
         }
     }
-    */
-   bst_remove(value);
+    
     // Make the root locally consistent
 
     /********************************
@@ -648,8 +645,6 @@ BSTNode *BSTNode::avl_remove(int value)
     /********************************
      ***** AVL Maintenance Ends *****
      ********************************/
-
-    //return root;
 }
 
 BSTNode *BSTNode::rbt_remove(int value)
