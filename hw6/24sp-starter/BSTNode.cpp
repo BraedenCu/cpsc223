@@ -381,83 +381,33 @@ BSTNode *BSTNode::rbt_insert(int value)
  */
 BSTNode *BSTNode::rbt_insert_helper(int value)
 {
-// TODO TODO FIX FIX FIX
     BSTNode *root = this;
 
-    /********************************
-     ***** BST Insertion Begins *****
-     ********************************/
-
-    // Perform the insertion, binary search tree
-    if (value < mData)
+    if (root->is_empty())
     {
-        if (mLeft == nullptr)
-        {
-            mLeft = new BSTNode(value);
-            mLeft->parent = this;
-        }
-        else
-        {
-            mLeft->rbt_insert_helper(value);
-        }
+        delete root;
+        root = new BSTNode(value);
+        root->mColor = RED;
     }
-    else if (value > mData)
+    else if (root->mData < value)
     {
-        if (mRight == nullptr)
-        {
-            mRight = new BSTNode(value);
-            mRight->parent = this;
-        }
-        else
-        {
-            mRight->rbt_insert_helper(value);
-        }
+        root->mRight = root->mRight->rbt_insert_helper(value);
+    }
+    else if (root->mData > value)
+    {
+        root->mLeft = root->mLeft->rbt_insert_helper(value);
+    }
+    else
+    {
+        root->mCount++;
     }
 
-    /********************************
-     ****** BST Insertion Ends ******
-     ********************************/
+    root->make_locally_consistent();
 
-    /********************************
-     ***** RB Maintenance Begins ****
-     ********************************/
-
-    // Make root locally consistent
-    // Eliminate a potential red-red violation near root
-
-    BHVNeighborhood nb(this, ROOT);
-    root = rbt_eliminate_red_red_violation();
-
-    /********************************
-     ****** RB Maintenance Ends *****
-     ********************************/
-
-    return root;
+    return root->rbt_eliminate_red_red_violation();
 }
 
-/**
- * Removes value from this.
- *
- * @param this the root of the tree
- * @param value the value to remove
- * @return a pointer to the root of the tree from which value has just been
- *  removed, whose parent pointer is `nullptr`. This method may return an
- *  empty tree.
- * @result removes (a single occurrence of) value from the tree rooted at
- *  this. Uses the "naive BST" removal algorithm. Does nothing if value is
- *  not in this.
- *
- * Runtime Complexity: O([height of tree rooted at this])
- */
-/*
-Remove: remove a value from “this”
-○ Traverse using binary search tree invariant to get to where the value should be
-○ Consider the 5 cases:
-■ mCount greater than 1
-■ Node has 2 children
-■ Node has 1 child (either left or right)
-■ Node has no children
-*/
+
 BSTNode *BSTNode::bst_remove(int value)
 {
     /********************************
@@ -1061,15 +1011,9 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
 
     if (nb.shape != SHAPE_NONE)
     {
-        /*
-         * There is a red-red violation somewhere in the neighborhood of this
-         *  Fix it.
-         */
-
+        //uncle is red then swap colors
         if (nb.y->mColor == RED)
         {
-            // Eliminate the red-red violation when y is red
-            // TODO TODO TODO FIX FIX
             nb.g->mColor = RED;
             nb.p->mColor = BLACK;
             nb.y->mColor = BLACK;
@@ -1078,34 +1022,38 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
         {
             switch (nb.shape)
             {
-            case LR:
-                // handle LR case
-                break;
-            case LL:
-                // handle LL case
-                nb.p->mColor = BLACK;
-                nb.g->mColor = RED;
+            case LR: // fixing LR case
+                nb.g->mLeft = nb.g->mLeft->left_rotate();
                 nb.g = nb.g->right_rotate();
-            case RL:
-                // handle RL case, RRV neighborhood has members p, g, x, y
-                nb.p->mColor = BLACK;
-                nb.g->mColor = RED;
-                nb.p = nb.p->left_rotate();
-            case RR:
-                // Handle RR case
-                nb.p->mColor = BLACK;
-                nb.g->mColor = RED;
+                nb.g->swap_colors_with(nb.g->mRight);
+                nb.g->make_locally_consistent();
+                break;
+            case LL: // fixing LL case 
+                nb.g = nb.g->right_rotate();
+                nb.g->swap_colors_with(nb.g->mRight);
+                nb.g->make_locally_consistent();
+                break;
+            case RL: // fixing RL case
+                nb.g->mRight = nb.g->mRight->right_rotate();
                 nb.g = nb.g->left_rotate();
+                nb.g->swap_colors_with(nb.g->mLeft);
+                nb.g->make_locally_consistent();
+                break;
+            case RR: // fixing RR case
+                nb.g = nb.g->left_rotate(); 
+                nb.g->swap_colors_with(nb.g->mLeft);
+                nb.g->make_locally_consistent();
                 break;
             default:
                 // INVALID case. Do nothing.
                 break;
             }
+            return nb.g; // new root
         }
     }
-
-    return nb.g;
+    return this;
 }
+
 
 void BSTNode::BHVNeighborhood::fix_blackheight_imbalance()
 {
