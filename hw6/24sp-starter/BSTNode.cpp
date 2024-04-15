@@ -1112,7 +1112,7 @@ BSTNode *BSTNode::avl_balance()
     BSTNode *root = this;
 
     // Check if the tree is unbalanced
-    if (this->height_diff() > 1)
+    if (this->height_diff() > 1 || this->height_diff() < -1)
     {
         // Check if the tree is left-heavy
         if (this->mLeft->mHeight > this->mRight->mHeight)
@@ -1139,7 +1139,8 @@ BSTNode *BSTNode::avl_balance()
             // Perform a left rotation
             root = this->left_rotate();
         }
-    }    
+    }
+    
 
     return root;
 }
