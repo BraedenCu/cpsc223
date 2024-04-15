@@ -384,11 +384,11 @@ BSTNode *BSTNode::avl_insert(int value)
     {
         if (value > mData) 
         {
-            mRight -> bst_insert(value);
+            mRight -> avl_insert(value);
         }
         else 
         {
-            mLeft -> bst_insert(value);
+            mLeft -> avl_insert(value);
         }
     }
 
@@ -404,7 +404,7 @@ BSTNode *BSTNode::avl_insert(int value)
     make_locally_consistent();
 
     // Ensure root is balanced
-    root = avl_balance();
+    root->avl_balance();
 
     /********************************
      ***** AVL Maintenance Ends *****
@@ -580,17 +580,18 @@ BSTNode *BSTNode::avl_remove(int value)
      ********************************/
     
     // Case One: mCount greater than 1
+    /*
     if (value == mData && mCount > 1) 
     {
         mCount -= 1; // decrement the count
     } 
     else if (value < mData && has_child(LEFT)) 
     {
-        mLeft = mLeft->bst_remove(value); // continue recursing
+        mLeft = mLeft->avl_remove(value); // continue recursing
     } 
     else if (value > mData && has_child(RIGHT)) 
     {
-        mRight = mRight->bst_remove(value); // continue recursing
+        mRight = mRight->avl_remove(value); // continue recursing
     } 
     else if (value == mData) // when value to remove is found
     {
@@ -600,7 +601,7 @@ BSTNode *BSTNode::avl_remove(int value)
             const BSTNode* replacement = mRight->minimum_value();
             mData = replacement->mData;
             mCount = replacement->mCount;
-            mRight = mRight->bst_remove(replacement->mData);
+            mRight = mRight->avl_remove(replacement->mData);
            
             // replace the node with the minimum value in the right subtree in this 
         } 
@@ -621,10 +622,11 @@ BSTNode *BSTNode::avl_remove(int value)
         {
             // Case Four: Node has no children
             //delete this;
-            //return new BSTNode();
             return new BSTNode();
         }
     }
+    */
+   bst_remove(value);
     // Make the root locally consistent
 
     /********************************
@@ -637,14 +639,15 @@ BSTNode *BSTNode::avl_remove(int value)
      ********************************/
 
     // Ensure the tree is AVL-balanced
-    make_locally_consistent();
-    root = avl_balance();
+    make_locally_consistent(); // updates height and balance factor of the node
+    
+    return root->avl_balance();
 
     /********************************
      ***** AVL Maintenance Ends *****
      ********************************/
 
-    return root;
+    //return root;
 }
 
 BSTNode *BSTNode::rbt_remove(int value)
@@ -1031,6 +1034,7 @@ BSTNode *BSTNode::rbt_remove_helper(int value, BHVNeighborhood &nb, BSTNode *&to
 BSTNode *BSTNode::dir_rotate(Direction dir)
 {
     // This function is implemented for you.
+    printf(" Rotating %s\n", dir == LEFT ? "LEFT" : "RIGHT" ); // I ADDED THIS
 
     BSTNode *root = this;
     if (dir == LEFT)
@@ -1043,6 +1047,7 @@ BSTNode *BSTNode::dir_rotate(Direction dir)
     }
     return root;
 }
+
 /**
  * @param this the root of the tree.
  * @return pointer to the root of rotated tree, whose parent pointer is the
@@ -1058,7 +1063,7 @@ BSTNode *BSTNode::right_rotate()
     // Leave this assert statement here for your own benefit.
     assert(!this->mLeft->is_empty());
 
-    // Perform the rotation
+    // perform rotation
     BSTNode *newRoot = this->mLeft;
     this->mLeft = newRoot->mRight;
     newRoot->mRight = this;
@@ -1067,7 +1072,7 @@ BSTNode *BSTNode::right_rotate()
     this->make_locally_consistent();
     newRoot->make_locally_consistent();
 
-    return newRoot;
+    return this;
 }
 
 /**
@@ -1079,10 +1084,12 @@ BSTNode *BSTNode::right_rotate()
  *
  * Runtime Complexity: O(1)
  */
-BSTNode *BSTNode::left_rotate()
+BSTNode* BSTNode::left_rotate()
 {
 // TODO TODO TODO FIX FIX
+    
     // Leave this assert statement here for your own benefit.
+    // print right node
     assert(!this->mRight->is_empty());
 
     // Perform the rotation
@@ -1094,7 +1101,7 @@ BSTNode *BSTNode::left_rotate()
     this->make_locally_consistent();
     newRoot->make_locally_consistent();
 
-    return newRoot;
+    return this;
 }
 
 /**
@@ -1106,43 +1113,46 @@ BSTNode *BSTNode::left_rotate()
  *
  * Runtime Complexity: O(1)
  */
-BSTNode *BSTNode::avl_balance()
+BSTNode* BSTNode::avl_balance() 
 {
-// TODO TODO FIX FIX FIX
-    BSTNode *root = this;
 
-    // Check if the tree is unbalanced
-    if (this->height_diff() > 1 || this->height_diff() < -1)
+    if (this->is_empty()) return this;
+
+    BSTNode* root = this;
+
+    int balance = this->height_diff();
+
+    // Left Left Case
+    if (balance > 1 && root->mLeft->height_diff() >= 0) 
     {
-        // Check if the tree is left-heavy
-        if (this->mLeft->mHeight > this->mRight->mHeight)
-        {
-            // Check if the left child is right-heavy
-            if (this->mLeft->height_diff() < 0)
-            {
-                // Perform a left-right rotation
-                dir_rotate(LEFT);
-            }
-
-            // Perform a right rotation
-            root = this->right_rotate();
-        }
-        else
-        {
-            // Check if the right child is left-heavy
-            if (this->mRight->height_diff() > 0)
-            {
-                // Perform a right-left rotation
-                dir_rotate(RIGHT);
-            }
-
-            // Perform a left rotation
-            root = this->left_rotate();
-        }
+        printf("Left Left Case\n");
+        return root->dir_rotate(LEFT);
     }
-    
 
-    return root;
+    // Left Right Case
+    if (balance > 1 && root->mLeft->height_diff() < 0) 
+    {
+        printf("Left Right Case\n");
+        root->mLeft = root->mLeft->dir_rotate(LEFT);
+        return root->dir_rotate(RIGHT);
+    }
+
+    // Right Right Case
+    if (balance < -1 && root->mRight->height_diff() <= 0) 
+    {
+        printf("Right Right Case\n");
+        return root->dir_rotate(RIGHT);
+    }
+
+    // Right Left Case
+    if (balance < -1 && root->mRight->height_diff() > 0) 
+    {
+        printf("Right Left Case\n");
+        root->mRight = root->mRight->dir_rotate(RIGHT);
+        return root->dir_rotate(LEFT);
+    }
+
+    return root;  // Return the node itself if it's already balanced
 }
 
 BSTNode *BSTNode::rbt_eliminate_red_red_violation()
