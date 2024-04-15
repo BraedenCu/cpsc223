@@ -398,23 +398,37 @@ BSTNode *BSTNode::bst_remove(int value)
         else if (has_child(LEFT) && !has_child(RIGHT)) 
         {
             // Case Three: Node has 1 child (left)
-            BSTNode* left = mLeft;  
-            delete this; 
-            return left;
+            //BSTNode* left = mLeft;  
+            //delete this; 
+            root = root->mLeft;
+            this->mLeft = nullptr;
+            delete this;
+            return root;
+            // root = this->mLeft;
+            // this->mLeft = nullptr;
+            // delete this;
             
         } 
         else if (!has_child(LEFT) && has_child(RIGHT)) 
         {
             // Case Three: Node has 1 child (right)
-            BSTNode* right = mRight;
+            //BSTNode* right = mRight;
+            //delete this;
+            root = root->mRight;
+            this->mRight = nullptr;
             delete this;
-            return right;
+            return root;
+            // root = this->mRight;
+            // this->mRight = nullptr;
+            // delete this;
         } 
         else 
         {
             // Case Four: Node has no children
+            root = new BSTNode();
             delete this;
-            return new BSTNode();
+            //delete this;
+            return root;
         }
     }
 
