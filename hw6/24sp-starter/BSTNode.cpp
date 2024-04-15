@@ -1121,7 +1121,7 @@ BSTNode *BSTNode::avl_balance()
             if (this->mLeft->height_diff() < 0)
             {
                 // Perform a left-right rotation
-                this->mLeft = this->mLeft->left_rotate();
+                dir_rotate(LEFT);
             }
 
             // Perform a right rotation
@@ -1133,7 +1133,7 @@ BSTNode *BSTNode::avl_balance()
             if (this->mRight->height_diff() > 0)
             {
                 // Perform a right-left rotation
-                this->mRight = this->mRight->right_rotate();
+                dir_rotate(RIGHT);
             }
 
             // Perform a left rotation
