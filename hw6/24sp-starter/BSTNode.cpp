@@ -467,7 +467,7 @@ BSTNode *BSTNode::bst_remove(int value)
     // Do the removal
     BSTNode *root = this;
     
-    // Case One: mCount greater than 1
+    // case one: mCount greater than 1
     if (value == mData && mCount > 1) 
     {
         mCount -= 1; // decrement the count
@@ -484,32 +484,33 @@ BSTNode *BSTNode::bst_remove(int value)
     {
         if (has_child(LEFT) && has_child(RIGHT)) 
         {
-            // Case Two: Node has 2 children
-            const BSTNode* replacement = mRight->minimum_value();
+            // case two: node has 2 children
+            BSTNode* replacement = (BSTNode*) mRight->minimum_value();
             mData = replacement->mData;
             mCount = replacement->mCount;
+            replacement->mCount = 1;
             mRight = mRight->bst_remove(replacement->mData);
            
-            // replace the node with the minimum value in the right subtree in this 
         } 
         else if (has_child(LEFT) && !has_child(RIGHT)) 
         {
-            // Case Three: Node has 1 child (left)
+            // case three: node has 1 child (left)
             BSTNode* left = mLeft;    
+            //delete this;
             return left;
             
         } 
         else if (!has_child(LEFT) && has_child(RIGHT)) 
         {
-            // Case Three: Node has 1 child (right)
+            // case three: node has 1 child (right)
             BSTNode* right = mRight;
+            //delete this;
             return right;
         } 
         else 
         {
-            // Case Four: Node has no children
+            // case four: node has no children
             //delete this;
-            //return new BSTNode();
             return new BSTNode();
         }
     }
@@ -565,7 +566,7 @@ BSTNode *BSTNode::avl_remove(int value)
             root->mData = right_successor->mData;
             root->mCount = right_successor->mCount;
             right_successor->mCount = 1;
-            root->mRight = root->mRight->avl_remove(right_successor->mData); //
+            root->mRight = root->mRight->avl_remove(right_successor->mData); // remove the successor
         }
     }
     root->make_locally_consistent();
