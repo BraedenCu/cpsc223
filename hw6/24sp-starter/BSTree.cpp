@@ -28,20 +28,6 @@ BSTree::~BSTree()
     delete this->root;
 }
 
-void tree_clear(const BSTNode* node)
-{
-// TODO TODO TODO
-    if (node == nullptr)
-    {
-        return;
-    }
-
-    tree_clear(node->left_child());
-    tree_clear(node->right_child());
-
-    delete node;
-}
-
 /*
  *
  * Deep copy constructor: make a copy of everything from the “other” BSTNode

@@ -354,41 +354,43 @@ BSTNode* BSTNode::bst_insert(int value)
 BSTNode *BSTNode::avl_insert(int value)
 {
 // TODO TODO FIX FIX FIX
-    BSTNode *root = this;
 
     /********************************
      ***** BST Insertion Begins *****
      ********************************/
 
-    // Perform the insertion
-    if (value < mData)
-    {
-        if (mLeft == nullptr)
-        {
-            mLeft = new BSTNode(value);
-            mLeft->parent = this;
-        }
-        else
-        {
-            mLeft->avl_insert(value);
-        }
-    }
-    else if (value > mData)
-    {
-        if (mRight == nullptr)
-        {
-            mRight = new BSTNode(value);
-            mRight->parent = this;
-        }
-        else
-        {
-            mRight->avl_insert(value);
-        }
-    }
+    // TODO TODO WORKING
+    BSTNode *root = this;
 
-    // Make root locally consistent
-    mCount++;
-    mHeight = std::max(mLeft != nullptr ? mLeft->mHeight : -1, mRight != nullptr ? mRight->mHeight : -1) + 1;
+    if(is_empty()) 
+    {
+        BSTNode* left = new BSTNode();
+        BSTNode* right = new BSTNode();
+        this->mData = value;
+        this->mCount += 1;
+        this->mRight = left;
+        this->mLeft = right;
+        this->mHeight = 0;
+    }
+    else if(this->mData == value) 
+    {
+        mCount +=1;
+    }
+    else if(this->mData == value) 
+    {
+        mCount += 1;
+    }
+    else 
+    {
+        if (value > mData) 
+        {
+            mRight -> bst_insert(value);
+        }
+        else 
+        {
+            mLeft -> bst_insert(value);
+        }
+    }
 
     /********************************
      ****** BST Insertion Ends ******
@@ -576,71 +578,59 @@ BSTNode *BSTNode::avl_remove(int value)
     /********************************
      ****** BST Removal Begins ******
      ********************************/
-
-    // Do the removal
+    
+    // Case One: mCount greater than 1
+    if (value == mData && mCount > 1) 
+    {
+        mCount -= 1; // decrement the count
+    } 
+    else if (value < mData && has_child(LEFT)) 
+    {
+        mLeft = mLeft->bst_remove(value); // continue recursing
+    } 
+    else if (value > mData && has_child(RIGHT)) 
+    {
+        mRight = mRight->bst_remove(value); // continue recursing
+    } 
+    else if (value == mData) // when value to remove is found
+    {
+        if (has_child(LEFT) && has_child(RIGHT)) 
+        {
+            // Case Two: Node has 2 children
+            const BSTNode* replacement = mRight->minimum_value();
+            mData = replacement->mData;
+            mCount = replacement->mCount;
+            mRight = mRight->bst_remove(replacement->mData);
+           
+            // replace the node with the minimum value in the right subtree in this 
+        } 
+        else if (has_child(LEFT) && !has_child(RIGHT)) 
+        {
+            // Case Three: Node has 1 child (left)
+            BSTNode* left = mLeft;    
+            return left;
+            
+        } 
+        else if (!has_child(LEFT) && has_child(RIGHT)) 
+        {
+            // Case Three: Node has 1 child (right)
+            BSTNode* right = mRight;
+            return right;
+        } 
+        else 
+        {
+            // Case Four: Node has no children
+            //delete this;
+            //return new BSTNode();
+            return new BSTNode();
+        }
+    }
     // Make the root locally consistent
-    if (value < mData)
-    {
-        if (mLeft != nullptr)
-        {
-            mLeft = mLeft->avl_remove(value);
-        }
-    }
-    else if (value > mData)
-    {
-        if (mRight != nullptr)
-        {
-            mRight = mRight->avl_remove(value);
-        }
-    }
-    else
-    {
-        if (mCount > 1)
-        {
-            mCount--;
-        }
-        else
-        {
-            if (mLeft->is_empty() && mRight->is_empty())
-            {
-                // this has no children. We may have to do extra work.
-                // Get its neighborhood
-                BHVNeighborhood nb(this, ROOT);
-
-                // Delete it
-                root = new BSTNode();
-                delete this;
-            }
-            else if (!mLeft->is_empty() && mRight->is_empty())
-            {
-                // this has one (left) child. Promote this's child
-                mLeft->parent = parent;
-                root = mLeft;
-                mLeft = nullptr;
-                delete this;
-            }
-            else if (mLeft->is_empty() && !mRight->is_empty())
-            {
-                // this has one (right) child. Promote this's child
-                mRight->parent = parent;
-                root = mRight;
-                mRight = nullptr;
-                delete this;
-            }
-            else
-            {
-                BSTNode *replacement = (BSTNode *)mRight->minimum_value();
-                mData = replacement->mData;
-                mCount = replacement->mCount;
-                replacement->mCount = 1;
-                mRight = mRight->avl_remove(replacement->mData);
-            }
-        }
-    }
 
     /********************************
-     ******* BST Removal Ends *******
+     ****** BST Removal Ends ******
      ********************************/
+
 
     /********************************
      **** AVL Maintenance Begins ****
@@ -1118,9 +1108,40 @@ BSTNode *BSTNode::left_rotate()
  */
 BSTNode *BSTNode::avl_balance()
 {
-    // TODO: Implement AVL balancing algorithm here
+// TODO TODO FIX FIX FIX
+    BSTNode *root = this;
 
-    return this;
+    // Check if the tree is unbalanced
+    if (this->height_diff() > 1)
+    {
+        // Check if the tree is left-heavy
+        if (this->mLeft->mHeight > this->mRight->mHeight)
+        {
+            // Check if the left child is right-heavy
+            if (this->mLeft->height_diff() < 0)
+            {
+                // Perform a left-right rotation
+                this->mLeft = this->mLeft->left_rotate();
+            }
+
+            // Perform a right rotation
+            root = this->right_rotate();
+        }
+        else
+        {
+            // Check if the right child is left-heavy
+            if (this->mRight->height_diff() > 0)
+            {
+                // Perform a right-left rotation
+                this->mRight = this->mRight->right_rotate();
+            }
+
+            // Perform a left rotation
+            root = this->left_rotate();
+        }
+    }    
+
+    return root;
 }
 
 BSTNode *BSTNode::rbt_eliminate_red_red_violation()
