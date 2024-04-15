@@ -339,20 +339,8 @@ BSTNode* BSTNode::bst_insert(int value)
 }
 
 
-/**
- * Inserts value into this.
- *
- * @param value the value to insert
- * @return a pointer to the root of the tree into which value has just been
- *  inserted, with parent `nullptr`. The returned tree is an AVL Tree.
- * @result inserts (a single occurrence of) value into the tree rooted at
- *  this. Uses the AVL Tree insertion algorithm.
- * @assumes this is the root of an AVL Tree
- *
- * Runtime Complexity: O(log n)
- */
 BSTNode *BSTNode::avl_insert(int value)
-{   // code coppied from bst_insert
+{
     BSTNode *root = this;
 
     if (root->is_empty())
@@ -372,8 +360,9 @@ BSTNode *BSTNode::avl_insert(int value)
     {
         root->mCount++;
     }
+
     root->make_locally_consistent();
-    //make sure to balance
+
     return root->avl_balance();
 }
 
@@ -536,42 +525,35 @@ BSTNode *BSTNode::bst_remove(int value)
 
 BSTNode *BSTNode::avl_remove(int value)
 {
-    // same as bst_remove
     BSTNode *root = this;
-    // go left
-    if (root->mData > value)
+
+    if (root->mData > value) // recurse left
     {
         root->mLeft = root->mLeft->avl_remove(value);
     }
-    // go right
-    else if (root->mData < value)
+    else if (root->mData < value) // recurse right
     {
         root->mRight = root->mRight->avl_remove(value);
     }
-    // found
-    else if (root->mData == value)
+    else if (root->mData == value) // target found
     {
-        // duplicate remove one from count
         if (root->mCount > 1)
         {
             root->mCount--;
         }
-        // remove if leaf
-        else if (root->mLeft->is_empty() && root->mRight->is_empty())
+        else if (root->mLeft->is_empty() && root->mRight->is_empty()) // no children
         {
             delete root;
             root = new BSTNode();
             root->make_locally_consistent();
         }
-        // repalce with left node
-        else if (!root->mLeft->is_empty() && root->mRight->is_empty())
+        else if (!root->mLeft->is_empty() && root->mRight->is_empty()) // one left child
         {
             BSTNode *temp = new BSTNode(*root->mLeft);
             delete root;
             root = temp;
         }
-        // replace with right node
-        else if (root->mLeft->is_empty() && !root->mRight->is_empty())
+        else if (root->mLeft->is_empty() && !root->mRight->is_empty()) // one right child
         {
             BSTNode *temp = new BSTNode(*root->mRight);
             delete root;
@@ -579,18 +561,16 @@ BSTNode *BSTNode::avl_remove(int value)
         }
         else
         {
-            // two nodes
-            BSTNode *succ = (BSTNode *)root->mRight->minimum_value();
-            root->mData = succ->mData;
-            root->mCount = succ->mCount;
-            succ->mCount = 1;
-            root->mRight = root->mRight->avl_remove(succ->mData); //
+            BSTNode *right_successor = (BSTNode *)root->mRight->minimum_value(); // find the successor
+            root->mData = right_successor->mData;
+            root->mCount = right_successor->mCount;
+            right_successor->mCount = 1;
+            root->mRight = root->mRight->avl_remove(right_successor->mData); //
         }
     }
     root->make_locally_consistent();
-    //make sure still AVL tree after removing
-    root = root->avl_balance();
-    return root;
+
+    return root->avl_balance();
 }
 
 BSTNode *BSTNode::rbt_remove(int value)
