@@ -536,77 +536,61 @@ BSTNode *BSTNode::bst_remove(int value)
 
 BSTNode *BSTNode::avl_remove(int value)
 {
-// TODO TODO FIX FIX FIX
+    // same as bst_remove
     BSTNode *root = this;
-
-    /********************************
-     ****** BST Removal Begins ******
-     ********************************/
-    
-    // Case One: mCount greater than 1
-    if (value == mData && mCount > 1) 
+    // go left
+    if (root->mData > value)
     {
-        mCount -= 1; // decrement the count
-    } 
-    else if (value < mData && has_child(LEFT)) 
+        root->mLeft = root->mLeft->avl_remove(value);
+    }
+    // go right
+    else if (root->mData < value)
     {
-        mLeft = mLeft->bst_remove(value); // continue recursing
-    } 
-    else if (value > mData && has_child(RIGHT)) 
+        root->mRight = root->mRight->avl_remove(value);
+    }
+    // found
+    else if (root->mData == value)
     {
-        mRight = mRight->bst_remove(value); // continue recursing
-    } 
-    else if (value == mData) // when value to remove is found
-    {
-        if (has_child(LEFT) && has_child(RIGHT)) 
+        // duplicate remove one from count
+        if (root->mCount > 1)
         {
-            // Case Two: Node has 2 children
-            const BSTNode* replacement = mRight->minimum_value();
-            mData = replacement->mData;
-            mCount = replacement->mCount;
-            mRight = mRight->bst_remove(replacement->mData);
-                       
-        } 
-        else if (has_child(LEFT) && !has_child(RIGHT)) 
+            root->mCount--;
+        }
+        // remove if leaf
+        else if (root->mLeft->is_empty() && root->mRight->is_empty())
         {
-            // Case Three: Node has 1 child (left)
-            BSTNode* left = mLeft;    
-            return left;
-            
-        } 
-        else if (!has_child(LEFT) && has_child(RIGHT)) 
+            delete root;
+            root = new BSTNode();
+            root->make_locally_consistent();
+        }
+        // repalce with left node
+        else if (!root->mLeft->is_empty() && root->mRight->is_empty())
         {
-            // Case Three: Node has 1 child (right)
-            BSTNode* right = mRight;
-            return right;
-        } 
-        else 
+            BSTNode *temp = new BSTNode(*root->mLeft);
+            delete root;
+            root = temp;
+        }
+        // replace with right node
+        else if (root->mLeft->is_empty() && !root->mRight->is_empty())
         {
-            // Case Four: Node has no children
-            //delete this;
-            //return new BSTNode();
-            return new BSTNode();
+            BSTNode *temp = new BSTNode(*root->mRight);
+            delete root;
+            root = temp;
+        }
+        else
+        {
+            // two nodes
+            BSTNode *succ = (BSTNode *)root->mRight->minimum_value();
+            root->mData = succ->mData;
+            root->mCount = succ->mCount;
+            succ->mCount = 1;
+            root->mRight = root->mRight->avl_remove(succ->mData); //
         }
     }
-    // Make the root locally consistent
-
-    /********************************
-     ****** BST Removal Ends ******
-     ********************************/
-
-
-    /********************************
-     **** AVL Maintenance Begins ****
-     ********************************/
-
-    // Ensure the tree is AVL-balanced
-    make_locally_consistent();
-
-    /********************************
-     ***** AVL Maintenance Ends *****
-     ********************************/
-
-    return root->avl_balance();
+    root->make_locally_consistent();
+    //make sure still AVL tree after removing
+    root = root->avl_balance();
+    return root;
 }
 
 BSTNode *BSTNode::rbt_remove(int value)
