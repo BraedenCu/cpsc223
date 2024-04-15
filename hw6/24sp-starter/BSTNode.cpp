@@ -398,7 +398,8 @@ BSTNode *BSTNode::bst_remove(int value)
         else if (has_child(LEFT) && !has_child(RIGHT)) 
         {
             // Case Three: Node has 1 child (left)
-            BSTNode* left = mLeft;    
+            BSTNode* left = mLeft;  
+            delete this; 
             return left;
             
         } 
@@ -406,6 +407,7 @@ BSTNode *BSTNode::bst_remove(int value)
         {
             // Case Three: Node has 1 child (right)
             BSTNode* right = mRight;
+            delete this;
             return right;
         } 
         else 
@@ -422,7 +424,7 @@ BSTNode *BSTNode::bst_remove(int value)
     /********************************
      ****** BST Removal Ends ******
      ********************************/
-
+    
     return root;
 }
 
