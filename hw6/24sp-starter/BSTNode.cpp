@@ -401,19 +401,18 @@ BSTNode *BSTNode::bst_remove(int value)
     {
         return root;
     }
-
-    if (value < mData && has_child(LEFT)) 
+    else if (root->mData > value) // left move
+        {
+            root->mLeft = root->mLeft->bst_remove(value);
+        }
+    else if (root->mData < value) // right move
     {
-        root->mLeft = root->mLeft->bst_remove(value); // continue recursing
-    } 
-    else if (value > mData && has_child(RIGHT)) 
-    {
-        root->mRight = root->mRight->bst_remove(value); // continue recursing
-    } 
-    else if (value == mData) // when value to remove is found
+        root->mRight = root->mRight->bst_remove(value);
+    }
+    else  // when value to remove is found
     {
         // case one: mCount greater than 1
-        if (value == mData && mCount > 1) 
+        if (mCount > 1) 
         {
             root->mCount -= 1; // decrement the count
         } 
