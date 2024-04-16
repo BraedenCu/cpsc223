@@ -262,7 +262,6 @@ const BSTNode *BSTNode::search(int value) const
  */
 BSTNode* BSTNode::bst_insert(int value) 
 {
-// TODO TODO WORKING
     BSTNode *root = this;
 
     if(is_empty()) 
@@ -296,6 +295,7 @@ BSTNode* BSTNode::bst_insert(int value)
     }
 
     make_locally_consistent();
+    
     return root;
 }
 
@@ -396,12 +396,11 @@ BSTNode *BSTNode::bst_remove(int value)
         if (has_child(LEFT) && has_child(RIGHT)) 
         {
             // Case Two: Node has 2 children
+            // replace the node with the minimum value in the right subtree in this 
             const BSTNode* replacement = mRight->minimum_value();
             mData = replacement->mData;
             mCount = replacement->mCount;
             mRight = mRight->bst_remove(replacement->mData);
-           
-            // replace the node with the minimum value in the right subtree in this 
         } 
         else if (has_child(LEFT) && !has_child(RIGHT)) 
         {
@@ -428,7 +427,6 @@ BSTNode *BSTNode::bst_remove(int value)
         }
     }
 
-    // make the root locally consistent
     make_locally_consistent();
 
     /********************************
@@ -954,6 +952,7 @@ BSTNode *BSTNode::avl_balance()
         else
         {
             this->mRight = this->mRight->right_rotate(); // R + L
+
             return this->left_rotate(); 
         }
     }
@@ -966,6 +965,7 @@ BSTNode *BSTNode::avl_balance()
         else
         {
             this->mLeft = this->mLeft->left_rotate(); // L + R
+
             return this->right_rotate();
         }
     }
@@ -996,22 +996,26 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
                 nb.g->swap_colors_with(nb.g->mRight); // swap colors
                 nb.g->make_locally_consistent(); // make consistent
                 break;
+                
             case LL: 
                 nb.g = nb.g->right_rotate(); // R
                 nb.g->swap_colors_with(nb.g->mRight); // swap colors
                 nb.g->make_locally_consistent(); // make consistent
                 break;
+
             case RL: 
                 nb.g->mRight = nb.g->mRight->right_rotate(); // R
                 nb.g = nb.g->left_rotate(); // L
                 nb.g->swap_colors_with(nb.g->mLeft); // swap colors
                 nb.g->make_locally_consistent(); // make consistent
                 break;
+
             case RR: 
                 nb.g = nb.g->left_rotate();  // L
                 nb.g->swap_colors_with(nb.g->mLeft); // swap colors
                 nb.g->make_locally_consistent(); // make consistent
                 break;
+
             default:
                 break;
             }
