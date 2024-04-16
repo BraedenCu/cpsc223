@@ -108,62 +108,29 @@ BSTNode::BSTNode(int data)
  *  function, or both.
  */
 
-/**
- * Copy constructor.
- *
- * @param other the node to copy
- * @return the root of a tree that is a copy of the tree rooted at other
- * @result creates a new node with the same properties as other by
- *  performing a pre-order deep copy of the tree rooted at other. The root
- *  of the new tree has parent nullptr (it is considered the ultimate root
- *  of its tree).
- *
- * Runtime Complexity: O(n)
- */
-/**
- * Copy constructor: make a copy of everything from the “other” BSTNode
-○ Some values can be easily copied over by simply setting them equal to your “this” values,
-others require a more in-depth approach
-○ Should be a pre-order deep copy (visit root, then left, then right). All nodes should be copied,
-not just direct children.
-○ As you copy all nodes, update other values as needed
-○ Have default values if we don’t know something exists yet*/
-BSTNode::BSTNode(const BSTNode &other)
-    : mData(other.mData), mCount(other.mCount), mHeight(other.mHeight), mColor(other.mColor), parent(nullptr)
+BSTNode::BSTNode(const BSTNode &other) : mData(other.mData), mCount(other.mCount), mHeight(other.mHeight), mColor(other.mColor), parent(nullptr)
 {
-    if (other.has_child(LEFT) && !other.mLeft->is_empty()) 
+    if (other.has_child(LEFT)) 
     {
         mLeft = new BSTNode(*other.mLeft);
-        mLeft->parent = this;  // Set the parent pointer of the left child
+        mLeft->parent = this;
     } 
     else 
     {
-        mLeft = new BSTNode();  // Create a sentinel node for the left child
+        mLeft = new BSTNode(); 
     }
 
-    // Copy the right subtree if it exists and is not a sentinel node
-    if (other.has_child(RIGHT) && !other.mRight->is_empty()) 
+    if (other.has_child(RIGHT)) 
     {
         mRight = new BSTNode(*other.mRight);
-        mRight->parent = this;  // Set the parent pointer of the right child
+        mRight->parent = this;  
     } 
     else 
     {
-        mRight = new BSTNode();  // Create a sentinel node for the right child
+        mRight = new BSTNode(); 
     }
 }
 
-
-/**
- * Destructor.
- *
- * @param this the root of the tree to free
- * @result Performs a post-order delete to free all memory owned by this.
- *
- * Remember: `this` is automatically freed at the end of a destructor.
- *
- * Runtime Complexity: O(n)
- */
 BSTNode::~BSTNode()
 {
     delete this->mLeft;
@@ -184,7 +151,7 @@ const BSTNode *BSTNode::minimum_value() const
 
     while (current->has_child(LEFT)) 
     {
-        current = current->left_child();
+        current = current->left_child(); // traverse to the leftmost node
     }
 
     return current;
@@ -194,7 +161,7 @@ const BSTNode *BSTNode::maximum_value() const
 {
     const BSTNode* current = this;
 
-    while (current->has_child(RIGHT)) 
+    while (current->has_child(RIGHT)) // traverse to the rightmost node
     {
         current = current->right_child();
     }
@@ -202,12 +169,6 @@ const BSTNode *BSTNode::maximum_value() const
     return current;
 }
 
-/**
- * @param this the root of the tree
- * @return the total of all counts in the tree rooted at this
- *
- * Runtime Complexity: O(n)
- */
 int BSTNode::count_total() const
 {
     if (is_empty()) 
@@ -232,34 +193,22 @@ int BSTNode::count_total() const
 
 const BSTNode *BSTNode::search(int value) const
 {
-    // DUP
     if (this->mData == value)
     {
-        return this; // Value found at current node
+        return this; 
     }
-    else if (value < this->mData && !this->mLeft->is_empty())
+    else if (has_child(LEFT) && value < this->mData)
     {
-        return this->mLeft->search(value); // Recurse on the left child
+        return this->mLeft->search(value); // continue left child
     }
-    else if (value > this->mData && !this->mRight->is_empty())
+    else if (has_child(RIGHT) && value > this->mData)
     {
-        return this->mRight->search(value); // Recurse on the right child
+        return this->mRight->search(value); // continue right child
     }
+    
     return this->minimum_value()->mLeft;
 }
 
-/**
- * Inserts value into this.
- *
- * @param this the root of the tree
- * @param value the value to insert
- * @return a pointer to the root of the tree into which value has just been
- *  inserted, with parent `nullptr`
- * @result inserts (a single occurrence of) value into the tree rooted at
- *  this. Uses the "naive BST" insertion algorithm.
- *
- * Runtime Complexity: O([height of tree rooted at this])
- */
 BSTNode* BSTNode::bst_insert(int value) 
 {
     BSTNode *root = this;
@@ -514,12 +463,6 @@ BSTNode *BSTNode::rbt_remove(int value)
     return root;
 }
 
-/**
- * @param this the root of the tree
- * @return the number of non-empty nodes in the tree rooted at this
- *
- * Runtime Complexity: O(n)
- */
 int BSTNode::node_count() const
 {
     if (is_empty()) 
@@ -996,7 +939,7 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
                 nb.g->swap_colors_with(nb.g->mRight); // swap colors
                 nb.g->make_locally_consistent(); // make consistent
                 break;
-                
+
             case LL: 
                 nb.g = nb.g->right_rotate(); // R
                 nb.g->swap_colors_with(nb.g->mRight); // swap colors
