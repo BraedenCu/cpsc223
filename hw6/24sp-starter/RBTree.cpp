@@ -1,7 +1,9 @@
-/*
- * Filename: RBTree.cpp
- * Contains: Implementation of Red-Black Trees for CPSC 223
- * Part of: Homework assignment "Trees" for CPSC 223
+/**
+ * Name: Braeden Cullen
+ * Assignment: Trees
+ * Class: CPSC223 Spring 2024
+ * Date: April 15th
+ * Interface for RBTree class
  */
 
 #include "RBTree.h"
@@ -30,29 +32,22 @@ RBTree::~RBTree()
 
 RBTree &RBTree::operator=(const RBTree &source)
 {   
-// TODO TODO TODO
-    // Assigns rhs to this by deep copy.
-
-    // Check for self-assignment
-    if (this == &source)
+    if (this == &source) // check for self assignment
     {
-        return *this; // return a reference to the current object
+        return *this; // return a reference to curr object
     }
-    // Delete existing tree, if it exists
 
-    delete this->root;
+    delete this->root; // delete existing tree
 
-    // Copy root from source.root, if it exists
     if(source.root != nullptr)
     {
-        this->root = new BSTNode(*source.root);
+        this->root = new BSTNode(*source.root); // deep copy
     }
     else
     {
         this->root = nullptr;
     }
 
-    // Don't forget to return *this
     return *this;
 }
 

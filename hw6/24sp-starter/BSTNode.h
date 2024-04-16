@@ -1,3 +1,11 @@
+/**
+ * Name: Braeden Cullen
+ * Assignment: Trees
+ * Class: CPSC223 Spring 2024
+ * Date: April 15th
+ * Interface for BSTNode class
+ */
+
 #pragma once
 
 #include <iostream>
@@ -648,6 +656,13 @@ private:
      */
     BSTNode *avl_balance();
 
+    /**
+     * @param this the root of an almost-balanced AVL Tree.
+     * @return the balance factor of this.
+     * @result returns the balance factor of this, which is the difference
+     * between the height of the right subtree and the height of the left
+     * subtree.
+     */
     int find_avl_balance(BSTNode *node);
 
     /**

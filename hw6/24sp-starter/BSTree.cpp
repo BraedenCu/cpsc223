@@ -1,7 +1,9 @@
-/*
- * Filename: BSTree.cpp
- * Contains: Implementation of Naive Binary Search Trees for CPSC 223
- * Part of: Homework assignment "Trees" for CPSC 223
+/**
+ * Name: Braeden Cullen
+ * Assignment: Trees
+ * Class: CPSC223 Spring 2024
+ * Date: April 15th
+ * Interface for BSTree class
  */
 
 #include "BSTree.h"
@@ -30,19 +32,13 @@ BSTree::~BSTree()
 
 BSTree &BSTree::operator=(const BSTree &source)
 {   
-// TODO TODO TODO
-    // Assigns rhs to this by deep copy.
-
-    // Check for self-assignment
-    if (this == &source)
+    if (this == &source) // check for self-assignment
     {
         return *this; // return a reference to the current object
     }
-    // Delete existing tree, if it exists
 
-    delete this->root;
+    delete this->root; // delete existing tree
 
-    // Copy root from source.root, if it exists
     if(source.root != nullptr)
     {
         this->root = new BSTNode(*source.root);
@@ -52,10 +48,8 @@ BSTree &BSTree::operator=(const BSTree &source)
         this->root = nullptr;
     }
 
-    // Don't forget to return *this
     return *this;
 }
-
 
 bool BSTree::is_valid() const
 {

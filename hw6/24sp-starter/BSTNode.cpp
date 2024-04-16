@@ -1,3 +1,11 @@
+/**
+ * Name: Braeden Cullen
+ * Assignment: Trees
+ * Class: CPSC223 Spring 2024
+ * Date: April 15th
+ * Implementation for BSTNode class
+ */
+
 #include "BSTNode.h"
 
 #include <cassert>
@@ -398,36 +406,24 @@ BSTNode *BSTNode::bst_remove(int value)
         else if (has_child(LEFT) && !has_child(RIGHT)) 
         {
             // Case Three: Node has 1 child (left)
-            //BSTNode* left = mLeft;  
-            //delete this; 
             root = root->mLeft;
             this->mLeft = nullptr;
             delete this;
             return root;
-            // root = this->mLeft;
-            // this->mLeft = nullptr;
-            // delete this;
-            
         } 
         else if (!has_child(LEFT) && has_child(RIGHT)) 
         {
             // Case Three: Node has 1 child (right)
-            //BSTNode* right = mRight;
-            //delete this;
             root = root->mRight;
             this->mRight = nullptr;
             delete this;
             return root;
-            // root = this->mRight;
-            // this->mRight = nullptr;
-            // delete this;
         } 
         else 
         {
             // Case Four: Node has no children
             root = new BSTNode();
             delete this;
-            //delete this;
             return root;
         }
     }
@@ -444,50 +440,66 @@ BSTNode *BSTNode::bst_remove(int value)
 
 BSTNode *BSTNode::avl_remove(int value)
 {
+    /********************************
+     ****** BST Removal Begins ******
+     ********************************/
+
     BSTNode *root = this;
 
-    if (root->mData > value) // recurse left
-    {
-        root->mLeft = root->mLeft->avl_remove(value);
-    }
-    else if (root->mData < value) // recurse right
+    if (root->mData < value) // search right side
     {
         root->mRight = root->mRight->avl_remove(value);
     }
-    else if (root->mData == value) // target found
+    else if (root->mData > value) // search left side
     {
-        if (root->mCount > 1)
+        root->mLeft = root->mLeft->avl_remove(value);
+    }
+    else if (root->mData == value)
+    {
+        if (root->mCount > 1) // if the count is greater than 1
         {
-            root->mCount--;
+            root->mCount -= 1; // decrement count
         }
-        else if (root->mLeft->is_empty() && root->mRight->is_empty()) // no children
+        // Case One: Node has no children.
+        else if (root->mLeft->is_empty() && root->mRight->is_empty()) 
         {
             delete root;
             root = new BSTNode();
             root->make_locally_consistent();
         }
+        // Case Two: Node has one left child.
         else if (!root->mLeft->is_empty() && root->mRight->is_empty()) // one left child
         {
             BSTNode *temp = new BSTNode(*root->mLeft);
             delete root;
             root = temp;
         }
+        // Case Three: Node has one right child.
         else if (root->mLeft->is_empty() && !root->mRight->is_empty()) // one right child
         {
             BSTNode *temp = new BSTNode(*root->mRight);
             delete root;
             root = temp;
         }
+        // Case Four: Node has two children, base.
         else
         {
-            BSTNode *right_successor = (BSTNode *)root->mRight->minimum_value(); // find the successor
-            root->mData = right_successor->mData;
-            root->mCount = right_successor->mCount;
-            right_successor->mCount = 1;
-            root->mRight = root->mRight->avl_remove(right_successor->mData); // remove the successor
+            // must find the min value on the right side, this will serve as the root
+            BSTNode *replacement = (BSTNode *)root->mRight->minimum_value(); 
+
+            root->mData = replacement->mData;
+            root->mCount = replacement->mCount;
+            replacement->mCount = 1;
+
+            // remove the replacement node from the right subtree
+            root->mRight = root->mRight->avl_remove(replacement->mData); 
         }
     }
     root->make_locally_consistent();
+
+    /********************************
+     ****** BST Removal Ends ******
+     ********************************/
 
     return root->avl_balance();
 }
@@ -512,7 +524,6 @@ BSTNode *BSTNode::rbt_remove(int value)
  */
 int BSTNode::node_count() const
 {
-// TODO TODO FIX FIX FIX
     if (is_empty()) 
     {
         return 0;
@@ -528,7 +539,8 @@ int BSTNode::node_count() const
         {
             count += right_child()->node_count();
         }
-        return count;
+
+        return count; 
     }
 }
 
@@ -932,7 +944,7 @@ int BSTNode::find_avl_balance(BSTNode *node)
 
 BSTNode *BSTNode::avl_balance()
 {
-    int bal = find_avl_balance(this);
+    int bal = find_avl_balance(this); 
     if (bal < -1)
     {
         if (find_avl_balance(this->mRight) <= 0) // R
@@ -979,26 +991,26 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
             switch (nb.shape)
             {
             case LR: 
-                nb.g->mLeft = nb.g->mLeft->left_rotate();
-                nb.g = nb.g->right_rotate();
-                nb.g->swap_colors_with(nb.g->mRight);
-                nb.g->make_locally_consistent();
+                nb.g->mLeft = nb.g->mLeft->left_rotate(); // L
+                nb.g = nb.g->right_rotate(); // R
+                nb.g->swap_colors_with(nb.g->mRight); // swap colors
+                nb.g->make_locally_consistent(); // make consistent
                 break;
             case LL: 
-                nb.g = nb.g->right_rotate();
-                nb.g->swap_colors_with(nb.g->mRight);
-                nb.g->make_locally_consistent();
+                nb.g = nb.g->right_rotate(); // R
+                nb.g->swap_colors_with(nb.g->mRight); // swap colors
+                nb.g->make_locally_consistent(); // make consistent
                 break;
             case RL: 
-                nb.g->mRight = nb.g->mRight->right_rotate();
-                nb.g = nb.g->left_rotate();
-                nb.g->swap_colors_with(nb.g->mLeft);
-                nb.g->make_locally_consistent();
+                nb.g->mRight = nb.g->mRight->right_rotate(); // R
+                nb.g = nb.g->left_rotate(); // L
+                nb.g->swap_colors_with(nb.g->mLeft); // swap colors
+                nb.g->make_locally_consistent(); // make consistent
                 break;
             case RR: 
-                nb.g = nb.g->left_rotate(); 
-                nb.g->swap_colors_with(nb.g->mLeft);
-                nb.g->make_locally_consistent();
+                nb.g = nb.g->left_rotate();  // L
+                nb.g->swap_colors_with(nb.g->mLeft); // swap colors
+                nb.g->make_locally_consistent(); // make consistent
                 break;
             default:
                 break;
