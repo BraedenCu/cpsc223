@@ -674,12 +674,11 @@ namespace g
          */
         vector<Vertex> vertices() const
         {
-// TODO in progress
-            // populate verticies. How? Lets iterate 
-
+// TODO 
+            return verticies;
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
-            return vector<Vertex>();
+            // return vector<Vertex>();
         }
 
         /**
@@ -688,10 +687,19 @@ namespace g
          */
         set<Edge> edges() const
         {
-// TODO (not started)
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
-            return set<Edge>();
+// TODO
+            set<Edge> all_edges;
+
+            // create nested set, loop over all edges, add them to the set. must be in order aswell
+            for(size_type idx = 0; idx < adj_list.size(); idx++) 
+            {
+                for(size_type idy = 0; idy < adj_list[idx].size(); idy++) 
+                {
+                    all_edges.insert(adj_list[idx][idy]);
+                }
+            }
+
+            return all_edges;
         }
 
         /**
@@ -702,11 +710,15 @@ namespace g
          */
         vector<Vertex> neighbors_of(const Vertex &v) const
         {
-// TODO (not started)
-
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
-            return vector<Vertex>();
+// TODO in progress
+            vector<Vertex> all_neighbors;
+            // loop through edges of our adj_list, adj_list[u] = neighbors for vertex u
+            for(size_type idx = 0; idx < adj_list[v.index].size(); idx++) 
+            {
+                all_neighbors.push_back(adj_list[v.index][idx].target);
+            }
+            
+            return sort(all_neighbors);
         }
 
         /**
@@ -719,7 +731,7 @@ namespace g
         Edge edge(const Vertex &s, const Vertex &t) const
         {
 // TODO (not started)
-
+            
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
             return Edge();
