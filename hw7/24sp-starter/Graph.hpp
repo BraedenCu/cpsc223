@@ -674,7 +674,8 @@ namespace g
          */
         vector<Vertex> vertices() const
         {
-#pragma message "TODO: Students write code here"
+// TODO in progress
+            // populate verticies. How? Lets iterate 
 
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
@@ -687,8 +688,7 @@ namespace g
          */
         set<Edge> edges() const
         {
-#pragma message "TODO: Students write code here"
-
+// TODO (not started)
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
             return set<Edge>();
@@ -702,7 +702,7 @@ namespace g
          */
         vector<Vertex> neighbors_of(const Vertex &v) const
         {
-#pragma message "TODO: Students write code here"
+// TODO (not started)
 
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
@@ -718,7 +718,7 @@ namespace g
          */
         Edge edge(const Vertex &s, const Vertex &t) const
         {
-#pragma message "TODO: Students write code here"
+// TODO (not started)
 
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
@@ -737,7 +737,7 @@ namespace g
          */
         void bfs(const Vertex &s) const
         {
-#pragma message "TODO: Students write code here"
+// TODO (not started)
         }
 
         /**
@@ -752,7 +752,7 @@ namespace g
          */
         void dfs(const Vertex &s) const
         {
-#pragma message "TODO: Students write code here"
+// TODO (not started)
         }
 
         /**
@@ -769,7 +769,7 @@ namespace g
          * @assumes the graph has no negative edge weights
          */
         void dijkstra(const Vertex &s) const {
-#pragma message "TODO: Students write code here"
+// TODO (not started)
         }
 
         /**
@@ -790,7 +790,7 @@ namespace g
         Path shortest_path(const Vertex &s, const Vertex &t) const
         {
             vector<Vertex> parents(vertices().size());
-#pragma message "TODO: Students write code here"
+// TODO (not started)
 
             return Path(*this, s, t, parents);
         }
@@ -808,7 +808,7 @@ namespace g
             v.index = this->vertices().size();
 
             // Do the insertion
-#pragma message "TODO: Students write code here"
+// TODO (not started)
         }
 
         /**
@@ -849,7 +849,7 @@ namespace g
             }
 
             // Do the edge insertion
-#pragma message "TODO: Students write code here"
+// TODO (not started)
         }
 
     private:
@@ -883,6 +883,6 @@ namespace g
             cout << vertex << endl;
         }
 
-#pragma message "TODO (optional): Students add private helper methods here."
+// TODO (not started) TODO (optional): Students add private helper methods here.
     };
 }
