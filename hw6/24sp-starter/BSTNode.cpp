@@ -934,35 +934,52 @@ BSTNode *BSTNode::rbt_eliminate_red_red_violation()
             switch (nb.shape)
             {
             case LR: 
-                nb.g->mLeft = nb.g->mLeft->left_rotate(); // L
-                nb.g = nb.g->right_rotate(); // R
+                nb.g->mLeft = nb.g->mLeft->left_rotate(); // rotate left
+                nb.g = nb.g->right_rotate(); // rotate right
+                
                 nb.g->swap_colors_with(nb.g->mRight); // swap colors
+
                 nb.g->make_locally_consistent(); // make consistent
+
+                return nb.g;
                 break;
 
             case LL: 
-                nb.g = nb.g->right_rotate(); // R
+                nb.g = nb.g->right_rotate(); // rotate right
+
                 nb.g->swap_colors_with(nb.g->mRight); // swap colors
+
                 nb.g->make_locally_consistent(); // make consistent
+
+                return nb.g;
                 break;
 
             case RL: 
-                nb.g->mRight = nb.g->mRight->right_rotate(); // R
-                nb.g = nb.g->left_rotate(); // L
+                nb.g->mRight = nb.g->mRight->right_rotate(); // rotate right
+                nb.g = nb.g->left_rotate(); // rotate left
+
                 nb.g->swap_colors_with(nb.g->mLeft); // swap colors
+
                 nb.g->make_locally_consistent(); // make consistent
+
+                return nb.g;
                 break;
 
             case RR: 
-                nb.g = nb.g->left_rotate();  // L
+                nb.g = nb.g->left_rotate();  // rotate left
+
                 nb.g->swap_colors_with(nb.g->mLeft); // swap colors
+
                 nb.g->make_locally_consistent(); // make consistent
+
+                return nb.g;
                 break;
 
             default:
-                break;
+                break; // just do nothing in this case
             }
-            return nb.g; // root
+            
+            return nb.g; // returning new root of subtree
         }
     }
     return this;
