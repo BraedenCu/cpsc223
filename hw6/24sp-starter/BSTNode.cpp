@@ -324,7 +324,6 @@ BSTNode *BSTNode::bst_remove(int value)
      ****** BST Removal Begins ******
      ********************************/
 
-    // Do the removal
     BSTNode *root = this;
     
     // Case One: mCount greater than 1
