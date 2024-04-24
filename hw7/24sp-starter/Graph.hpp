@@ -455,7 +455,7 @@ namespace g
          * You must intialize all members of class Graph.
          */
 //TODO
-        Graph() : directed(true), adj_list(), verticies() {}
+        Graph() : directed(true), adj_list(), vertices_list() {}
 
         /**
          * Constructs a graph from the given input stream. If the graph is
@@ -675,7 +675,7 @@ namespace g
         vector<Vertex> vertices() const
         {
 // TODO 
-            return verticies;
+            return vertices_list;
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
             // return vector<Vertex>();
@@ -882,7 +882,7 @@ namespace g
          *  the edges from that vertex.
          */
         vector <vector<Edge>> adj_list;
-        vector <Vertex> verticies; 
+        vector <Vertex> vertices_list; 
 // TODO
 
         /**
