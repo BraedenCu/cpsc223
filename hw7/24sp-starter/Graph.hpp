@@ -731,9 +731,13 @@ namespace g
         Edge edge(const Vertex &s, const Vertex &t) const
         {
 // TODO (not started)
-            
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
+            for(size_type idx = 0; idx < adj_list[s.index].size(); idx++) 
+            {
+                if(adj_list[s.index][idx].target == t) 
+                {
+                    return adj_list[s.index][idx];
+                }
+            }
             return Edge();
         }
 
