@@ -753,7 +753,49 @@ namespace g
          */
         void bfs(const Vertex &s) const
         {
-// TODO (not started)
+            // Create a queue to store the vertices to visit
+            queue<Vertex> q;
+
+            // Create a set to store the visited vertices
+            set<Vertex> visited;
+
+            // Enqueue the starting vertex
+            q.push(s);
+
+            // While there are vertices to visit
+            while (!q.empty())
+            {
+                // Dequeue the next vertex
+                Vertex u = q.front();
+                q.pop();
+
+                // If we have already visited this vertex, skip it
+                if (visited.count(u))
+                {
+                    continue;
+                }
+
+                // Visit the vertex
+                visit(u);
+
+                // Mark the vertex as visited
+                visited.insert(u);
+
+                // Enqueue the neighbors of the vertex
+                for (Vertex v : neighbors_of(u))
+                {
+                    q.push(v);
+                }
+            }
+
+            // Reset the visited set
+            visited.clear();
+
+            // Reset the queue
+            while (!q.empty())
+            {
+                q.pop();
+            }
         }
 
         /**
@@ -769,6 +811,36 @@ namespace g
         void dfs(const Vertex &s) const
         {
 // TODO (not started)
+            stack<Vertex> stack;
+            set<Vertex> visited;
+
+            stack.push(s);
+
+            while(!stack.empty()) 
+            {
+                Vertex u = stack.top();
+                stack.pop();
+
+                if(visited.count(u)) 
+                {
+                    continue;
+                }
+
+                visit(u);
+                visited.insert(u);
+
+                for(Vertex v : neighbors_of(u)) 
+                {
+                    stack.push(v);
+                }
+            }
+
+            visited.clear();
+
+            while(!stack.empty()) 
+            {
+                stack.pop();
+            }
         }
 
         /**
@@ -786,6 +858,38 @@ namespace g
          */
         void dijkstra(const Vertex &s) const {
 // TODO (not started)
+            MinQueue<Vertex, W> q;
+
+            vector<W> dist(vertices().size(), W_MAX);
+
+            dist[s] = W();
+
+            q.push(s, W());
+
+            set<Vertex> visited;
+
+            while(!q.empty()) 
+            {
+                Vertex u = q.top();
+                q.pop();
+
+                if(visited.count(u)) 
+                {
+                    continue;
+                }
+
+                visited.insert(u);
+
+                for(Vertex v : neighbors_of(u)) 
+                {
+                    W alt = dist[u] + edge(u, v).weight;
+                    if(alt < dist[v]) 
+                    {
+                        dist[v] = alt;
+                        q.push(v);
+                    }
+                }
+            }
         }
 
         /**
@@ -807,6 +911,40 @@ namespace g
         {
             vector<Vertex> parents(vertices().size());
 // TODO (not started)
+
+            MinQueue<Vertex, W> q;
+
+            vector<W> dist(vertices().size(), W_MAX);
+
+            dist[s] = W();
+
+            q.push(s, W());
+
+            set<Vertex> visited;
+
+            while(!q.empty()) 
+            {
+                Vertex u = q.top();
+                q.pop();
+
+                if(visited.count(u)) 
+                {
+                    continue;
+                }
+
+                visited.insert(u);
+
+                for(Vertex v : neighbors_of(u)) 
+                {
+                    W alt = dist[u] + edge(u, v).weight;
+                    if(alt < dist[v]) 
+                    {
+                        dist[v] = alt;
+                        parents[v] = u;
+                        q.push(v);
+                    }
+                }
+            }
 
             return Path(*this, s, t, parents);
         }
@@ -866,6 +1004,18 @@ namespace g
 
             // Do the edge insertion
 // TODO (not started)
+            while(adj_list.size() <= e.source.index || adj_list.size() <= e.target.index) 
+            {
+                adj_list.push_back(vector<Edge>());
+            }
+
+            adj_list[e.source.index].push_back(e);
+
+            if(!is_directed()) 
+            {
+                adj_list[e.target.index].push_back(~e);
+            }
+            
         }
 
     private:
