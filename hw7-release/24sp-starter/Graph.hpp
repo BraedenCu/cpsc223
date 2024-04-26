@@ -55,7 +55,7 @@ namespace g
         using size_type = unsigned int;
         static constexpr W W_MAX = numeric_limits<W>::max();
         static constexpr W W_MIN = numeric_limits<W>::min();
-        static constexpr size_type MAX_SIZE = numeric_limits<size_type>::max(); // TODO CHANGE BACK TO SIZE_MAX !!!!!! BEFORE SUBMITTING !!!!!!!
+        static constexpr size_type SIZE_MAX = numeric_limits<size_type>::max(); // TODO CHANGE BACK TO SIZE_MAX !!!!!! BEFORE SUBMITTING !!!!!!!
 
         /*
          * Type traits for the template parameters V, E, and W. The following
