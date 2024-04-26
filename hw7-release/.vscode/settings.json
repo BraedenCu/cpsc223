@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "variant": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "limits": "cpp"
+    }
+}

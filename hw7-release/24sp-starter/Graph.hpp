@@ -24,7 +24,7 @@
  * Contains the interface and implementation for the Graph class, including
  *  inner structs for Vertex, Edge, and Path.
  *
- * Author: [your name here]
+ * Author: Braeden Cullen
  */
 
 namespace g
@@ -802,6 +802,8 @@ namespace g
         {
 // TODO NOT DONE
 
+            // recursive solution reccomended
+
             stack<Vertex> st;
 
             vector<bool> visited(vertices().size(), false);
@@ -843,56 +845,64 @@ namespace g
          */
         void dijkstra(const Vertex &s) const 
         {
-// TODO TODO TODO NOT
-            // djikstras algorithm psuedo-code
+    // TODO TODO TODO NOT
             /**
-             * 1. Create a set of all vertices with distance = infinity
-             * 2. Set the distance of the source vertex to 0
-             * 3. While the set is not empty
-             *    a. Find the vertex with the minimum distance
-             *    b. For each neighbor of the vertex
-             *        i. If the distance of the neighbor is greater than the distance of the vertex + the weight of the edge
-             *           1. Set the distance of the neighbor to the distance of the vertex + the weight of the edge
-             *           2. Set the parent of the neighbor to the vertex
-             * 4. Return the set of parents
-             */
+             * Psuedocode
+             * 1. initialize s.d =0, all other v.d = infinity: all parents NIL.
+             * Q <- min-priority queue of all verticies (using score d as key)
+             * S <- empty set S of processsed elements
+             * While Q is not empty do:
+             *  u <- extractmin(Q)
+             *  S <- S Union {u}
+             *  For all edges (u, v) element of E:
+             *      if (v.d > u.d + w(u, v))
+             *          v.d <- u.d + w(u, v)
+             *          v.pi <- u
+            *           Float v in Q
+            */
+            queue<Vertex> q;
 
-            // create our minqueue
-            MinQueue<W, Vertex> mq;
+            // initialize distances, set all to infinity (W_MAX)
+            vector<W> dist(vertices().size(), W_MAX);
 
-            // create a vector of distances
-            vector<W> distances(vertices_list.size(), numeric_limits<W>::max());
+            // initialize parents, set all to NIL
+            vector<Vertex> parents(vertices().size(), Vertex());
 
-            // distance of source vertex = 0
-            distance[s.index] = 0;
-            
-            // place source vertex onto the min queue
-            mq.insert(0, s); // format: distance, vertex
+            // set the starting vertex distance to 0
+            dist[s.index] = 0;
 
-            // while the min queue is not empty, process all verticies in the queue
-            while(!mq.empty()) 
+            // empty set of processed elements
+            set<Vertex> processed; 
+
+            // while Q is not empty
+            while(!empty(q)) 
             {
-                // get the neighbor with the minimum distance
-                vector<Vertex> neighbors = neighbors_of(mq.min());
+                // u <- extractmin(Q)
+                Vertex u = q.front();
+                q.pop();
 
-                // for each neighbor of the vertex
-                for(size_type idx = 0; idx < neighbors.size(); idx++) 
+
+                // S <- S Union {u}
+                processed.insert(u);
+
+
+                // for all edges (u, v) element of E
+                for(size_type idx = 0; idx < adj_list[u.index].size(); idx++)
                 {
-                    // if the distance of the neighbor is greater than the distance of the vertex + the weight of the edge
-                    if(distances[neighbors[idx].index] > distances[mq.min().index] + edge(mq.min(), neighbors[idx]).weight) 
+                    // if (v.d > u.d + w(u, v))
+                    if(dist[adj_list[u.index][idx].target.index] > dist[u.index] + adj_list[u.index][idx].weight)
                     {
-                        // set the distance of the neighbor to the distance of the vertex + the weight of the edge
-                        distances[neighbors[idx].index] = distances[mq.min().index] + edge(mq.min(), neighbors[idx]).weight;
+                        // v.d <- u.d + w(u, v)
+                        dist[adj_list[u.index][idx].target.index] = dist[u.index] + adj_list[u.index][idx].weight;
 
-                        // set the parent of the neighbor to the vertex
-                        mq.insert(distances[neighbors[idx].index], neighbors[idx]);
+                        // v.pi <- u
+                        parents[adj_list[u.index][idx].target.index] = u;
+
+                        // float v in Q
+                        q.push(adj_list[u.index][idx].target);
                     }
                 }
-
-                // remove the vertex from the min queue
-                mq.remove_min();
-            }
-            
+            } 
         }
 
         /**
@@ -1002,26 +1012,38 @@ namespace g
                 ss << "Invalid target vertex " << e.target;
                 throw runtime_error(ss.str());
             }
-
-            // Do the edge insertion
-// TODO (not started)
-
-            // Add the edge to the adjacency list
-            adj_list[e.source.index].push_back(e);
-
-            // If the graph is undirected, add the reverse edge
-            if (!this->is_directed())
+            
+            if (e.weight == 0) 
             {
-                adj_list[e.target.index].push_back(~e);
+                return;
             }
+            else 
+            {
+                // check if the edge already exists
+                for(size_type idx = 0; idx < adj_list[e.source.index].size(); idx++) 
+                {
+                    if(adj_list[e.source.index][idx].target == e.target) 
+                    {
+                        // replace the edge if it exists
+                        adj_list[e.source.index][idx] = e;
+                        return;
+                    }
+                }
 
-            // Sort the adjacency list for the source vertex
-            sort(adj_list[e.source.index].begin(), adj_list[e.source.index].end());
+                // Add the edge to the adjacency list
+                adj_list[e.source.index].push_back(e);
 
-            // Sort the adjacency list for the target vertex
-            sort(adj_list[e.target.index].begin(), adj_list[e.target.index].end());
+                // If the graph is undirected, add the reverse edge
+                if (!this->is_directed())
+                {
+                    adj_list[e.target.index].push_back(~e);
+                }
 
+                sort(adj_list[e.source.index].begin(), adj_list[e.source.index].end());
 
+                sort(adj_list[e.target.index].begin(), adj_list[e.target.index].end());
+
+            }
         }
 
     private:
