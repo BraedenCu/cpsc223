@@ -964,7 +964,13 @@ namespace g
             // Do the insertion
 // TODO (not started)
 
-            
+            vertices_list.push_back(v);
+
+            while(adj_list.size() <= v.index) 
+            {
+                adj_list.push_back(vector<Edge>());
+            }
+
         }
 
         /**
