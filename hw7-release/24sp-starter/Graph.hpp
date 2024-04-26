@@ -711,7 +711,7 @@ namespace g
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
 
-            // create a vector of vertices, loop over the adjacency list of the vertex, add the vertices to the vector
+            // create a vector of vertices, loop over the list of the vertex, add the vertices to the vector
             vector<Vertex> neighbors;
 
             for(size_type idx = 0; idx < adj_list[v.index].size(); idx++) 
@@ -826,7 +826,6 @@ namespace g
                     st.push(adj_list[v.index][idx].target);
                 }
             }
-
         }
 
         /**
@@ -864,9 +863,30 @@ namespace g
          */
         Path shortest_path(const Vertex &s, const Vertex &t) const
         {
-            vector<Vertex> parents(vertices().size());
 // TODO (not started)
+            // bellman-ford algorithm
+            vector<W> dist(vertices().size(), W_MAX);
+            vector<Vertex> parents(vertices().size());
 
+            dist[s.index] = 0;
+
+            for(size_type idx = 0; idx < vertices().size() - 1; idx++) 
+            {
+                for(size_type idy = 0; idy < edges().size(); idy++) 
+                {
+                    set<Edge> e = edges();
+                    for(auto it = e.begin(); it != e.end(); it++) 
+                    {
+                        if(dist[it->source.index] != W_MAX && dist[it->source.index] + it->weight < dist[it->target.index]) 
+                        {
+                            dist[it->target.index] = dist[it->source.index] + it->weight;
+                            parents[it->target.index] = it->source;
+                        }
+                    }
+
+                }
+            }
+        
             return Path(*this, s, t, parents);
         }
 
