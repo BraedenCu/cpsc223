@@ -842,8 +842,52 @@ namespace g
          * @assumes the graph has no negative edge weights
          */
         void dijkstra(const Vertex &s) const {
-// TODO NOT DONE
+// TODO TODO TODO NOT
+            // djikstras algorithm psuedo-code
+            /**
+             * 1. Create a set of all vertices with distance = infinity
+             * 2. Set the distance of the source vertex to 0
+             * 3. While the set is not empty
+             *    a. Find the vertex with the minimum distance
+             *    b. For each neighbor of the vertex
+             *        i. If the distance of the neighbor is greater than the distance of the vertex + the weight of the edge
+             *           1. Set the distance of the neighbor to the distance of the vertex + the weight of the edge
+             *           2. Set the parent of the neighbor to the vertex
+             * 4. Return the set of parents
+             */
+            priority_queue<pair<W, Vertex>, vector<pair<W, Vertex>>, greater<pair<W, Vertex>>> pq;
+
+            // Create a vector to store the distances from the source to all vertices
+            vector<W> distance(vertices_list.size(), numeric_limits<W>::max());
+
+            // Set the distance of the source vertex to 0
+            distance[s] = 0;
+
+            // Push the source vertex into the priority queue
+            pq.push(make_pair(0, s));
             
+            // Process vertices until the priority queue is empty
+            while (!pq.empty()) 
+            {
+                // Get the vertex with the minimum distance from the priority queue
+                Vertex u = pq.top().second;
+                pq.pop();
+
+                // Iterate through all the neighbors of the current vertex
+                for (const auto& neighbor : adj_list[u]) {
+                    Vertex v = neighbor.target;
+                    W weight = neighbor.weight;
+
+                    // Calculate the new distance to the neighbor vertex
+                    W new_distance = distance[u] + weight;
+
+                    // If the new distance is smaller than the current distance, update it
+                    if (new_distance < distance[v]) {
+                    distance[v] = new_distance;
+                    pq.push(make_pair(new_distance, v));
+                    }
+                }
+            }
         }
 
         /**
