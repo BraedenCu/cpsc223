@@ -841,7 +841,8 @@ namespace g
          *
          * @assumes the graph has no negative edge weights
          */
-        void dijkstra(const Vertex &s) const {
+        void dijkstra(const Vertex &s) const 
+        {
 // TODO TODO TODO NOT
             // djikstras algorithm psuedo-code
             /**
@@ -855,39 +856,43 @@ namespace g
              *           2. Set the parent of the neighbor to the vertex
              * 4. Return the set of parents
              */
-            priority_queue<pair<W, Vertex>, vector<pair<W, Vertex>>, greater<pair<W, Vertex>>> pq;
 
-            // Create a vector to store the distances from the source to all vertices
-            vector<W> distance(vertices_list.size(), numeric_limits<W>::max());
+            // create our minqueue
+            MinQueue<W, Vertex> mq;
 
-            // Set the distance of the source vertex to 0
-            distance[s] = 0;
+            // create a vector of distances
+            vector<W> distances(vertices_list.size(), numeric_limits<W>::max());
 
-            // Push the source vertex into the priority queue
-            pq.push(make_pair(0, s));
+            // distance of source vertex = 0
+            distance[s.index] = 0;
             
-            // Process vertices until the priority queue is empty
-            while (!pq.empty()) 
+            // place source vertex onto the min queue
+            mq.insert(0, s); // format: distance, vertex
+
+            // while the min queue is not empty, process all verticies in the queue
+            while(!mq.empty()) 
             {
-                // Get the vertex with the minimum distance from the priority queue
-                Vertex u = pq.top().second;
-                pq.pop();
+                // get the neighbor with the minimum distance
+                vector<Vertex> neighbors = neighbors_of(mq.min());
 
-                // Iterate through all the neighbors of the current vertex
-                for (const auto& neighbor : adj_list[u]) {
-                    Vertex v = neighbor.target;
-                    W weight = neighbor.weight;
+                // for each neighbor of the vertex
+                for(size_type idx = 0; idx < neighbors.size(); idx++) 
+                {
+                    // if the distance of the neighbor is greater than the distance of the vertex + the weight of the edge
+                    if(distances[neighbors[idx].index] > distances[mq.min().index] + edge(mq.min(), neighbors[idx]).weight) 
+                    {
+                        // set the distance of the neighbor to the distance of the vertex + the weight of the edge
+                        distances[neighbors[idx].index] = distances[mq.min().index] + edge(mq.min(), neighbors[idx]).weight;
 
-                    // Calculate the new distance to the neighbor vertex
-                    W new_distance = distance[u] + weight;
-
-                    // If the new distance is smaller than the current distance, update it
-                    if (new_distance < distance[v]) {
-                    distance[v] = new_distance;
-                    pq.push(make_pair(new_distance, v));
+                        // set the parent of the neighbor to the vertex
+                        mq.insert(distances[neighbors[idx].index], neighbors[idx]);
                     }
                 }
+
+                // remove the vertex from the min queue
+                mq.remove_min();
             }
+            
         }
 
         /**
