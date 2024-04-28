@@ -738,7 +738,7 @@ namespace g
             // Remove or modify it when implementing."
 
             // loop over the vector list of the source vertex, if the target vertex is found, return the edge
-            for(auto e : adj_list[s.index]) 
+            for(Edge e : adj_list[s.index]) 
             {
                 if (e.target == t)
                 {
