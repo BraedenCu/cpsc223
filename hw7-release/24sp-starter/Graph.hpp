@@ -772,38 +772,16 @@ namespace g
             
             while(!q.empty()) 
             {
-                if (!directed) 
+                Vertex v = q.front();
+                visit(v);
+                q.pop();
+               
+                for(const Edge& edge : adj_list[v.index]) 
                 {
-                    Vertex v = q.front(); // get the front of the queue
-                    q.pop(); // pop the front of the queue
-                    visit(v);
-
-                    for(size_type idx = 0; idx < adj_list[v.index].size(); idx++) 
+                    if(!visited[edge.target.index]) 
                     {
-                        // check if the vertex has been visited
-                        if(!visited[adj_list[v.index][idx].target.index]) 
-                        {
-                            // push the vertex to the queue and set it to visited
-                            q.push(adj_list[v.index][idx].target);
-                            visited[adj_list[v.index][idx].target.index] = true;
-                        }
-                    }
-                }
-                else if (directed)
-                {
-                    Vertex v = q.front();
-                    q.pop();
-                    visit(v);
-
-                    // dealing with directed graph
-                    for(const Edge& edge : adj_list[v.index]) 
-                    {
-                        // In a directed graph, we only consider outgoing edges from v
-                        if(!visited[edge.target.index]) 
-                        {
-                            visited[edge.target.index] = true;
-                            q.push(edge.target);
-                        }
+                        visited[edge.target.index] = true;
+                        q.push(edge.target);
                     }
                 }
             }
@@ -819,50 +797,29 @@ namespace g
          *
          * @param s the starting vertex
          */
+        void dfs_helper(const Vertex &s, vector<bool> &visited) const 
+        {
+            for(size_type idx = 0; idx < adj_list[s.index].size(); idx++) 
+            {
+                if(!visited[adj_list[s.index][idx].target.index]) 
+                {
+                    visit(adj_list[s.index][idx].target);
+                    visited[adj_list[s.index][idx].target.index] = true;
+                    dfs_helper(adj_list[s.index][idx].target, visited);
+                }
+            }
+        }
+
         void dfs(const Vertex &s) const
         {
 // TODO NOT DONE
-            stack<Vertex> stack;
+            stack<Vertex> dfs_stack;
+            vector<bool> dfs_visited(vertices().size(), false);
 
-            vector<bool> visited(vertices().size(), false);
+            dfs_visited[s.index] = true;
+            visit(s);
 
-            stack.push(s);
-
-            visited[s.index] = true;
-
-            while(!stack.empty()) 
-            {
-                if (!directed) 
-                {
-                    Vertex v = stack.top();
-                    stack.pop();
-                    visit(v);
-
-                    for(size_type idx = 0; idx < adj_list[v.index].size(); idx++) 
-                    {
-                        if(!visited[adj_list[v.index][idx].target.index]) 
-                        {
-                            stack.push(adj_list[v.index][idx].target);
-                            visited[adj_list[v.index][idx].target.index] = true;
-                        }
-                    }
-                }
-                else if (directed)
-                {
-                    Vertex v = stack.top();
-                    stack.pop();
-                    visit(v);
-
-                    for(const Edge& edge : adj_list[v.index]) 
-                    {
-                        if(!visited[edge.target.index]) 
-                        {
-                            visited[edge.target.index] = true;
-                            stack.push(edge.target);
-                        }
-                    }
-                }
-            }
+            dfs_helper(s, dfs_visited);
         }
 
         /**
@@ -922,7 +879,7 @@ namespace g
             }
             if (!directed) 
             {
-                bfs(s); // if the graph is undirected, use bfs b/c it is equivalent to dijkstra for undirected graphs
+                bfs(s); // 
             }
             else if (directed) 
             {
