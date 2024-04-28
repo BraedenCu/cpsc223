@@ -766,24 +766,45 @@ namespace g
 
             vector<bool> visited(vertices().size(), false);
 
-            q.push(s);
+            q.push(s); // push the starting vertex
 
+            visited[s.index] = true; // set the starting vertex to visited
+            
             while(!q.empty()) 
             {
-                Vertex v = q.front();
-                q.pop();
-
-                if(visited[v.index]) 
+                if (!directed) 
                 {
-                    continue;
+                    Vertex v = q.front(); // get the front of the queue
+                    q.pop(); // pop the front of the queue
+                    visit(v);
+
+                    for(size_type idx = 0; idx < adj_list[v.index].size(); idx++) 
+                    {
+                        // check if the vertex has been visited
+                        if(!visited[adj_list[v.index][idx].target.index]) 
+                        {
+                            // push the vertex to the queue and set it to visited
+                            q.push(adj_list[v.index][idx].target);
+                            visited[adj_list[v.index][idx].target.index] = true;
+                        }
+                    }
                 }
-
-                visit(v);
-                visited[v.index] = true;
-
-                for(size_type idx = 0; idx < adj_list[v.index].size(); idx++) 
+                else if (directed)
                 {
-                    q.push(adj_list[v.index][idx].target);
+                    Vertex v = q.front();
+                    q.pop();
+                    visit(v);
+
+                    // dealing with directed graph
+                    for(const Edge& edge : adj_list[v.index]) 
+                    {
+                        // In a directed graph, we only consider outgoing edges from v
+                        if(!visited[edge.target.index]) 
+                        {
+                            visited[edge.target.index] = true;
+                            q.push(edge.target);
+                        }
+                    }
                 }
             }
         }
@@ -801,31 +822,31 @@ namespace g
         void dfs(const Vertex &s) const
         {
 // TODO NOT DONE
-
-            // recursive solution reccomended
-
             stack<Vertex> st;
 
             vector<bool> visited(vertices().size(), false);
 
+            // deal with edge cases, negative weights etc
+            if (directed) 
+            {
+                //throw runtime_error("DFS is not defined for directed graphs");
+                return;
+            }
+            else if (W_MIN < 0) 
+            {
+                //throw runtime_error("Negative edge weights are not allowed");
+                return;
+            }
+
             st.push(s);
 
-            while(!st.empty()) 
+            visited[s.index] = true;
+
+            for (size_type idx = 0; idx < adj_list[s.index].size(); idx++) 
             {
-                Vertex v = st.top();
-                st.pop();
-
-                if(visited[v.index]) 
+                if(!visited[adj_list[s.index][idx].target.index]) 
                 {
-                    continue;
-                }
-
-                visit(v);
-                visited[v.index] = true;
-
-                for(size_type idx = 0; idx < adj_list[v.index].size(); idx++) 
-                {
-                    st.push(adj_list[v.index][idx].target);
+                    dfs(adj_list[s.index][idx].target);
                 }
             }
         }
