@@ -905,47 +905,45 @@ namespace g
          * @param s the starting vertex
          * @param t the target vertex
          */
-         Path shortest_path(const Vertex &s, const Vertex &t) const
+        Path shortest_path(const Vertex &s, const Vertex &t) const
         {
-            // Initializes distances and parent tracking
-            vector<W> distances(vertices_list.size(), W_MAX);
-            vector<Vertex> parents(vertices_list.size());
-            distances[s.index] = W();
+            vector<W> distance_vert(vertices().size(), W_MAX);
+            vector<Vertex> parents(vertices().size());
 
-            // Repeatedly relaxing edges
-            for (size_type i = 0; i < vertices_list.size() - 1; ++i)
+            distance_vert[s.index] = 0;
+            parents[s] = s;
+
+            for (size_type idx = 0; idx < vertices().size() - 1; idx++) 
             {
-                for (const auto &vertex : vertices_list)
+                for (auto vertex : vertices()) 
                 {
-                    if (distances[vertex.index] == W_MAX)
+                    for (auto current_vertex : neighbors_of(vertex)) 
                     {
-                        continue;
-                    }
+                        Edge current_edge = edge(vertex, current_vertex);
+                        W distance = current_edge.weight + distance_vert[current_edge.source];
 
-                    for (const Edge &edge : adj_list[vertex.index])
-                    {
-                        if (distances[edge.target.index] > distances[vertex.index] + edge.weight)
+                        if(distance_vert[current_edge.source] != W_MAX && distance < distance_vert[current_edge.target]) 
                         {
-                            distances[edge.target.index] = distances[vertex.index] + edge.weight;
-                            parents[edge.target.index] = vertex;
-                        }
+                            distance_vert[current_edge.target] = distance;
+                            
+                            parents[current_edge.target.index] = vertex;
+                        }  
                     }
                 }
             }
-
-            // Checks for errors
+            
+            // negative weight cycles check
             for (const auto &vertex : vertices_list)
             {
                 for (const Edge &edge : adj_list[vertex.index])
                 {
-                    if (distances[edge.target.index] > distances[vertex.index] + edge.weight)
+                    if (distance_vert[edge.target.index] > distance_vert[vertex.index] + edge.weight)
                     {
-                        throw runtime_error("No path found");
+                        throw runtime_error("Could not find a path");
                     }
                 }
             }
 
-            // Builds path from s to t
             return Path(*this, s, t, parents);
         }
 
