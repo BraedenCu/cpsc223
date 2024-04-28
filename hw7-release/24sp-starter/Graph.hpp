@@ -852,56 +852,48 @@ namespace g
          *
          * @assumes the graph has no negative edge weights
          */
-        void dijkstra(const Vertex &s) const 
+        void dijkstra(const Vertex &s) const
         {
-// TODO NOT DONE
-            priority_queue<Vertex> q;
+            vector<bool>        visited(vertices_list.size(), false);
+            vector<W>           distance_vert(vertices_list.size(), W_MAX);
+            vector<Vertex>      parents(vertices_list.size());
+            MinQueue<W, Vertex> queue;
 
-            vector<W> distance_vert(vertices().size(), W_MAX);
-            vector<Vertex> parents(vertices().size());
+            distance_vert[s.index] = W(); 
 
-            // initialize the distance and parent vectors
-            for(size_type idw = 0; idw < vertices().size(); idw++) 
+            for (size_type i = 0; i < vertices_list.size(); i++)
             {
-                distance_vert[idw] = W_MAX;
-                parents[idw] = Vertex();
+                queue.insert(distance_vert[i], vertices_list[i]);
             }
 
-            distance_vert[s.index] = 0;
-
-            q.push(s);
-
-            while(!empty(q)) 
+            while (!queue.empty())
             {
-                Vertex u = q.top();
-                q.pop();
+                Vertex rem_vertex = queue.remove_min();
 
-                for(auto idx = adj_list[u.index].begin(); idx != adj_list[u.index].end(); idx++) 
+                if (visited[rem_vertex.index])
                 {
-                    Vertex v = idx->target;
-                    W weight = idx->weight;
-
-                    if(distance_vert[v.index] > distance_vert[u.index] + weight) 
-                    {
-                        distance_vert[v.index] = distance_vert[u.index] + weight;
-                        parents[v.index] = u;
-                        q.push(v);
-                    }                    
+                    continue;
                 }
-            }
-            if (directed) 
-            {
-                for(size_type idx = 0; idx < vertices().size(); idx++) 
+
+                visited[rem_vertex.index] = true;
+
+                visit(rem_vertex);
+
+                for (Vertex vert : neighbors_of(rem_vertex))
                 {
-                    if(distance_vert[idx] != W_MAX) 
+                    const Edge current_edge = edge(rem_vertex, vert);
+
+                    W distance = distance_vert[rem_vertex.index] +  current_edge.weight;
+
+                    if (!visited[current_edge.target.index] && distance_vert[current_edge.target.index] > distance)
                     {
-                        visit(vertices_list[idx]);
+                        distance_vert[current_edge.target.index] = distance;
+                        
+                        parents[current_edge.target.index] = rem_vertex;
+                        
+                        queue.insert(distance_vert[current_edge.target.index], current_edge.target); 
                     }
                 }
-            }
-            else if (!directed) 
-            {
-                bfs(s);
             }
         }
 
@@ -922,16 +914,31 @@ namespace g
          */
          Path shortest_path(const Vertex &s, const Vertex &t) const
         {
+
 // TODO 
             vector<W> distance_vert(vertices().size(), W_MAX);
             vector<Vertex> parents(vertices().size());
 
-            distance_vert[s.index] = W();
+            distance_vert[s.index] = 0;
+            parents[s] = s;
 
             for (size_type idx = 0; idx < vertices().size() - 1; idx++) 
             {
                 for (auto vertex : vertices()) 
                 {
+                    for (auto current_vertex : neighbors_of(vertex)) 
+                    {
+                        Edge current_edge = edge(vertex, current_vertex);
+                        W distance = current_edge.weight + distance_vert[current_edge.source];
+
+                        if(distance_vert[current_edge.source] != W_MAX && distance < distance_vert[current_edge.target]) 
+                        {
+                            distance_vert[current_edge.target] = distance;
+                            
+                            parents[current_edge.target.index] = vertex;
+                        }  
+                    }
+                    /*
                     for (const Edge &current_edge : adj_list[vertex.index]) 
                     {
                         W distance = current_edge.weight + distance_vert[current_edge.source];
@@ -943,6 +950,7 @@ namespace g
                             parents[current_edge.target.index] = vertex;
                         }   
                     }
+                    */
                 }
             }
 
