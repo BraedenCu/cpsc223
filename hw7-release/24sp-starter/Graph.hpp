@@ -734,9 +734,6 @@ namespace g
         Edge edge(const Vertex &s, const Vertex &t) const
         {
 //TODO 
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
-
             // loop over the vector list of the source vertex, if the target vertex is found, return the edge
             for(Edge e : adj_list[s.index]) 
             {
@@ -829,7 +826,7 @@ namespace g
 
         void dfs(const Vertex &s) const
         {
-// TODO NOT DONE
+// TODO
             stack<Vertex> dfs_stack;
             vector<bool> dfs_visited(vertices().size(), false);
             
@@ -852,19 +849,6 @@ namespace g
          *
          * @assumes the graph has no negative edge weights
          */
-        /**
-         * Performs Dijkstra's algorithm starting from the given vertex. The
-         *  function visits each vertex in the graph at most once (it visits
-         *  exactly those that are reachable from the starting vertex).
-         *
-         * Whenever there are two or more vertices to visit with the same
-         *  distance, the function visits them in increasing order of their
-         *  indices.
-         *
-         * @param s the starting vertex
-         *
-         * @assumes the graph has no negative edge weights
-         */
         void dijkstra(const Vertex &s) const
         {
             vector<bool>        visited(vertices_list.size(), false);
@@ -874,13 +858,6 @@ namespace g
             distance_vert[s.index] = W(); 
 
             queue.insert(distance_vert[s.index], s);
-
-/*
-            for (size_type i = 0; i < vertices_list.size(); i++)
-            {
-                queue.insert(distance_vert[i], vertices_list[i]);
-            }
-*/
 
             while (!queue.empty())
             {
@@ -910,11 +887,6 @@ namespace g
                         queue.insert(distance_vert[current_edge.target.index], current_edge.target); 
                     }
                 }
-
-                //if(num_neighbors == 0)
-                //{
-                //    break;
-                //}
             }
         }
 
