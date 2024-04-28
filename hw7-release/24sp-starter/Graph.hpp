@@ -719,9 +719,9 @@ namespace g
                 neighbors.push_back(adj_list[v.index][idx].target);
             }
 
+            sort(neighbors.begin(), neighbors.end());
+
             return neighbors;
-            
-            //return vector<Vertex>();
         }
 
         /**
@@ -738,11 +738,11 @@ namespace g
             // Remove or modify it when implementing."
 
             // loop over the vector list of the source vertex, if the target vertex is found, return the edge
-            for(size_type idx = 0; idx < adj_list[s.index].size(); idx++) 
+            for(auto e : adj_list[s.index]) 
             {
-                if(adj_list[s.index][idx].target == t) 
+                if (e.target == t)
                 {
-                    return adj_list[s.index][idx];
+                    return e;
                 }
             }
             
@@ -792,7 +792,6 @@ namespace g
                         q.push(vertex);
                     }
                 }
-                    
             }
         }
 
@@ -906,8 +905,7 @@ namespace g
             }
         }
 
-
-        /**
+         /**
          * Finds and returns the shortest path between the given vertices (or a
          *  nonexistent path if there is no path from s to t, that is, a path p
          *  such that p.path_exists is false).
@@ -928,34 +926,38 @@ namespace g
             vector<W> distance_vert(vertices().size(), W_MAX);
             vector<Vertex> parents(vertices().size());
 
-            // initialize the distance and parent vectors
-            for(size_type idw = 0; idw < vertices().size(); idw++) 
-            {
-                distance_vert[idw] = W_MAX;
-                parents[idw] = Vertex();
-            }
+            distance_vert[s.index] = W();
 
-            distance_vert[s.index] = 0;
-
-            for(size_type idx = 0; idx < vertices().size() - 1; idx++) 
+            for (size_type idx = 0; idx < vertices().size() - 1; idx++) 
             {
-                for(size_type idy = 0; idy < edges().size(); idy++) 
+                for (auto vertex : vertices()) 
                 {
-                    set<Edge> e = edges();
-                    for(auto current_edge = e.begin(); current_edge != e.end(); current_edge++) 
+                    for (const Edge &current_edge : adj_list[vertex.index]) 
                     {
-                        Vertex src = current_edge->source;
-                        Vertex destination = current_edge->target;
-                        if(distance_vert[src.index] != W_MAX && distance_vert[src.index] + current_edge->weight < distance_vert[destination.index]) 
-                        {
-                            distance_vert[destination.index] = distance_vert[destination.index] + current_edge->weight;
-                            parents[destination.index] = src;
-                        }
-                    }
+                        W distance = current_edge.weight + distance_vert[current_edge.source];
 
+                        if(distance_vert[current_edge.source] != W_MAX && distance < distance_vert[current_edge.target]) 
+                        {
+                            distance_vert[current_edge.target] = distance;
+                            
+                            parents[current_edge.target.index] = vertex;
+                        }   
+                    }
                 }
             }
-        
+
+            // negative weight cycles check
+            for (const auto &vertex : vertices_list)
+            {
+                for (const Edge &edge : adj_list[vertex.index])
+                {
+                    if (distance_vert[edge.target.index] > distance_vert[vertex.index] + edge.weight)
+                    {
+                        throw runtime_error("Could not find a path");
+                    }
+                }
+            }
+
             return Path(*this, s, t, parents);
         }
 
