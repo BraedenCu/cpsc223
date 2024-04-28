@@ -766,24 +766,33 @@ namespace g
 
             vector<bool> visited(vertices().size(), false);
 
-            q.push(s); // push the starting vertex
-
-            visited[s.index] = true; // set the starting vertex to visited
+            q.push(s);
+            visited[s.index] = true;
             
             while(!q.empty()) 
-            {
-                Vertex v = q.front();
-                visit(v);
+            {  
+                vector<Vertex> vertices_to_visit;
+                Vertex curr_head = q.front();
+                
+                visit(q.front());
                 q.pop();
-               
-                for(const Edge& edge : adj_list[v.index]) 
+
+                for(const Edge& edge : adj_list[curr_head.index])
                 {
-                    if(!visited[edge.target.index]) 
+                    vertices_to_visit.push_back(edge.target);
+                }
+                // sort the vertices to visit
+                sort(vertices_to_visit.begin(), vertices_to_visit.end());
+
+                for(const Vertex& vertex : vertices_to_visit) 
+                {
+                    if(!visited[vertex.index]) 
                     {
-                        visited[edge.target.index] = true;
-                        q.push(edge.target);
+                        visited[vertex.index] = true;
+                        q.push(vertex);
                     }
                 }
+                    
             }
         }
 
@@ -799,13 +808,22 @@ namespace g
          */
         void dfs_helper(const Vertex &s, vector<bool> &visited) const 
         {
-            for(size_type idx = 0; idx < adj_list[s.index].size(); idx++) 
+            vector<Vertex> vertices_to_visit;
+            for(const Edge& edge : adj_list[curr_head.index])
             {
-                if(!visited[adj_list[s.index][idx].target.index]) 
+                vertices_to_visit.push_back(edge.target);
+            }
+            // sort the vertices to visit
+            sort(vertices_to_visit.begin(), vertices_to_visit.end());
+
+            // depth-first search graph recursion
+            for(const Vertex& vertex : vertices_to_visit) 
+            {
+                if(!visited[vertex.index]) 
                 {
-                    visit(adj_list[s.index][idx].target);
-                    visited[adj_list[s.index][idx].target.index] = true;
-                    dfs_helper(adj_list[s.index][idx].target, visited);
+                    visited[vertex.index] = true;
+                    visit(vertex);
+                    dfs_helper(vertex, visited);
                 }
             }
         }
@@ -815,7 +833,7 @@ namespace g
 // TODO NOT DONE
             stack<Vertex> dfs_stack;
             vector<bool> dfs_visited(vertices().size(), false);
-
+            
             dfs_visited[s.index] = true;
             visit(s);
 
@@ -837,7 +855,7 @@ namespace g
          */
         void dijkstra(const Vertex &s) const 
         {
-    // TODO TODO TODO NOT
+// TODO NOT DONE
             /**
              * Psuedocode
              * 1. initialize s.d =0, all other v.d = infinity: all parents NIL.
