@@ -922,13 +922,7 @@ namespace g
             }
             if (!directed) 
             {
-                for(size_type idx = 0; idx < vertices().size(); idx++) 
-                {
-                    if(dist[idx] != W_MAX) 
-                    {
-                        visit(vertices_list[idx]);
-                    }
-                }
+                bfs(s); // if the graph is undirected, use bfs b/c it is equivalent to dijkstra for undirected graphs
             }
             else if (directed) 
             {
