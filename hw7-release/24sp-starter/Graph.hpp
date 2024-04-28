@@ -809,7 +809,7 @@ namespace g
         void dfs_helper(const Vertex &s, vector<bool> &visited) const 
         {
             vector<Vertex> vertices_to_visit;
-            for(const Edge& edge : adj_list[curr_head.index])
+            for(const Edge& edge : adj_list[s.index])
             {
                 vertices_to_visit.push_back(edge.target);
             }
