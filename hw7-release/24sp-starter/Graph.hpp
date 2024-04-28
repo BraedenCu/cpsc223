@@ -909,7 +909,6 @@ namespace g
             {
                 Vertex u = q.top();
                 q.pop();
-                visit(u);
 
                 for(size_type idx = 0; idx < adj_list[u.index].size(); idx++) 
                 {
@@ -921,7 +920,28 @@ namespace g
                     }
                 }
             }
+            if (!directed) 
+            {
+                for(size_type idx = 0; idx < vertices().size(); idx++) 
+                {
+                    if(dist[idx] != W_MAX) 
+                    {
+                        visit(vertices_list[idx]);
+                    }
+                }
+            }
+            else if (directed) 
+            {
+                for(size_type idx = 0; idx < vertices().size(); idx++) 
+                {
+                    if(dist[idx] != W_MAX) 
+                    {
+                        visit(vertices_list[idx]);
+                    }
+                }
+            }
         }
+
 
         /**
          * Finds and returns the shortest path between the given vertices (or a
