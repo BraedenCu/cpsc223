@@ -856,27 +856,19 @@ namespace g
         void dijkstra(const Vertex &s) const 
         {
 // TODO NOT DONE
-            /**
-             * Psuedocode
-             * 1. initialize s.d =0, all other v.d = infinity: all parents NIL.
-             * Q <- min-priority queue of all verticies (using score d as key)
-             * S <- empty set S of processsed elements
-             * While Q is not empty do:
-             *  u <- extractmin(Q)
-             *  S <- S Union {u}
-             *  For all edges (u, v) element of E:
-             *      if (v.d > u.d + w(u, v))
-             *          v.d <- u.d + w(u, v)
-             *          v.pi <- u
-            *           Float v in Q
-            */
             priority_queue<Vertex> q;
 
-            vector<W> dist(vertices().size(), W_MAX);
+            vector<W> distance_vert(vertices().size(), W_MAX);
+            vector<Vertex> parents(vertices().size());
 
-            vector<Vertex> parents(vertices().size(), Vertex());
+            // initialize the distance and parent vectors
+            for(size_type idw = 0; idw < vertices().size(); idw++) 
+            {
+                distance_vert[idw] = W_MAX;
+                parents[idw] = Vertex();
+            }
 
-            dist[s.index] = 0;
+            distance_vert[s.index] = 0;
 
             q.push(s);
 
@@ -885,29 +877,32 @@ namespace g
                 Vertex u = q.top();
                 q.pop();
 
-                for(size_type idx = 0; idx < adj_list[u.index].size(); idx++) 
+                for(auto idx = adj_list[u.index].begin(); idx != adj_list[u.index].end(); idx++) 
                 {
-                    if(dist[adj_list[u.index][idx].target.index] > dist[u.index] + adj_list[u.index][idx].weight) 
+                    Vertex v = idx->target;
+                    W weight = idx->weight;
+
+                    if(distance_vert[v.index] > distance_vert[u.index] + weight) 
                     {
-                        dist[adj_list[u.index][idx].target.index] = dist[u.index] + adj_list[u.index][idx].weight;
-                        parents[adj_list[u.index][idx].target.index] = u;
-                        q.push(adj_list[u.index][idx].target);
-                    }
+                        distance_vert[v.index] = distance_vert[u.index] + weight;
+                        parents[v.index] = u;
+                        q.push(v);
+                    }                    
                 }
             }
-            if (!directed) 
-            {
-                bfs(s); // 
-            }
-            else if (directed) 
+            if (directed) 
             {
                 for(size_type idx = 0; idx < vertices().size(); idx++) 
                 {
-                    if(dist[idx] != W_MAX) 
+                    if(distance_vert[idx] != W_MAX) 
                     {
                         visit(vertices_list[idx]);
                     }
                 }
+            }
+            else if (!directed) 
+            {
+                bfs(s);
             }
         }
 
@@ -927,26 +922,34 @@ namespace g
          * @param s the starting vertex
          * @param t the target vertex
          */
-        Path shortest_path(const Vertex &s, const Vertex &t) const
+         Path shortest_path(const Vertex &s, const Vertex &t) const
         {
-// TODO (not started)
-            // bellman-ford algorithm
-            vector<W> dist(vertices().size(), W_MAX);
+// TODO 
+            vector<W> distance_vert(vertices().size(), W_MAX);
             vector<Vertex> parents(vertices().size());
 
-            dist[s.index] = 0;
+            // initialize the distance and parent vectors
+            for(size_type idw = 0; idw < vertices().size(); idw++) 
+            {
+                distance_vert[idw] = W_MAX;
+                parents[idw] = Vertex();
+            }
+
+            distance_vert[s.index] = 0;
 
             for(size_type idx = 0; idx < vertices().size() - 1; idx++) 
             {
                 for(size_type idy = 0; idy < edges().size(); idy++) 
                 {
                     set<Edge> e = edges();
-                    for(auto it = e.begin(); it != e.end(); it++) 
+                    for(auto current_edge = e.begin(); current_edge != e.end(); current_edge++) 
                     {
-                        if(dist[it->source.index] != W_MAX && dist[it->source.index] + it->weight < dist[it->target.index]) 
+                        Vertex src = current_edge->source;
+                        Vertex destination = current_edge->target;
+                        if(distance_vert[src.index] != W_MAX && distance_vert[src.index] + current_edge->weight < distance_vert[destination.index]) 
                         {
-                            dist[it->target.index] = dist[it->source.index] + it->weight;
-                            parents[it->target.index] = it->source;
+                            distance_vert[destination.index] = distance_vert[destination.index] + current_edge->weight;
+                            parents[destination.index] = src;
                         }
                     }
 
@@ -1047,9 +1050,6 @@ namespace g
                 }
 
                 sort(adj_list[e.source.index].begin(), adj_list[e.source.index].end());
-
-                sort(adj_list[e.target.index].begin(), adj_list[e.target.index].end());
-
             }
         }
 
