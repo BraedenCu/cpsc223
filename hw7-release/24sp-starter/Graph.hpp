@@ -822,31 +822,45 @@ namespace g
         void dfs(const Vertex &s) const
         {
 // TODO NOT DONE
-            stack<Vertex> st;
+            stack<Vertex> stack;
 
             vector<bool> visited(vertices().size(), false);
 
-            // deal with edge cases, negative weights etc
-            if (directed) 
-            {
-                //throw runtime_error("DFS is not defined for directed graphs");
-                return;
-            }
-            else if (W_MIN < 0) 
-            {
-                //throw runtime_error("Negative edge weights are not allowed");
-                return;
-            }
-
-            st.push(s);
+            stack.push(s);
 
             visited[s.index] = true;
 
-            for (size_type idx = 0; idx < adj_list[s.index].size(); idx++) 
+            while(!stack.empty()) 
             {
-                if(!visited[adj_list[s.index][idx].target.index]) 
+                if (!directed) 
                 {
-                    dfs(adj_list[s.index][idx].target);
+                    Vertex v = stack.top();
+                    stack.pop();
+                    visit(v);
+
+                    for(size_type idx = 0; idx < adj_list[v.index].size(); idx++) 
+                    {
+                        if(!visited[adj_list[v.index][idx].target.index]) 
+                        {
+                            stack.push(adj_list[v.index][idx].target);
+                            visited[adj_list[v.index][idx].target.index] = true;
+                        }
+                    }
+                }
+                else if (directed)
+                {
+                    Vertex v = stack.top();
+                    stack.pop();
+                    visit(v);
+
+                    for(const Edge& edge : adj_list[v.index]) 
+                    {
+                        if(!visited[edge.target.index]) 
+                        {
+                            visited[edge.target.index] = true;
+                            stack.push(edge.target);
+                        }
+                    }
                 }
             }
         }
@@ -881,49 +895,32 @@ namespace g
              *          v.pi <- u
             *           Float v in Q
             */
-            queue<Vertex> q;
+            priority_queue<Vertex> q;
 
-            // initialize distances, set all to infinity (W_MAX)
             vector<W> dist(vertices().size(), W_MAX);
 
-            // initialize parents, set all to NIL
             vector<Vertex> parents(vertices().size(), Vertex());
 
-            // set the starting vertex distance to 0
             dist[s.index] = 0;
 
-            // empty set of processed elements
-            set<Vertex> processed; 
+            q.push(s);
 
-            // while Q is not empty
             while(!empty(q)) 
             {
-                // u <- extractmin(Q)
-                Vertex u = q.front();
+                Vertex u = q.top();
                 q.pop();
+                visit(u);
 
-
-                // S <- S Union {u}
-                processed.insert(u);
-
-
-                // for all edges (u, v) element of E
-                for(size_type idx = 0; idx < adj_list[u.index].size(); idx++)
+                for(size_type idx = 0; idx < adj_list[u.index].size(); idx++) 
                 {
-                    // if (v.d > u.d + w(u, v))
-                    if(dist[adj_list[u.index][idx].target.index] > dist[u.index] + adj_list[u.index][idx].weight)
+                    if(dist[adj_list[u.index][idx].target.index] > dist[u.index] + adj_list[u.index][idx].weight) 
                     {
-                        // v.d <- u.d + w(u, v)
                         dist[adj_list[u.index][idx].target.index] = dist[u.index] + adj_list[u.index][idx].weight;
-
-                        // v.pi <- u
                         parents[adj_list[u.index][idx].target.index] = u;
-
-                        // float v in Q
                         q.push(adj_list[u.index][idx].target);
                     }
                 }
-            } 
+            }
         }
 
         /**
