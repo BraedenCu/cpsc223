@@ -707,7 +707,7 @@ namespace g
          */
         vector<Vertex> neighbors_of(const Vertex &v) const
         {
-//TODO (NOT DONE)
+//TODO 
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
 
@@ -733,7 +733,7 @@ namespace g
          */
         Edge edge(const Vertex &s, const Vertex &t) const
         {
-//TODO NOT DONE
+//TODO 
             // This line is in here so that the starter code compiles. "
             // Remove or modify it when implementing."
 
@@ -761,7 +761,7 @@ namespace g
          */
         void bfs(const Vertex &s) const
         {
-// TODO NOT DONE
+// TODO 
             queue<Vertex> q;
 
             vector<bool> visited(vertices().size(), false);
@@ -852,19 +852,35 @@ namespace g
          *
          * @assumes the graph has no negative edge weights
          */
+        /**
+         * Performs Dijkstra's algorithm starting from the given vertex. The
+         *  function visits each vertex in the graph at most once (it visits
+         *  exactly those that are reachable from the starting vertex).
+         *
+         * Whenever there are two or more vertices to visit with the same
+         *  distance, the function visits them in increasing order of their
+         *  indices.
+         *
+         * @param s the starting vertex
+         *
+         * @assumes the graph has no negative edge weights
+         */
         void dijkstra(const Vertex &s) const
         {
             vector<bool>        visited(vertices_list.size(), false);
             vector<W>           distance_vert(vertices_list.size(), W_MAX);
-            vector<Vertex>      parents(vertices_list.size());
             MinQueue<W, Vertex> queue;
 
             distance_vert[s.index] = W(); 
 
+            queue.insert(distance_vert[s.index], s);
+
+/*
             for (size_type i = 0; i < vertices_list.size(); i++)
             {
                 queue.insert(distance_vert[i], vertices_list[i]);
             }
+*/
 
             while (!queue.empty())
             {
@@ -879,8 +895,10 @@ namespace g
 
                 visit(rem_vertex);
 
+                int num_neighbors = 0;
                 for (Vertex vert : neighbors_of(rem_vertex))
                 {
+                    num_neighbors += 1;
                     const Edge current_edge = edge(rem_vertex, vert);
 
                     W distance = distance_vert[rem_vertex.index] +  current_edge.weight;
@@ -888,12 +906,15 @@ namespace g
                     if (!visited[current_edge.target.index] && distance_vert[current_edge.target.index] > distance)
                     {
                         distance_vert[current_edge.target.index] = distance;
-                        
-                        parents[current_edge.target.index] = rem_vertex;
-                        
+                                                
                         queue.insert(distance_vert[current_edge.target.index], current_edge.target); 
                     }
                 }
+
+                //if(num_neighbors == 0)
+                //{
+                //    break;
+                //}
             }
         }
 
@@ -914,58 +935,45 @@ namespace g
          */
          Path shortest_path(const Vertex &s, const Vertex &t) const
         {
+            // Initializes distances and parent tracking
+            vector<W> distances(vertices_list.size(), W_MAX);
+            vector<Vertex> parents(vertices_list.size());
+            distances[s.index] = W();
 
-// TODO 
-            vector<W> distance_vert(vertices().size(), W_MAX);
-            vector<Vertex> parents(vertices().size());
-
-            distance_vert[s.index] = 0;
-            parents[s] = s;
-
-            for (size_type idx = 0; idx < vertices().size() - 1; idx++) 
+            // Repeatedly relaxing edges
+            for (size_type i = 0; i < vertices_list.size() - 1; ++i)
             {
-                for (auto vertex : vertices()) 
+                for (const auto &vertex : vertices_list)
                 {
-                    for (auto current_vertex : neighbors_of(vertex)) 
+                    if (distances[vertex.index] == W_MAX)
                     {
-                        Edge current_edge = edge(vertex, current_vertex);
-                        W distance = current_edge.weight + distance_vert[current_edge.source];
-
-                        if(distance_vert[current_edge.source] != W_MAX && distance < distance_vert[current_edge.target]) 
-                        {
-                            distance_vert[current_edge.target] = distance;
-                            
-                            parents[current_edge.target.index] = vertex;
-                        }  
+                        continue;
                     }
-                    /*
-                    for (const Edge &current_edge : adj_list[vertex.index]) 
+
+                    for (const Edge &edge : adj_list[vertex.index])
                     {
-                        W distance = current_edge.weight + distance_vert[current_edge.source];
-
-                        if(distance_vert[current_edge.source] != W_MAX && distance < distance_vert[current_edge.target]) 
+                        if (distances[edge.target.index] > distances[vertex.index] + edge.weight)
                         {
-                            distance_vert[current_edge.target] = distance;
-                            
-                            parents[current_edge.target.index] = vertex;
-                        }   
+                            distances[edge.target.index] = distances[vertex.index] + edge.weight;
+                            parents[edge.target.index] = vertex;
+                        }
                     }
-                    */
                 }
             }
 
-            // negative weight cycles check
+            // Checks for errors
             for (const auto &vertex : vertices_list)
             {
                 for (const Edge &edge : adj_list[vertex.index])
                 {
-                    if (distance_vert[edge.target.index] > distance_vert[vertex.index] + edge.weight)
+                    if (distances[edge.target.index] > distances[vertex.index] + edge.weight)
                     {
-                        throw runtime_error("Could not find a path");
+                        throw runtime_error("No path found");
                     }
                 }
             }
 
+            // Builds path from s to t
             return Path(*this, s, t, parents);
         }
 
@@ -982,7 +990,7 @@ namespace g
             v.index = this->vertices().size();
 
             // Do the insertion
-// TODO (not started)
+// TODO 
 
             // Add the vertex to the list of vertices
             vertices_list.push_back(v);
