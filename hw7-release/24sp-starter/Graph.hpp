@@ -55,7 +55,7 @@ namespace g
         using size_type = unsigned int;
         static constexpr W W_MAX = numeric_limits<W>::max();
         static constexpr W W_MIN = numeric_limits<W>::min();
-        static constexpr size_type SIZE_MAX = numeric_limits<size_type>::max(); // TODO CHANGE BACK TO SIZE_MAX !!!!!! BEFORE SUBMITTING !!!!!!!
+        static constexpr size_type SIZE_MAX = numeric_limits<size_type>::max(); // CHANGE BACK TO SIZE_MAX !!!!!! BEFORE SUBMITTING !!!!!!!
 
         /*
          * Type traits for the template parameters V, E, and W. The following
@@ -451,7 +451,6 @@ namespace g
          *  body.
          * You must intialize all members of class Graph.
          */
-// TODO
         Graph() : directed(true), adj_list(), vertices_list() {}
 
         /**
@@ -671,11 +670,7 @@ namespace g
          */
         vector<Vertex> vertices() const
         {
-// TODO
             return vertices_list;
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
-            //return vector<Vertex>();
         }
 
         /**
@@ -684,7 +679,6 @@ namespace g
          */
         set<Edge> edges() const
         {
-// TODO
             set<Edge> all_edges;
 
             // create nested set, loop over all edges, add them to the set. must be in order aswell
@@ -707,10 +701,6 @@ namespace g
          */
         vector<Vertex> neighbors_of(const Vertex &v) const
         {
-//TODO 
-            // This line is in here so that the starter code compiles. "
-            // Remove or modify it when implementing."
-
             // create a vector of vertices, loop over the list of the vertex, add the vertices to the vector
             vector<Vertex> neighbors;
 
@@ -733,7 +723,6 @@ namespace g
          */
         Edge edge(const Vertex &s, const Vertex &t) const
         {
-//TODO 
             // loop over the vector list of the source vertex, if the target vertex is found, return the edge
             for(Edge e : adj_list[s.index]) 
             {
@@ -758,7 +747,6 @@ namespace g
          */
         void bfs(const Vertex &s) const
         {
-// TODO 
             queue<Vertex> q;
 
             vector<bool> visited(vertices().size(), false);
@@ -768,20 +756,23 @@ namespace g
             
             while(!q.empty()) 
             {  
-                vector<Vertex> vertices_to_visit;
+                vector<Vertex> verts;
                 Vertex curr_head = q.front();
                 
+                // indicate visited vertex, print it
                 visit(q.front());
                 q.pop();
 
+                // loop over the vertices, add them to verts list
                 for(const Edge& edge : adj_list[curr_head.index])
                 {
-                    vertices_to_visit.push_back(edge.target);
+                    verts.push_back(edge.target);
                 }
                 // sort the vertices to visit
-                sort(vertices_to_visit.begin(), vertices_to_visit.end());
+                sort(verts.begin(), verts.end());
 
-                for(const Vertex& vertex : vertices_to_visit) 
+                // search through all the verticies, if the vertex is not visited, visit it and add it to the queue
+                for(const Vertex& vertex : verts) 
                 {
                     if(!visited[vertex.index]) 
                     {
@@ -826,13 +817,14 @@ namespace g
 
         void dfs(const Vertex &s) const
         {
-// TODO
             stack<Vertex> dfs_stack;
             vector<bool> dfs_visited(vertices().size(), false);
             
+            // push the starting vertex onto the stack
             dfs_visited[s.index] = true;
             visit(s);
 
+            // search the graph, continue dfs
             dfs_helper(s, dfs_visited);
         }
 
@@ -861,6 +853,7 @@ namespace g
 
             while (!queue.empty())
             {
+                // get the vertex with the minimum distance
                 Vertex rem_vertex = queue.remove_min();
 
                 if (visited[rem_vertex.index])
@@ -868,22 +861,25 @@ namespace g
                     continue;
                 }
 
+                // mark the vertex as visited
                 visited[rem_vertex.index] = true;
 
                 visit(rem_vertex);
 
-                int num_neighbors = 0;
+                // loop over the neighbors of the vertex
                 for (Vertex vert : neighbors_of(rem_vertex))
                 {
-                    num_neighbors += 1;
                     const Edge current_edge = edge(rem_vertex, vert);
 
+                    // calculate the distance
                     W distance = distance_vert[rem_vertex.index] +  current_edge.weight;
 
+                    // if the distance is less than the current distance, update the distance
                     if (!visited[current_edge.target.index] && distance_vert[current_edge.target.index] > distance)
                     {
                         distance_vert[current_edge.target.index] = distance;
-                                                
+                        
+                        // insert the vertex into the queue
                         queue.insert(distance_vert[current_edge.target.index], current_edge.target); 
                     }
                 }
@@ -913,15 +909,20 @@ namespace g
             distance_vert[s.index] = 0;
             parents[s] = s;
 
+            // Bellman-Ford algorithm, iterave V-1 times
             for (size_type idx = 0; idx < vertices().size() - 1; idx++) 
             {
-                for (auto vertex : vertices()) 
+                // loop over each vertex
+                for (Vertex vertex : vertices()) 
                 {
-                    for (auto current_vertex : neighbors_of(vertex)) 
+                    // loop over each edge
+                    for (Vertex current_vertex : neighbors_of(vertex)) 
                     {
+                        // get the current edge
                         Edge current_edge = edge(vertex, current_vertex);
                         W distance = current_edge.weight + distance_vert[current_edge.source];
 
+                        // if the distance is less than the current distance, update the distance
                         if(distance_vert[current_edge.source] != W_MAX && distance < distance_vert[current_edge.target]) 
                         {
                             distance_vert[current_edge.target] = distance;
@@ -931,7 +932,7 @@ namespace g
                     }
                 }
             }
-            
+
             // negative weight cycles check
             for (const auto &vertex : vertices_list)
             {
@@ -939,7 +940,7 @@ namespace g
                 {
                     if (distance_vert[edge.target.index] > distance_vert[vertex.index] + edge.weight)
                     {
-                        throw runtime_error("Could not find a path");
+                        throw runtime_error("Was not able to find the shortest path");
                     }
                 }
             }
@@ -958,9 +959,6 @@ namespace g
         {
             // Set the vertex's index
             v.index = this->vertices().size();
-
-            // Do the insertion
-// TODO 
 
             // Add the vertex to the list of vertices
             vertices_list.push_back(v);
@@ -1031,7 +1029,7 @@ namespace g
                 // Add the edge to the adjacency list
                 adj_list[e.source.index].push_back(e);
 
-                // If the graph is undirected, add the reverse edge
+                // if the graph is undirected, add the reverse edge
                 if (!this->is_directed())
                 {
                     adj_list[e.target.index].push_back(~e);
@@ -1060,7 +1058,6 @@ namespace g
          */
         vector <vector<Edge>> adj_list;
         vector <Vertex> vertices_list; 
-// TODO
 
         /**
          * "Visits" the given vertex. By default, prints the vertex to cout.
@@ -1071,7 +1068,5 @@ namespace g
         {
             cout << vertex << endl;
         }
-
-// TODO (not started) TODO (optional): Students add private helper methods here.
     };
 }
