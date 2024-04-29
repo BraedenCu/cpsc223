@@ -681,7 +681,7 @@ namespace g
         {
             set<Edge> all_edges;
 
-            // create nested set, loop over all edges, add them to the set. must be in order aswell
+            // create nested set, loop over all edges, add them to the set. MUST be in order.
             for(size_type idx = 0; idx < adj_list.size(); idx++) 
             {
                 for(size_type idy = 0; idy < adj_list[idx].size(); idy++) 
@@ -708,7 +708,8 @@ namespace g
             {
                 neighbors.push_back(adj_list[v.index][idx].target);
             }
-
+                
+            // sort the neighbors, corrected for bellman algorithm
             sort(neighbors.begin(), neighbors.end());
 
             return neighbors;
@@ -723,9 +724,10 @@ namespace g
          */
         Edge edge(const Vertex &s, const Vertex &t) const
         {
-            // loop over the vector list of the source vertex, if the target vertex is found, return the edge
+            // loop over the vector list of the source vertex
             for(Edge e : adj_list[s.index]) 
             {
+                // if the target vertex is found, return the edge
                 if (e.target == t)
                 {
                     return e;
@@ -748,9 +750,9 @@ namespace g
         void bfs(const Vertex &s) const
         {
             queue<Vertex> q;
-
             vector<bool> visited(vertices().size(), false);
 
+            // popuate vertex queue, mark as visited
             q.push(s);
             visited[s.index] = true;
             
@@ -784,15 +786,11 @@ namespace g
         }
 
         /**
-         * Performs a depth-first search starting from the given vertex. The
-         *  function visits each vertex in the graph at most once (it visits
-         *  exactly those that are reachable from the starting vertex).
-         *
-         * Whenever there are two or more vertices to visit, the function visits
-         *  them in increasing order of their indices.
-         *
+         * Helper function for recusion in the depth-first search function.
+         * 
          * @param s the starting vertex
-         */
+         * @param visited the vector of visited vertices
+        */
         void dfs_helper(const Vertex &s, vector<bool> &visited) const 
         {
             vector<Vertex> vertices_to_visit;
@@ -806,6 +804,7 @@ namespace g
             // depth-first search graph recursion
             for(const Vertex& vertex : vertices_to_visit) 
             {
+                // if the vertex is not visited, visit it and continue the dfs
                 if(!visited[vertex.index]) 
                 {
                     visited[vertex.index] = true;
@@ -815,6 +814,16 @@ namespace g
             }
         }
 
+        /**
+         * Performs a depth-first search starting from the given vertex. The
+         *  function visits each vertex in the graph at most once (it visits
+         *  exactly those that are reachable from the starting vertex).
+         *
+         * Whenever there are two or more vertices to visit, the function visits
+         *  them in increasing order of their indices.
+         *
+         * @param s the starting vertex
+         */
         void dfs(const Vertex &s) const
         {
             stack<Vertex> dfs_stack;
@@ -856,6 +865,7 @@ namespace g
                 // get the vertex with the minimum distance
                 Vertex rem_vertex = queue.remove_min();
 
+                // pass up visited vertex's
                 if (visited[rem_vertex.index])
                 {
                     continue;
@@ -903,9 +913,10 @@ namespace g
          */
         Path shortest_path(const Vertex &s, const Vertex &t) const
         {
-            vector<W> distance_vert(vertices().size(), W_MAX);
-            vector<Vertex> parents(vertices().size());
-
+            vector<W>       distance_vert(vertices().size(), W_MAX);
+            vector<Vertex>  parents(vertices().size());
+                
+            // populate initial starting point, aka source
             distance_vert[s.index] = 0;
             parents[s] = s;
 
@@ -938,6 +949,7 @@ namespace g
             {
                 for (const Edge &edge : adj_list[vertex.index])
                 {
+                    // if distance is disproportionate, unable to find the shortest path, throw an error
                     if (distance_vert[edge.target.index] > distance_vert[vertex.index] + edge.weight)
                     {
                         throw runtime_error("Was not able to find the shortest path");
@@ -1056,8 +1068,8 @@ namespace g
          *  vector is indexed by the vertex index and the inner vector contains
          *  the edges from that vertex.
          */
-        vector <vector<Edge>> adj_list;
-        vector <Vertex> vertices_list; 
+        vector <vector<Edge>> adj_list; // adjacency list
+        vector <Vertex> vertices_list;  // list of vertices
 
         /**
          * "Visits" the given vertex. By default, prints the vertex to cout.
